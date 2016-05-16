@@ -1,5 +1,7 @@
 # Get your data
 
+[![Build Status](https://travis-ci.org/sakset/getyourdata.svg?branch=master)](https://travis-ci.org/sakset/getyourdata)
+
 ### Deviympäristön asennus ###
 
 Asenna ainakin seuraavat, käytössä PostgreSQL-kanta
