@@ -10,6 +10,6 @@ before_install:
   - sudo ./create_dev_db.bash
 install:
   - pip install -r requirements.txt
-  - python manage.py migrate
+  - python dev_manage.py migrate
 # command to run tests
-script: python manage.py test
+script: python dev_manage.py test
