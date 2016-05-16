@@ -1,0 +1,32 @@
+{% load staticfiles %}
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html lang="en">
+    {# HEADER #}
+    {% block head %}
+    <head>
+        <title>{% block title %}GetYourData.org{% endblock %}</title>
+
+        {% bootstrap_css %}
+        <!-- Padding to move content below the menubar -->
+    	<style>
+    	body {
+    	  padding-top: 50px;
+    	}
+    	</style>
+    </head>
+    {% endblock head %}
+
+    {% block body %}
+    <body>
+    	{# MENUBAR #}
+        {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
+
+        {# PAGE CONTENT #}
+        {% block content %}
+        {% endblock content %}
+
+        {% bootstrap_javascript %}
+    </body>
+    {% endblock body %}
+</html>
