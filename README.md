@@ -41,3 +41,4 @@ Käynnistä devipalvelin (defaulttina on portti 8000, tässä käytössä portti
     python dev_manage.py runserver 8080
 
 Avaa selain http://localhost:8080
+
