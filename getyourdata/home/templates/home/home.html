@@ -1,13 +1,68 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 <div class="container">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<div class="page-header">
-				<h1>GetYourData</h1>
+				{# Translators: Front page blurb title #}
+				<h1>{% trans "Find out what companies know about you" %}</h1>
 			</div>
-			Lirum larum...
+			{# Translators: Front page blurb #}
+			{% blocktrans %}
+			Find out what companies know about you.
+			{% endblocktrans %}
+			<hr>
+			<p><a class="btn btn-primary btn-lg" href="#"><span class="glyphicon glyphicon-pencil"></span> {% trans "Make a request" %}</a></p>
+			<p><a class="btn btn-link">{% trans "I've already made a request" %}</a></p>
+
+		</div>
+		<div class="col-md-6">
+			<br>
+			<img src="http://placekitten.com/500/300"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<br>
+			<div class="well">
+				<h3>{% trans "How do I make a request?" %}</h3>
+				<hr>
+				<div class="col-md-3">
+					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					{# Translators: How do I make a request: First step #}
+					<h3>1 <small>{% trans "Send a request with this site" %}</small></h3>
+				</div>
+				<div class="col-md-3">
+					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					{# Translators: How do I make a request: Second step #}
+					<h3>2 <small>{% trans "Receive updates to your request via email" %}</small></h3>
+				</div>
+				<div class="col-md-3">
+					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					{# Translators: How do I make a request: Third step #}
+					<h3>3 <small>{% trans "Download your data once it arrives" %}</small></h3>
+				</div>
+				<div class="col-md-3">
+					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					{# Translators: How do I make a request: Fourth step #}
+					<h3>4 <small>{% trans "Tell us how your request went to help other users" %}</small></h3>
+				</div>
+				<hr>
+				<a href="#">{% trans "More information about how to request your data" %}</a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h3>{% trans "Why does it matter?" %}</h3>
+			<div class="col-md-3">
+				<img class="thumbnail" src="http://placekitten.com/200/200"/>
+			</div>
+			<div class="col-md-9">
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</div>
 		</div>
 	</div>
 </div>
