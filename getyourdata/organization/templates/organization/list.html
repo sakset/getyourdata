@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table">
+	<tbody>
+		{% for organization in organizations %}
+			<tr>
+				<td>{{ organization.name}}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+{% endblock %}
