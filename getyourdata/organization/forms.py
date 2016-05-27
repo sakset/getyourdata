@@ -1,42 +1,20 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-class NewOrganizationForm(forms.Form):
+from organization.models import Organization
+
+class NewOrganizationForm(forms.ModelForm):
     """
     A form used by a visitor to create a new organization
 
     Either email contact or postal information fields have to be filled, or both
     """
-    name = forms.CharField(
-        max_length=255,
-        required=True,
-        label=_("Name"),
-        help_text=_("Name of the organization"))
-
-    email_address = forms.EmailField(
-        required=False,
-        label=_("Email address"),
-        help_text=_("Email address used by the organization that responds to user data requests"))
-
-    address_line_one = forms.CharField(
-        max_length=255,
-        required=False,
-        label=_("Address line 1"))
-
-    address_line_two = forms.CharField(
-        max_length=255,
-        required=False,
-        label=_("Address line 2"))
-
-    postal_code = forms.CharField(
-        max_length=64,
-        required=False,
-        label=_("Postal code"))
-
-    country = forms.CharField(
-        max_length=64,
-        required=False,
-        label=_("Country"))
+    class Meta:
+        model = Organization
+        fields = [
+            "name", "email_address", "address_line_one",
+            "address_line_two", "postal_code", "country"
+        ]
 
     def clean(self):
         """
