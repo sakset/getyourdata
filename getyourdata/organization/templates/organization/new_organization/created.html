@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% trans "Organization profile created" %}</h1>
+            </div>
+            <div class="alert alert-success">
+                <strong>{% trans "Organization profile created!" %}</strong>
+                <p>{% blocktrans %}
+                An organization profile has been created! You can view the created organization profile, create a new user request using the provided details or return to the homepage.
+                {% endblocktrans %}</p>
+                <p><b>{% blocktrans %}
+                Note that the organization profile won't be made visible until it has been verified by the site staff.
+                {% endblocktrans %}</b></p>
+                <hr>
+                <a href="#" class="btn btn-primary">View organization profile</a>
+                <a href="#" class="btn btn-primary">Create a new request</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
