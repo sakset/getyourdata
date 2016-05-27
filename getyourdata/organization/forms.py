@@ -13,8 +13,7 @@ class NewOrganizationForm(forms.Form):
         label=_("Name"),
         help_text=_("Name of the organization"))
 
-    email_address = forms.CharField(
-        max_length=255,
+    email_address = forms.EmailField(
         required=False,
         label=_("Email address"),
         help_text=_("Email address used by the organization that responds to user data requests"))
