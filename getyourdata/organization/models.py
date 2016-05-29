@@ -4,6 +4,13 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+class AuthenticationField(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Organization(models.Model):
     name = models.CharField(
         max_length=255,
@@ -39,6 +46,8 @@ class Organization(models.Model):
         default=False,
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
+
+    authentication_fields = models.ManyToManyField(AuthenticationField, related_name="+")
 
     def __unicode__(self):
         return self.name
