@@ -23,6 +23,9 @@ def request_data(request, organization_id):
                     content=form.cleaned_data[auth_field.name]
                     ))
             AuthenticationContent.objects.bulk_create(auth_contents)
+            # TODO: Create PDF and send email to organization.
+            # Note that there will be no reason to save AuthenticationContents in our database.
+            # We are doing it here now just for illustration purposes.
             messages.success(request, _('Your data was successfully requested from %s!' \
                 % organization.name))
             return redirect(reverse('organization:list_organizations'))

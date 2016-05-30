@@ -5,9 +5,9 @@ from data_request.models import DataRequest, AuthenticationContent
 
 @admin.register(DataRequest)
 class DataRequestAdmin(admin.ModelAdmin):
-    list_display = ['organization']
+    list_display = ['organization', 'created_on']
 
 
 @admin.register(AuthenticationContent)
 class AuthenticationContentAdmin(admin.ModelAdmin):
-    list_display = ['auth_field', 'data_request', 'content']
+    list_display = ['auth_field', 'data_request', 'content', 'created_on']

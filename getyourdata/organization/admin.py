@@ -7,6 +7,7 @@ from organization.models import Organization, AuthenticationField
 class AuthenticationFieldAdmin(admin.ModelAdmin):
     list_display = [
         'name',
+        'created_on',
     ]
 
 
@@ -14,6 +15,8 @@ class AuthenticationFieldAdmin(admin.ModelAdmin):
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = [
         'name',
-        'verified'
+        'verified',
+        'created_on',
+        'updated_on',
     ]
 
