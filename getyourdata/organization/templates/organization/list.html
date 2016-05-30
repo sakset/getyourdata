@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
-{% block content %}
 
+{% block content %}
 <table class="table">
 	<tbody>
 		{% for organization in organizations %}
 			<tr>
-				<td>{{ organization.name}}</td>
+				<td><a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a></td>
 			</tr>
 		{% endfor %}
 	</tbody>
 </table>
-
-
 {% endblock %}

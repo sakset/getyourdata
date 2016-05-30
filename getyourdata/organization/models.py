@@ -3,8 +3,17 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from getyourdata.models import BaseModel
 
-class Organization(models.Model):
+
+class AuthenticationField(BaseModel):
+    name = models.CharField(max_length=255, unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Organization(BaseModel):
     name = models.CharField(
         max_length=255,
         verbose_name=_("Name"))
@@ -39,6 +48,8 @@ class Organization(models.Model):
         default=False,
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
+
+    authentication_fields = models.ManyToManyField(AuthenticationField, related_name="+")
 
     def __unicode__(self):
         return self.name
