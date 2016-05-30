@@ -1,8 +1,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.template.loader import render_to_string
+from django.utils import timezone
 
 from getyourdata.models import BaseModel
+from data_request.services import convert_html_to_pdf
 from organization.models import Organization, AuthenticationField
 
 
@@ -17,6 +20,26 @@ class AuthenticationContent(BaseModel):
 
 class DataRequest(BaseModel):
     organization = models.ForeignKey(Organization, related_name="data_requests")
+
+    def to_html(self):
+        """
+        Return data request as a HTML-formatted document
+        """
+        try:
+            person_name = self.auth_contents.get(auth_field__name="name")
+        except:
+            person_name = None
+
+        return render_to_string(
+            "data_request/mail/request.html", {"data_request": self,
+                                               "person_name": person_name,
+                                               "current_datetime": timezone.now()})
+
+    def to_pdf(self):
+        """
+        Return data request as a PDF-formatted document
+        """
+        return convert_html_to_pdf(self.to_html())
 
     def __unicode__(self):
         return "Data request for " + self.organization.name

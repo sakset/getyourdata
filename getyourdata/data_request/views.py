@@ -6,10 +6,7 @@ from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
 from data_request.models import DataRequest, AuthenticationContent
-from data_request.services import convert_data_request_to_pdf
-
 from organization.models import Organization
-
 
 def request_data(request, organization_id):
     organization = get_object_or_404(Organization, pk=organization_id)
@@ -37,7 +34,7 @@ def request_data(request, organization_id):
                 request, _('Your data was successfully requested from %s!'
                 % organization.name))
 
-            pdf_data = convert_data_request_to_pdf(data_request)
+            pdf_data = data_request.to_pdf()
 
             if not pdf_data:
                 messages.error(
