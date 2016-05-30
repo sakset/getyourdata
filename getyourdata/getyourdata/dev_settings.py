@@ -14,5 +14,3 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = []
-
-MEDIA_ROOT = "%s/media" % BASE_DIR
