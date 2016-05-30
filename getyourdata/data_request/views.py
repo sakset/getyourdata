@@ -23,7 +23,8 @@ def request_data(request, organization_id):
                     content=form.cleaned_data[auth_field.name]
                     ))
             AuthenticationContent.objects.bulk_create(auth_contents)
-            messages.success(request, _('Your data was successfully requested!'))
+            messages.success(request, _('Your data was successfully requested from %s!' \
+                % organization.name))
             return redirect(reverse('organization:list_organizations'))
     else:
         form = DataRequestForm(organization=organization)
