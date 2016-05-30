@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h1>{% trans 'Request your data from' %} {{ organization.name }}</h1>
-        <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' organization.id %}">
-            {% csrf_token %}
-            <table class="table">
-            {{ form.as_table }}
-            </table>
-            <input class="btn btn-default" type="submit" value="{% trans 'Create request' %}"/>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% trans 'Request your data from' %} {{ organization.name }}</h1>
+            </div>
+            <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' organization.id %}">
+                {% csrf_token %}
+                <table class="table">
+                {% bootstrap_form form layout='horizontal' %}
+                </table>
+                <input class="btn btn-default" type="submit" value="{% trans 'Create request' %}"/>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

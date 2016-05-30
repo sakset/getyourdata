@@ -1,0 +1,39 @@
+{% load i18n %}
+<html>
+    <head>
+        <title>{% trans "Data request: " %}{{ data_request.organization.name }}</title>
+    </head>
+    <body>
+        <div style="text-align: left;">
+            <p>{{ data_request.organization.name }}</p>
+            <p>{{ data_request.organization.address_line_one }}</p>
+            <p>{{ data_request.organization.address_line_two }}</p>
+            <p>{{ data_request.organization.postal_code }}</p>
+            <p>{{ data_request.organization.country }}</p>
+        </div>
+        <div style="width: 100%; text-align: right;">
+            <p>{{ current_datetime }}</p>
+        </div>
+        <div style="text-align: left;">
+            <h5>{% trans "Dear recipient," %}</h5>
+            <p>{% blocktrans %}
+            This is a data request as described by law 1234.56.
+            {% endblocktrans %}</p>
+
+            <p>{% blocktrans %}
+            The necessary identifying details are provided below:
+            {% endblocktrans %}</p>
+
+            {% for auth_content in data_request.auth_contents.all %}
+            <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
+            {% endfor %}
+
+            {% if person_name %}
+            <p>{% blocktrans %}
+            Regards,
+            {% endblocktrans %}</p>
+            <p>{{ person_name.content }}</p>
+            {% endif %}
+        </div>
+    </body>
+</html>

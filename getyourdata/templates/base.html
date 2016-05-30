@@ -22,9 +22,8 @@
     	{# MENUBAR #}
         {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
 
-        <div class="row messages">
         {% include "partials/messages.html" %}
-        </div>
+        
         {# PAGE CONTENT #}
         {% block content %}
         {% endblock content %}
