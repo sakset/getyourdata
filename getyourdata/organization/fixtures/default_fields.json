@@ -1,0 +1,56 @@
+[
+    {
+        "model": "organization.authenticationfield",
+        "fields": {
+            "name": "name",
+            "title": "Name",
+            "created_on": "2016-01-01T12:00:00.000Z",
+            "updated_on": "2016-01-01T12:00:00.000Z"
+        }
+    },
+    {
+        "model": "organization.authenticationfield",
+        "fields": {
+            "name": "phone_number",
+            "title": "Phone number",
+            "created_on": "2016-01-01T12:00:00.000Z",
+            "updated_on": "2016-01-01T12:00:00.000Z"
+        }
+    },
+    {
+        "model": "organization.authenticationfield",
+        "fields": {
+            "name": "email_address",
+            "title": "Email address",
+            "created_on": "2016-01-01T12:00:00.000Z",
+            "updated_on": "2016-01-01T12:00:00.000Z"
+        }
+    },
+    {
+        "model": "organization.authenticationfield",
+        "fields": {
+            "name": "address",
+            "title": "Address",
+            "created_on": "2016-01-01T12:00:00.000Z",
+            "updated_on": "2016-01-01T12:00:00.000Z"
+        }
+    },
+    {
+        "model": "organization.authenticationfield",
+        "fields": {
+            "name": "zip_code",
+            "title": "Zip code",
+            "created_on": "2016-01-01T12:00:00.000Z",
+            "updated_on": "2016-01-01T12:00:00.000Z"
+        }
+    },
+    {
+        "model": "organization.authenticationfield",
+        "fields": {
+            "name": "country",
+            "title": "Country",
+            "created_on": "2016-01-01T12:00:00.000Z",
+            "updated_on": "2016-01-01T12:00:00.000Z"
+        }
+    }
+]

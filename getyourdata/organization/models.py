@@ -7,10 +7,14 @@ from getyourdata.models import BaseModel
 
 
 class AuthenticationField(BaseModel):
-    name = models.CharField(max_length=255, unique=True)
+    # The canonical name of the field (NOT TRANSLATED!)
+    name = models.CharField(max_length=255, unique=True, db_index=True)
+
+    # Name of the field displayed to the user (translatable)
+    title = models.CharField(max_length=255)
 
     def __unicode__(self):
-        return self.name
+        return self.title
 
 
 class Organization(BaseModel):

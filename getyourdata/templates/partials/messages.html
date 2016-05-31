@@ -1,9 +1,17 @@
 {% load i18n %}
 
-<div id="messages">
-    {% for message in messages %}
-    <div class="message alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">
-        {{ message }}
+{% if messages %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="messages">
+                {% for message in messages %}
+                <div class="message alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
 </div>
+{% endif %}
