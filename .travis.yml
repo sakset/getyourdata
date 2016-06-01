@@ -12,7 +12,7 @@ install:
 script: python dev_manage.py test
 after_success:
 - test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
-- test $TRAVIS_BRANCH = "master" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; ./deploy.sh"
+- test $TRAVIS_BRANCH = "master" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; ./deploy.sh" &> /dev/null
 addons:
   apt:
     packages:
