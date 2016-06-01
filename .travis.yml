@@ -11,8 +11,8 @@ install:
 - python dev_manage.py migrate
 script: python dev_manage.py test
 after_success:
-- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && export SSHPASS=$DEPLOY_PASS
-- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/deploy.sh
+- test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
+- test $TRAVIS_BRANCH = "master" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/deploy.sh
 addons:
   apt:
     packages:
