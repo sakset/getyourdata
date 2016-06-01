@@ -11,13 +11,8 @@ install:
 - python dev_manage.py migrate
 script: python dev_manage.py test
 after_success:
- if ([ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]); then
-   echo "Commit on master; deploying."
-   export SSHPASS=$DEPLOY_PASS
-   sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/deploy.sh
- else
-   echo "Commit not in master; not deploying."
- fi
+- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && export SSHPASS=$DEPLOY_PASS
+- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/deploy.sh
 addons:
   apt:
     packages:
