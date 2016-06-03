@@ -8,7 +8,6 @@ from data_request.models import DataRequest
 class AuthenticationAttributeField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(AuthenticationAttributeField, self).__init__(*args, **kwargs)
-        self.error_messages["invalid"] = _("The value for this was not valid")
 
     def clean(self, value):
         try:
