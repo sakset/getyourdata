@@ -13,6 +13,9 @@ class AuthenticationField(BaseModel):
     # Name of the field displayed to the user (translatable)
     title = models.CharField(max_length=255)
 
+    help_text = models.CharField(max_length=255, default="", blank=True)
+    validator_regex = models.CharField(max_length=1028, default="", blank=True)
+
     def __unicode__(self):
         return self.title
 
