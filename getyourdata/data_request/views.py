@@ -30,10 +30,11 @@ def request_data(request, organization_id):
             # TODO: Create PDF and send email to organization.
             # Note that there will be no reason to save AuthenticationContents in our database.
             # We are doing it here now just for illustration purposes.
+            '''
             messages.success(
                 request, _('Your data was successfully requested from %s!'
                 % organization.name))
-
+            '''
             pdf_data = data_request.to_pdf()
 
             if not pdf_data:
@@ -49,7 +50,7 @@ def request_data(request, organization_id):
                 return response
     else:
         form = DataRequestForm(organization=organization)
-
+        
     return render(request, 'data_request/request_data.html', {
         'form': form,
         'organization': organization,
