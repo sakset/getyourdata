@@ -20,23 +20,16 @@
             <p>{{ current_datetime }}</p>
         </div>
         <div style="text-align: left;">
-            <h5>{% trans "Dear recipient," %}</h5>
-            <p>{% blocktrans %}
-            This is a data request as described by law 1234.56.
-            {% endblocktrans %}</p>
-
-            <p>{% blocktrans %}
-            The necessary identifying details are provided below:
-            {% endblocktrans %}</p>
+            <h5>{{ pdfcontent.header }}</h5>
+            <p>{{ pdfcontent.content1 }}</p>
+            <p>{{ pdfcontent.content2 }}</p>
 
             {% for auth_content in data_request.auth_contents.all %}
             <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
             {% endfor %}
 
             {% if person_name %}
-            <p>{% blocktrans %}
-            Regards,
-            {% endblocktrans %}</p>
+            <p>{{ pdfcontent.footer }}</p>
             <p>{{ person_name.content }}</p>
             {% endif %}
         </div>

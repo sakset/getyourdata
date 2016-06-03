@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from data_request.models import DataRequest, AuthenticationContent
+from data_request.models import DataRequest, AuthenticationContent, PdfContents
 
 
 @admin.register(DataRequest)
@@ -11,3 +11,7 @@ class DataRequestAdmin(admin.ModelAdmin):
 @admin.register(AuthenticationContent)
 class AuthenticationContentAdmin(admin.ModelAdmin):
     list_display = ['auth_field', 'data_request', 'content', 'created_on']
+
+@admin.register(PdfContents)
+class PdfContentsAdmin(admin.ModelAdmin):
+    list_display = ['title']
