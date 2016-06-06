@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'rosetta',
     'getyourdata',
     'home',
     'organization',
@@ -52,6 +53,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -66,6 +68,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -91,6 +94,15 @@ DATABASES = {
         'PASSWORD': 'getyourdatapwd',
         'HOST': 'localhost',
         'PORT': '',
+    }
+}
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
 
@@ -127,9 +139,43 @@ USE_L10N = True
 
 USE_TZ = True
 
+from django.utils.translation import ugettext_lazy as _
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('fi', _('Finnish')),
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, "locale"),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = '%s/site_media' % os.getcwd()
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+# Media
+
 MEDIA_URL = '/media/'
+
+MEDIA_ROOT = '%s/media' % os.getcwd()
+
+# Session
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

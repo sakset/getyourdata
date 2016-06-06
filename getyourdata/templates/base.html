@@ -2,23 +2,19 @@
 {% load bootstrap3 %}
 <!DOCTYPE html>
 <html lang="en">
-    {# HEADER #}
-    {% block head %}
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+        <meta name="description" content="getyourdata">
+        <link rel="stylesheet" href="{% static 'css/getyourdata.css' %}">
         <title>{% block title %}GetYourData.org{% endblock %}</title>
-
         {% bootstrap_css %}
-        <!-- Padding to move content below the menubar -->
-    	<style>
-    	body {
-    	  padding-top: 50px;
-    	}
-    	</style>
+        {% block extrahead %}
+        {% endblock extrahead %}
     </head>
-    {% endblock head %}
-
-    {% block body %}
-    <body>
+    <body class="{% block body_class %}{% endblock %}">
     	{# MENUBAR #}
         {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
 
@@ -28,9 +24,11 @@
         {% block content %}
         {% endblock content %}
 
-        {% bootstrap_javascript %}
-
         {% include "footer.html" %}
+
+        {# SCRIPTS #}
+        {% bootstrap_javascript %}
+        {% block script %}
+        {% endblock script %}
     </body>
-    {% endblock body %}
 </html>
