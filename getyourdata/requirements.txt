@@ -3,6 +3,7 @@ decorator==4.0.9
 Django==1.9.6
 django-bootstrap3==7.0.1
 django-extensions==1.6.7
+django-modeltranslation==0.11
 django-rosetta==0.7.11
 html5lib==0.9999999
 ipython==4.2.0
