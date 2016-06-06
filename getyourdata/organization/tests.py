@@ -127,8 +127,7 @@ class OrganizationListingTests(TestCase):
         self.assertContains(response, "The Organization", 15)
 
         response = self.client.get(
-            reverse("organization:list_organizations", kwargs={
-                "page": 2
-            }))
+            reverse("organization:list_organizations"),
+            {"page": 2})
 
         self.assertContains(response, "The Organization", 10)

@@ -21,7 +21,7 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			{% bootstrap_pagination organizations url="organizations:list_organizations" %}
+			{% bootstrap_pagination organizations url=pag_url %}
 			{% else %}
 			<p>{% trans "No organizations yet." %}</p>
 			{% endif %}

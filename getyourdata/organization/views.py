@@ -1,13 +1,15 @@
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from organization.models import Organization
 from organization.forms import NewOrganizationForm
 
 
-def list_organizations(request, page=1):
+def list_organizations(request):
     ORGANIZATIONS_PER_PAGE = 15
 
+    page = request.GET.get("page", 1)
     p = Paginator(Organization.objects.all(), ORGANIZATIONS_PER_PAGE)
 
     try:
@@ -18,7 +20,8 @@ def list_organizations(request, page=1):
         organizations = p.page(p.num_pages)
     return render(
         request, 'organization/list.html',
-        {'organizations': organizations})
+        {'organizations': organizations,
+         'pag_url': reverse("organization:list_organizations")})
 
 
 def new_organization(request):
