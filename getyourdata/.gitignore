@@ -45,14 +45,8 @@ coverage.xml
 *,cover
 .hypothesis/
 
-# Translations
-*.mo
-*.pot
-
 # Django stuff:
 *.log
-site_media/
-
 
 # Sphinx documentation
 docs/_build/
