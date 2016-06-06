@@ -18,8 +18,7 @@ def list_organizations(request, page=1):
         organizations = p.page(p.num_pages)
     return render(
         request, 'organization/list.html',
-        {'organizations': organizations,
-         'paginator': p})
+        {'organizations': organizations})
 
 
 def new_organization(request):
