@@ -1,14 +1,25 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from organization.models import Organization
 from organization.forms import NewOrganizationForm
 
 
-def list_organizations(request):
-    organizations = Organization.objects.all()
+def list_organizations(request, page=1):
+    ORGANIZATIONS_PER_PAGE = 15
+
+    p = Paginator(Organization.objects.all(), ORGANIZATIONS_PER_PAGE)
+
+    try:
+        organizations = p.page(page)
+    except PageNotAnInteger:
+        organizations = p.page(1)
+    except EmptyPage:  # Reached an empty page: redirect to last page
+        organizations = p.page(p.num_pages)
     return render(
         request, 'organization/list.html',
-        {'organizations': organizations})
+        {'organizations': organizations,
+         'paginator': p})
 
 
 def new_organization(request):

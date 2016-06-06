@@ -86,3 +86,49 @@ class OrganizationCreationTests(TestCase):
         self.assertEquals(organization.postal_code, "00444")
         self.assertEquals(organization.country, "Finland")
         self.assertEquals(organization.email_address, "fake@address.com")
+
+def create_organization(test_case):
+    response = test_case.client.post(
+        reverse("organization:new_organization"),
+        {"name": "The Organization",
+         "email_address": "valid@address.com"},
+        follow=True)
+
+    test_case.assertContains(response, "Organization profile created")
+
+class OrganizationListingTests(TestCase):
+    def test_no_organizations_listed_when_no_organizations_exists(self):
+        response = self.client.get(reverse("organization:list_organizations"))
+
+        self.assertContains(response, "No organizations yet")
+
+    def test_existing_organizations_listed_on_page(self):
+        for i in range(0, 5):
+            create_organization(self)
+
+        response = self.client.get(reverse("organization:list_organizations"))
+
+        self.assertContains(response, "The Organization", 5)
+
+    def test_only_15_organizations_are_listed_per_page(self):
+        for i in range(0, 20):
+            create_organization(self)
+
+        response = self.client.get(reverse("organization:list_organizations"))
+
+        self.assertContains(response, "The Organization", 15)
+
+    def test_correct_amount_of_organizations_listed_per_page(self):
+        for i in range(0, 25):
+            create_organization(self)
+
+        response = self.client.get(reverse("organization:list_organizations"))
+
+        self.assertContains(response, "The Organization", 15)
+
+        response = self.client.get(
+            reverse("organization:list_organizations", kwargs={
+                "page": 2
+            }))
+
+        self.assertContains(response, "The Organization", 10)

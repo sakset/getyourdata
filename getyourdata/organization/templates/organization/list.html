@@ -1,13 +1,31 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
 
 {% block content %}
-<table class="table">
-	<tbody>
-		{% for organization in organizations %}
-			<tr>
-				<td><a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a></td>
-			</tr>
-		{% endfor %}
-	</tbody>
-</table>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				{# Translators: On the "list organizations" view #}
+				<h1>{% trans "Organizations" %}</h1>
+			</div>
+			{% if organizations %}
+			<table class="table">
+				<tbody>
+					{% for organization in organizations %}
+						<tr>
+							<td><a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
+								<a class="pull-right btn btn-primary btn-xs" href="{% url 'data_request:request_data' organization.id %}">Create request</a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% bootstrap_pagination organizations url="organizations:list_organizations" %}
+			{% else %}
+			<p>{% trans "No organizations yet." %}</p>
+			{% endif %}
+		</div>
+	</div>
+</div>
 {% endblock %}
