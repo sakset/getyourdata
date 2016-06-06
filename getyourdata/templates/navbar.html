@@ -16,6 +16,23 @@
 		        <li><a href="{% url 'home' %}">{% trans "Make a request" %}</a></li>
 				{# Translators: Navbar link #}
 		        <li><a href="{% url 'organization:list_organizations' %}">{% trans "Organizations" %}</a></li>
+		        {# Language selection #}
+		        <li>
+                    {% if LANGUAGES|length > 1 %}
+                    <form action="/i18n/setlang/" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <select name="language" class="form-control" onchange="this.form.submit()">
+                            {% for language in LANGUAGES %}
+                                <option value="{{ language.0 }}" {% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                                    {{ language.1 }}
+                                </option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                    {% endif %}
+                </li>
             </ul>
 	    </div><!--/.nav-collapse -->
 	</div>
