@@ -1,6 +1,7 @@
 [
     {
         "model": "organization.authenticationfield",
+        "pk": 1,
         "fields": {
             "name": "name",
             "title": "Name",
@@ -10,6 +11,7 @@
     },
     {
         "model": "organization.authenticationfield",
+        "pk": 2,
         "fields": {
             "name": "phone_number",
             "title": "Phone number",
@@ -19,6 +21,7 @@
     },
     {
         "model": "organization.authenticationfield",
+        "pk": 3,
         "fields": {
             "name": "email_address",
             "title": "Email address",
@@ -28,6 +31,7 @@
     },
     {
         "model": "organization.authenticationfield",
+        "pk": 4,
         "fields": {
             "name": "address",
             "title": "Address",
@@ -37,6 +41,7 @@
     },
     {
         "model": "organization.authenticationfield",
+        "pk": 5,
         "fields": {
             "name": "zip_code",
             "title": "Zip code",
@@ -46,6 +51,7 @@
     },
     {
         "model": "organization.authenticationfield",
+        "pk": 6,
         "fields": {
             "name": "country",
             "title": "Country",

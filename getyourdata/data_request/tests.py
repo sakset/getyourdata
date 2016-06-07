@@ -5,7 +5,6 @@ from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
 
 class DataRequestCreationTests(TestCase):
-
     def setUp(self):
         self.organization = Organization.objects.create(
             name='Organization',
@@ -80,3 +79,60 @@ class DataRequestCreationTests(TestCase):
             data_request=data_request
             )
         self.assertEquals(second_content.content, 'Some text here')
+
+class AuthenticationAttributeValidationTests(TestCase):
+    def setUp(self):
+        self.organization = Organization.objects.create(
+            name='Organization',
+            email_address='fake@address.com',
+            address_line_one='Address one',
+            address_line_two='Address two',
+            postal_code='00000',
+            country='Finland'
+            )
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="phone_number",
+            title='Phone number',
+            validator_regex="^[0-9]+$",
+            help_text="This is a phone number")
+        self.auth_field2 = AuthenticationField.objects.create(
+            name='other_thing',
+            title="Other thing")
+
+        self.organization.authentication_fields.add(self.auth_field1)
+        self.organization.authentication_fields.add(self.auth_field2)
+
+    def test_authentication_field_with_regex_accepts_valid_input(self):
+        response = self.client.post(
+            reverse("data_request:request_data", args=(self.organization.id,)),
+            {"phone_number": "1234567",
+             "other_thing": "Some text here"},
+            follow=True
+            )
+
+        self.assertNotContains(response, "The value for this field was not valid")
+
+    def test_authentication_field_with_regex_accepts_invalid_input(self):
+        response = self.client.post(
+            reverse("data_request:request_data", args=(self.organization.id,)),
+            {"phone_number": "notaphonenumber",
+             "other_thing": "Some text here"},
+            follow=True
+            )
+
+        self.assertContains(response, "The value for this field was not valid")
+
+    def test_authentication_field_is_shown_with_help_text(self):
+        response = self.client.get(
+            reverse("data_request:request_data", args=(self.organization.id,)))
+
+        self.assertContains(response, "This is a phone number")
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(self.organization.id,)),
+            {"phone_number": "notaphonenumber",
+             "other_thing": "Some text here"},
+            follow=True
+            )
+
+        self.assertNotContains(response, "This is a phone number")
