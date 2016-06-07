@@ -17,8 +17,13 @@ cd getyourdata
 pip install -r requirements.txt
 
 echo "Running migrations..."
-python manage.py makemigrations
+# The programmer should be aware when new migrations are made.
+# We don't want to create new migrations during deployment.
+#python manage.py makemigrations
 python manage.py migrate
+
+echo "Collecting static files..."
+python manage.py collectstatic
 
 echo "Loading initial fixtures..."
 python manage.py loaddata default_fields
