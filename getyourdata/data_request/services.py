@@ -22,6 +22,9 @@ def concatenate_pdf_pages(pdf_pages):
     """
     Concatenate multiple PDF pages into one PDF document
     """
+    if len(pdf_pages) == 1:
+        return pdf_pages[0]
+        
     try:
         merger = PdfFileMerger()
 

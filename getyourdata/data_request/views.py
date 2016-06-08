@@ -62,12 +62,7 @@ def request_data(request, org_ids=None):
 
                 pdf_pages.append(pdf_page)
 
-            if len(pdf_pages) == 1:
-                pdf_data = pdf_pages[0]
-            else:
-                # If we have more than one PDF request, we need to concatenate
-                # all requests into one PDF file
-                pdf_data = concatenate_pdf_pages(pdf_pages)
+            pdf_data = concatenate_pdf_pages(pdf_pages)
 
             response = HttpResponse(pdf_data, content_type='application/pdf')
             response["Content-Disposition"] = 'attachment; filename="request.pdf"'
