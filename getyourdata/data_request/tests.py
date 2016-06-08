@@ -55,6 +55,17 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Other thing")
         self.assertContains(response, "Request your data from Organization")
 
+    def test_data_request_form_with_multiple_organizations_is_correct(self):
+        response = self.client.get(
+            reverse("data_request:request_data",
+                    args=("%d,%d" % (self.organization.id,
+                                     self.organization2.id),)))
+
+        self.assertContains(response, "Some number")
+        self.assertContains(response, "Other thing")
+        self.assertContains(response, "Oddest thing")
+        self.assertContains(response, "Request your data from multiple organizations")
+
     def test_data_request_is_created(self):
         self.client.post(
             reverse("data_request:request_data", args=(self.organization.id,)),
