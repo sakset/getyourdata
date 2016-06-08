@@ -20,20 +20,28 @@ class AuthenticationAttributeField(forms.CharField):
 
 class DataRequestForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.organization = kwargs.pop('organization')
+        self.organizations = kwargs.pop('organizations', None)
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
-        for auth_field in self.organization.authentication_fields.all():
-            validators = []
+        if not self.organizations:
+            raise AttributeError("'%s' requires a list of Organization objects as 'organizations'")
 
-            if auth_field.validator_regex != "":
-                validators = [RegexValidator(
-                    auth_field.validator_regex,
-                    message=_("The value for this field was not valid"))]
+        for organization in self.organizations:
+            for auth_field in organization.authentication_fields.all():
+                # Only add each authentication field once
+                if auth_field.name in self.fields:
+                    continue
 
-            self.fields[auth_field.name] = AuthenticationAttributeField(
-                label=auth_field.title,
-                help_text=auth_field.help_text,
-                max_length=255,
-                validators=validators,
-                required=True)
+                validators = []
+
+                if auth_field.validator_regex != "":
+                    validators = [RegexValidator(
+                        auth_field.validator_regex,
+                        message=_("The value for this field was not valid"))]
+
+                self.fields[auth_field.name] = AuthenticationAttributeField(
+                    label=auth_field.title,
+                    help_text=auth_field.help_text,
+                    max_length=255,
+                    validators=validators,
+                    required=True)
