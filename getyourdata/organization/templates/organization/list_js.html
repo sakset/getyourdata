@@ -1,0 +1,21 @@
+<script>
+window.onload = function() {
+    // Hide the create request button if no checkboxes are checked
+    updateOrganizationCheckboxes();
+};
+
+/*
+ * Go through all the organization checkboxes and disable
+ * the submit button if none are checked
+ */
+function updateOrganizationCheckboxes() {
+    $("#create-request").attr("disabled", true);
+
+    $('[id^="org-"]').each(function(i, elem) {
+        if ($(elem).is(':checked')) {
+            $("#create-request").attr("disabled", false);
+            return false;
+        }
+    });
+}
+</script>
