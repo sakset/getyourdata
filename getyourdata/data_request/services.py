@@ -1,8 +1,10 @@
 from django.conf import settings
 
 from xhtml2pdf import pisa
+from PyPDF2 import PdfFileMerger
 
 from StringIO import StringIO
+
 
 def convert_html_to_pdf(html_data):
     """
@@ -14,3 +16,24 @@ def convert_html_to_pdf(html_data):
     pisa.CreatePDF(StringIO(html_data), pdf)
 
     return pdf.getvalue()
+
+
+def concatenate_pdf_pages(pdf_pages):
+    """
+    Concatenate multiple PDF pages into one PDF document
+    """
+    if len(pdf_pages) == 1:
+        return pdf_pages[0]
+        
+    try:
+        merger = PdfFileMerger()
+
+        for pdf_page in pdf_pages:
+            merger.append(StringIO(pdf_page))
+
+        complete_pdf = StringIO()
+        merger.write(complete_pdf)
+
+        return complete_pdf.getvalue()
+    except:
+        return False
