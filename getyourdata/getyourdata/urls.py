@@ -13,6 +13,7 @@ urlpatterns = i18n_patterns(
         'organization.urls', namespace="organization")),
     url(r'^request/', include(
         'data_request.urls', namespace="data_request")),
+    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
 )
 
