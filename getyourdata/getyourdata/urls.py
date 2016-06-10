@@ -6,6 +6,8 @@ from django.contrib import admin
 
 from filebrowser.sites import site as filebrowser_site
 from grappelli import urls as grappelli_urls
+from tinymce import urls as tinymce_urls
+
 
 from home import views as home_views
 
@@ -19,6 +21,7 @@ urlpatterns = i18n_patterns(
     url(r'^admin/filebrowser/', include(filebrowser_site.urls)),
     url(r'^grappelli/', include(grappelli_urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^tinymce/', include(tinymce_urls)),
 )
 
 urlpatterns += [url(r'^i18n/', include('django.conf.urls.i18n'))]

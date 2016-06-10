@@ -7,6 +7,7 @@ django-filebrowser==3.7.1
 django-grappelli==2.8.1
 django-modeltranslation==0.11
 django-rosetta==0.7.11
+django-tinymce==2.3.0
 html5lib==0.9999999
 ipython==4.2.0
 ipython-genutils==0.1.0
