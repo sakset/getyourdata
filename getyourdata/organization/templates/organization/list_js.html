@@ -1,21 +1,202 @@
+{% load staticfiles %}
+{% load i18n %}
 <script>
-window.onload = function() {
-    // Hide the create request button if no checkboxes are checked
-    updateOrganizationCheckboxes();
+ORIGIN = location.protocol + "//" + location.host;
+
+// URLs
+ORGANIZATION_API_URL = ORIGIN + "{% url 'api:organization-list' %}";
+// Remove the trailing slash
+ORGANIZATION_API_URL = ORGANIZATION_API_URL.substr(0, ORGANIZATION_API_URL.length-1) + ".json";
+
+REQUEST_DATA_URL = ORIGIN + "{% url 'data_request:request_data' %}";
+
+// Messages
+MESSAGES = {
+    "create_request": "{% trans "Create request" %}",
+    "organizations_selected_none": "{% trans "0 organizations selected." %}",
+    "organizations_selected_one": "{% trans "1 organization selected." %}",
+    "organizations_selected_plural": "{% trans "{0} organizations selected." %}"
 };
 
-/*
- * Go through all the organization checkboxes and disable
- * the submit button if none are checked
- */
-function updateOrganizationCheckboxes() {
-    $("#create-request").attr("disabled", true);
+window.onload = function() {
+    // Hide the create request button if no checkboxes are checked
+    orgList.loadList();
+    orgList.loadPage(1);
 
-    $('[id^="org-"]').each(function(i, elem) {
-        if ($(elem).is(':checked')) {
-            $("#create-request").attr("disabled", false);
-            return false;
+    // Load a few simple helpers
+    Handlebars.registerHelper("isOrganizationChecked", function(id, options) {
+        if (orgList.isOrganizationChecked(id)) {
+            return options.fn(this);
         }
     });
+
+    Handlebars.registerHelper("printOrganizationsChecked", function(options) {
+        var checkedCount = orgList.context.checkedOrganizations.length;
+
+        if (checkedCount === 0) {
+            return new Handlebars.SafeString(MESSAGES["organizations_selected_none"]);
+        } else if (checkedCount === 1) {
+            return new Handlebars.SafeString(MESSAGES["organizations_selected_one"]);
+        } else {
+            return new Handlebars.SafeString(
+                MESSAGES["organizations_selected_plural"].replace("{0}", checkedCount)
+            );
+        }
+    });
+};
+
+orgList = {
+    // Context
+    context: {
+        currentPage: 1,
+        pageCount: 1,
+        organizationCount: 5,
+
+        // A set of organizations that the user has checked
+        checkedOrganizations: [],
+
+        // Messages used for translation
+        msg: MESSAGES
+    },
+
+    /*
+     * Set everything up so that the user can use the organization list app
+     */
+    loadList: function() {
+        $("#organization-list").empty();
+    },
+
+    /*
+     * Render the view
+     */
+    renderView: function() {
+        if (!('template' in orgList)) {
+            var source = $("#organization-list-template").html();
+            orgList.template = Handlebars.compile(source);
+        }
+
+        var html = orgList.template(orgList.context);
+        $("#organization-list").html(html);
+    },
+
+    /*
+     *  Load the provided page
+     */
+    loadPage: function(page) {
+        this.context.currentPage = page;
+
+        $.getJSON(ORGANIZATION_API_URL + "?page=" + page, function(data) {
+            orgList.updateContext(data);
+            orgList.renderView();
+        });
+    },
+
+    /*
+     * Update context based on provided data retrieved using REST API
+     */
+    updateContext: function(data) {
+        this.context.pageCount = Math.floor(data.count / 15) + 1;
+        this.context.organizationCount = data.count;
+        this.context.organizations = data.results;
+        this.context.pages = [];
+
+        orgList.updatePaginator();
+    },
+
+    /*
+     *  Mark/unmark the organization as a checked
+     */
+    checkOrganization: function(id) {
+        var index = this.context.checkedOrganizations.indexOf(id);
+
+        if (index === -1) {
+            this.context.checkedOrganizations.push(id);
+        } else {
+            this.context.checkedOrganizations.splice(index, 1);
+        }
+
+        this.renderView();
+    },
+
+    /*
+     * Check if the organization is currently checked by user
+     */
+    isOrganizationChecked: function(id) {
+        return this.context.checkedOrganizations.indexOf(id) !== -1 ? true : false;
+    },
+
+    /*
+     * Redirect the user to data request creation page
+     */
+     createRequest: function() {
+         var url = REQUEST_DATA_URL + this.context.checkedOrganizations.join(",");
+         document.location.href = url;
+     },
+
+    /*
+     * Update paginator
+     */
+    updatePaginator: function() {
+        this.context.pages.push({
+            "page": 1,
+            "prev": true,
+            "label": "&laquo;",
+            "disabled": this.context.currentPage === 1 ? true : false
+        });
+
+        // Display 11 pages with the current page in the middle
+        for (var page=this.context.currentPage - 6; page < this.context.currentPage + 5; page++) {
+
+            if (page < 1 || page > this.context.pageCount) {
+                continue;
+            }
+
+            this.context.pages.push({
+                "page": page,
+                "label": page,
+                "active": this.context.currentPage === page ? true : false
+            });
+        }
+
+        this.context.pages.push({
+            "page": this.context.pageCount,
+            "last": true,
+            "label": "&raquo;",
+            "disabled": this.context.currentPage === this.context.pageCount ? true : false
+        });
+    }
 }
 </script>
+<script src="{% static 'js/handlebars.min.js' %}"></script>
+{% verbatim %}
+<script id="organization-list-template">
+<table class="table">
+    <tbody>
+        {{#each organizations}}
+        <tr>
+            <td>
+                <input id="org-{{ this.id }}" onclick="orgList.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
+                <a href="/request/new/{{ this.id }}">{{ this.name }}</a>
+                <a class="pull-right btn btn-primary btn-xs" href="/request/new/{{ this.id }}">{{ ../msg.create_request }}</a>
+                <span class="organization-icon-list pull-right">
+                    {{#if this.accepts_mail}}<span class="glyphicon glyphicon-envelope"></span> {{/if}}
+                    {{#if this.accepts_email}}<span class="glyphicon glyphicon-cloud"></span> {{/if}}
+                </span>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<div>
+    <button class="btn btn-primary" onclick="orgList.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
+    {{printOrganizationsChecked}}
+</div>
+<ul class="pagination">
+    {{#each pages}}
+    <li class="{{#if this.prev}}prev{{/if}} {{#if this.disabled }}disabled{{/if}} {{# if this.active }}active{{/if}}">
+        <a href="#" onclick="{{#unless this.disabled}}orgList.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
+    </li>
+    {{/each}}
+</ul>
+</script>
+{% endverbatim %}

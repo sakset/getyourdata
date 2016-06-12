@@ -11,28 +11,30 @@
 				<h1>{% trans "Organizations" %}</h1>
 			</div>
 			{% if organizations %}
-			<form action="{% url 'organization:list_organizations' %}" method="post">
-				{% csrf_token %}
-				<input type="hidden" name="prev_org_ids" value="{{ org_ids }}"/>
-				<table class="table">
-					<tbody>
-						{% for organization in organizations %}
-							<tr>
-								<td><input id="org-{{ organization.id }}" onclick="updateOrganizationCheckboxes()" type="checkbox" name="org_ids" value="{{ organization.id }}" {% if organization.id in org_ids %}checked{% endif %}/>
-									<a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
-									<a class="pull-right btn btn-primary btn-xs" href="{% url 'data_request:request_data' organization.id %}">Create request</a>
-									<span class="organization-icon-list pull-right">
-										{% if organization.accepts_mail %}<span class="glyphicon glyphicon-envelope"></span> {% endif %}
-										{% if organization.accepts_email %}<span class="glyphicon glyphicon-cloud"></span>{% endif %}</span></td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				<div>
-					<input type="submit" class="btn btn-primary" id="create-request" name="create_request" value="Create request"/>
-				</div>
-			</form>
-			{% bootstrap_pagination organizations url=pag_url %}
+			<div id="organization-list">
+				<form action="{% url 'organization:list_organizations' %}" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="prev_org_ids" value="{{ org_ids }}"/>
+					<table class="table">
+						<tbody>
+							{% for organization in organizations %}
+								<tr>
+									<td><input id="org-{{ organization.id }}" onclick="updateOrganizationCheckboxes()" type="checkbox" name="org_ids" value="{{ organization.id }}" {% if organization.id in org_ids %}checked{% endif %}/>
+										<a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
+										<a class="pull-right btn btn-primary btn-xs" href="{% url 'data_request:request_data' organization.id %}">Create request</a>
+										<span class="organization-icon-list pull-right">
+											{% if organization.accepts_mail %}<span class="glyphicon glyphicon-envelope"></span> {% endif %}
+											{% if organization.accepts_email %}<span class="glyphicon glyphicon-cloud"></span>{% endif %}</span></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div>
+						<input type="submit" class="btn btn-primary" id="create-request" name="create_request" value="Create request"/>
+					</div>
+				</form>
+				{% bootstrap_pagination organizations url=pag_url %}
+			</div>
 			{% else %}
 			<p>{% trans "No organizations yet." %}</p>
 			{% endif %}

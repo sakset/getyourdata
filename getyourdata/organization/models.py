@@ -61,6 +61,9 @@ class Organization(BaseModel):
     authentication_fields = models.ManyToManyField(
         AuthenticationField, related_name="+")
 
+    class Meta:
+        ordering = ('created_on',)
+
     @property
     def accepts_email(self):
         return self.email_address != ""

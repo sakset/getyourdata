@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'rosetta',
+    'rest_framework',
+
     'getyourdata',
     'home',
     'organization',
@@ -79,6 +81,16 @@ TEMPLATES = [
 
 BOOTSTRAP3 = {
     'include_jquery': True
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+
+    'PAGE_SIZE': 15,
 }
 
 WSGI_APPLICATION = 'getyourdata.wsgi.application'

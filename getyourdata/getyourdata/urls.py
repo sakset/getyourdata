@@ -11,9 +11,9 @@ urlpatterns = i18n_patterns(
     url(r'^$', home_views.home, name="home"),
     url(r'^organizations/', include(
         'organization.urls', namespace="organization")),
-    url(r'^request/', include(
-        'data_request.urls', namespace="data_request")),
+    url(r'^request/', include('data_request.urls', namespace="data_request")),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/', include('api.urls', namespace="api")),
 )
 
 urlpatterns += [url(r'^i18n/', include('django.conf.urls.i18n'))]
