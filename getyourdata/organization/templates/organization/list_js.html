@@ -188,13 +188,13 @@ orgList = {
     </tbody>
 </table>
 <div>
-    <button class="btn btn-primary" onclick="orgList.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
+    <button id="create-request" class="btn btn-primary" onclick="orgList.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
     {{printOrganizationsChecked}}
 </div>
 <ul class="pagination">
     {{#each pages}}
     <li class="{{#if this.prev}}prev{{/if}} {{#if this.disabled }}disabled{{/if}} {{# if this.active }}active{{/if}}">
-        <a href="#" onclick="{{#unless this.disabled}}orgList.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
+        <a id="page-{{ this.page }}" href="#" onclick="{{#unless this.disabled}}orgList.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
     </li>
     {{/each}}
 </ul>

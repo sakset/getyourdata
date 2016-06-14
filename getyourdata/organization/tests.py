@@ -1,7 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 
-from organization.models import Organization
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+
+from organization.models import Organization, AuthenticationField
 
 class OrganizationCreationTests(TestCase):
     def test_organization_with_valid_email_address_can_be_added(self):
@@ -131,3 +135,109 @@ class OrganizationListingTests(TestCase):
             {"page": 2})
 
         self.assertContains(response, "The Organization", 10)
+
+
+class OrganizationListJavascriptTests(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(OrganizationListJavascriptTests, cls).setUpClass()
+        cls.selenium = WebDriver()
+        # Prevent tests from failing by making the test wait longer
+        # if element isn't immediately available
+        cls.selenium.implicitly_wait(2)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(OrganizationListJavascriptTests, cls).tearDownClass()
+
+    def setUp(self):
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        # Create three pages worth of organizations
+        for i in range(0, 45):
+            organization = Organization.objects.create(
+                name='Organization %d' % i,
+                email_address='fake@address.com',
+                address_line_one='Address one',
+                address_line_two='Address two',
+                postal_code='00000',
+                country='Finland'
+                )
+
+            organization.authentication_fields.add(self.auth_field1)
+
+    def test_cant_create_request_with_no_selected_organizations(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.assertEquals(
+            self.selenium.find_element_by_id("create-request").is_enabled(),
+            False)
+
+        self.assertIn("0 organizations selected", self.selenium.page_source)
+
+    def test_select_single_organization_for_request(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[1]").click()
+        self.assertIn("1 organization selected", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("create-request").click()
+
+        self.assertIn("Request your data from Organization 0", self.selenium.page_source)
+
+
+    def test_select_multiple_organizations_for_request(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[1]").click()
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        self.assertIn("2 organizations selected", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("create-request").click()
+
+        self.assertIn("Request your data from multiple organizations", self.selenium.page_source)
+
+    def test_can_change_page_to_display_different_organizations(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.selenium.find_element_by_id("page-2").click()
+
+        self.assertIn("Organization 15", self.selenium.page_source)
+        self.assertNotIn("Organization 0", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("page-1").click()
+
+        self.assertIn("Organization 0", self.selenium.page_source)
+        self.assertNotIn("Organization 15", self.selenium.page_source)
+
+    def test_user_can_select_multiple_organizations_from_different_pages(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[1]").click()
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        self.assertIn("2 organizations selected", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("page-2").click()
+
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[1]").click()
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        self.assertIn("4 organizations selected", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("page-3").click()
+
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[1]").click()
+        self.selenium.find_element(By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        self.assertIn("6 organizations selected", self.selenium.page_source)
