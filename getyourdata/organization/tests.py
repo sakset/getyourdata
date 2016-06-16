@@ -1,16 +1,14 @@
 from django.test import TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
 
 from organization.models import Organization, AuthenticationField
-
-import os
 
 
 @isDjangoTest()
@@ -146,6 +144,37 @@ class OrganizationListingTests(TestCase):
 
         self.assertContains(response, "The Organization", 10)
 
+    def test_icon_displayed_next_to_organization_that_accepts_email(self):
+        for i in range(0, 5):
+            create_organization(self)
+
+        Organization.objects.all().update(email_address="")
+        organization = Organization.objects.all()[0]
+        organization.email_address = "fake@address.com"
+        organization.save()
+
+        response = self.client.get(reverse("organization:list_organizations"))
+
+        self.assertContains(response, "title=\"Accepts email requests", 1)
+
+    def test_icon_displayed_next_to_organization_that_accepts_mail(self):
+        for i in range(0, 5):
+            create_organization(self)
+
+        Organization.objects.all().update(
+            address_line_one="",
+            postal_code="",
+            country="")
+        organization = Organization.objects.all()[0]
+        organization.address_line_one = "Fake Street"
+        organization.postal_code = "012345"
+        organization.country = "Finland"
+        organization.save()
+
+        response = self.client.get(reverse("organization:list_organizations"))
+
+        self.assertContains(response, "title=\"Accepts postal requests", 1)
+
 
 @isSeleniumTest()
 class OrganizationListJavascriptTests(StaticLiveServerTestCase):
@@ -180,7 +209,6 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
 
             organization.authentication_fields.add(self.auth_field1)
 
-
     def test_cant_create_request_with_no_selected_organizations(self):
         self.selenium.get(
             "%s%s" % (self.live_server_url,
@@ -191,7 +219,6 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
             False)
 
         self.assertIn("0 organizations selected", self.selenium.page_source)
-
 
     def test_select_single_organization_for_request(self):
         self.selenium.get(
@@ -206,7 +233,6 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
 
         self.assertIn(
             "Request your data from Organization 0", self.selenium.page_source)
-
 
     def test_select_multiple_organizations_for_request(self):
         self.selenium.get(
@@ -225,7 +251,6 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
             "Request your data from multiple organizations",
             self.selenium.page_source)
 
-
     def test_can_change_page_to_display_different_organizations(self):
         self.selenium.get(
             "%s%s" % (self.live_server_url,
@@ -240,7 +265,6 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
 
         self.assertIn("Organization 0", self.selenium.page_source)
         self.assertNotIn("Organization 15", self.selenium.page_source)
-
 
     def test_user_can_select_multiple_organizations_from_different_pages(self):
         self.selenium.get(
@@ -268,3 +292,40 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
         self.selenium.find_element(
             By.XPATH, "(//input[@type='checkbox'])[2]").click()
         self.assertIn("6 organizations selected", self.selenium.page_source)
+
+    def test_selenium_icon_displayed_next_to_organization_that_accepts_email(self):
+        Organization.objects.all().update(email_address="")
+        organization = Organization.objects.all()[0]
+        organization.email_address = "fake@address.com"
+        organization.save()
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        try:
+            element = self.selenium.find_element(By.XPATH, "(//span[@class='glyphicon glyphicon-cloud'])")
+            self.assertTrue(element)
+        except NoSuchElementException:
+            self.fail("'Accepts email requests' element not found")
+
+    def test_selenium_icon_displayed_next_to_organization_that_accepts_mail(self):
+        Organization.objects.all().update(
+            address_line_one="",
+            postal_code="",
+            country="")
+        organization = Organization.objects.all()[0]
+        organization.address_line_one = "Fake Street"
+        organization.postal_code = "012345"
+        organization.country = "Finland"
+        organization.save()
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        try:
+            element = self.selenium.find_element(By.XPATH, "(//span[@class='glyphicon glyphicon-envelope'])")
+            self.assertTrue(element)
+        except NoSuchElementException:
+            self.fail("'Accepts postal requests' element not found")

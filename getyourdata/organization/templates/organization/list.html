@@ -23,8 +23,8 @@
 										<a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
 										<a class="pull-right btn btn-primary btn-xs" href="{% url 'data_request:request_data' organization.id %}">Create request</a>
 										<span class="organization-icon-list pull-right">
-											{% if organization.accepts_mail %}<span class="glyphicon glyphicon-envelope"></span> {% endif %}
-											{% if organization.accepts_email %}<span class="glyphicon glyphicon-cloud"></span>{% endif %}</span></td>
+											{% if organization.accepts_mail %}<span title="{% trans "Accepts postal requests" %}" class="glyphicon glyphicon-envelope"></span> {% endif %}
+											{% if organization.accepts_email %}<span title="{% trans "Accepts email requests" %}" class="glyphicon glyphicon-cloud"></span>{% endif %}</span></td>
 								</tr>
 							{% endfor %}
 						</tbody>

@@ -15,7 +15,9 @@ MESSAGES = {
     "create_request": "{% trans "Create request" %}",
     "organizations_selected_none": "{% trans "0 organizations selected." %}",
     "organizations_selected_one": "{% trans "1 organization selected." %}",
-    "organizations_selected_plural": "{% trans "{0} organizations selected." %}"
+    "organizations_selected_plural": "{% trans "{0} organizations selected." %}",
+    "mail_request_accepted": "{% trans "Accepts postal requests" %}",
+    "email_request_accepted": "{% trans "Accepts email requests" %}"
 };
 
 window.addEventListener("load", function(evt) {
@@ -207,6 +209,11 @@ orgList.View = {
 
         var html = template(orgList.Model.getContext());
         $("#organization-list").html(html);
+
+        // Enable tooltips
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     }
 }
 </script>
@@ -222,8 +229,8 @@ orgList.View = {
                 <a href="/request/new/{{ this.id }}">{{ this.name }}</a>
                 <a class="pull-right btn btn-primary btn-xs" href="/request/new/{{ this.id }}">{{ ../msg.create_request }}</a>
                 <span class="organization-icon-list pull-right">
-                    {{#if this.accepts_mail}}<span class="glyphicon glyphicon-envelope"></span> {{/if}}
-                    {{#if this.accepts_email}}<span class="glyphicon glyphicon-cloud"></span> {{/if}}
+                    {{#if this.accepts_mail}}<a href="#" data-toggle="tooltip" title="{{ ../msg.mail_request_accepted }}"><span class="glyphicon glyphicon-envelope"></span></a> {{/if}}
+                    {{#if this.accepts_email}}<a href="#" data-toggle="tooltip" title="{{ ../msg.email_request_accepted }}"><span class="glyphicon glyphicon-cloud"></span></a> {{/if}}
                 </span>
             </td>
         </tr>
