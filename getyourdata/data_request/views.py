@@ -8,6 +8,8 @@ from data_request.forms import DataRequestForm
 from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization
 
+from getyourdata import util
+
 from data_request.services import concatenate_pdf_pages
 
 
@@ -25,11 +27,17 @@ def request_data(request, org_ids=None):
     if request.method == 'POST':
         form = DataRequestForm(request.POST, organizations=organizations)
 
+        # To make sure we don't store any data, do everything
+        # inside a transaction which is rolled back instead of being
+        # committed
+        util.set_autocommit_off()
+
         if form.is_valid():
             pdf_pages = []
 
             for organization in organizations:
-                data_request = DataRequest.objects.create(organization=organization)
+                data_request = DataRequest.objects.create(
+                    organization=organization)
                 auth_fields = organization.authentication_fields.all()
                 auth_contents = []
 
@@ -41,14 +49,6 @@ def request_data(request, org_ids=None):
                         ))
                 AuthenticationContent.objects.bulk_create(auth_contents)
 
-                # TODO: Create PDF and send email to organization.
-                # Note that there will be no reason to save AuthenticationContents in our database.
-                # We are doing it here now just for illustration purposes.
-                '''
-                messages.success(
-                    request, _('Your data was successfully requested from %s!'
-                    % organization.name))
-                '''
                 pdf_page = data_request.to_pdf()
 
                 if not pdf_page:
@@ -63,6 +63,10 @@ def request_data(request, org_ids=None):
                 pdf_pages.append(pdf_page)
 
             pdf_data = concatenate_pdf_pages(pdf_pages)
+
+            # Cancel transaction to clear everything from memory
+            util.rollback()
+            util.set_autocommit_on()
 
             response = HttpResponse(pdf_data, content_type='application/pdf')
             response["Content-Disposition"] = 'attachment; filename="request.pdf"'

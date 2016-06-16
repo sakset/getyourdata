@@ -4,7 +4,6 @@ from django.test import TestCase
 from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
 
-
 class DataRequestCreationTests(TestCase):
     def setUp(self):
         self.organization = Organization.objects.create(
