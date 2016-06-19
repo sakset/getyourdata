@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load extra_tags %}
 <div class="navbar navbar-inverse navbar-fixed-top navbar-default" role="navigation">
 	<div class="container">
 	    <div class="navbar-header">
@@ -17,21 +18,17 @@
 				{# Translators: Navbar link #}
 		        <li><a href="{% url 'organization:list_organizations' %}">{% trans "Organizations" %}</a></li>
 		        {# Language selection #}
-		        <li>
-                    {% if LANGUAGES|length > 1 %}
-                    <form action="/i18n/setlang/" method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <select name="language" class="form-control" onchange="this.form.submit()">
-                            {% for language in LANGUAGES %}
-                                <option value="{{ language.0 }}" {% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                                    {{ language.1 }}
-                                </option>
-                            {% endfor %}
-                            </select>
-                        </div>
-                    </form>
-                    {% endif %}
+		        <li class="dropdown">
+					{% get_current_language as current_language %}
+					{% get_language_info for current_language as current_lang_info %}
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						{{ current_lang_info.name_translated }} <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+	                    {% for lang_code, lang_name in LANGUAGES %}
+						<li><a href="{{ request.get_full_path|change_url_lang:lang_code }}">{{ lang_name }}</a></li>
+	                    {% endfor %}
+					</ul>
                 </li>
             </ul>
 	    </div><!--/.nav-collapse -->

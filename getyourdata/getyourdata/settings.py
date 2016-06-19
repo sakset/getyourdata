@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'tinymce',
     'rosetta',
+
     'getyourdata',
     'home',
     'organization',

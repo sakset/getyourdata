@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -22,6 +22,18 @@ def list_organizations(request):
         request, 'organization/list.html',
         {'organizations': organizations,
          'pag_url': reverse("organization:list_organizations")})
+
+
+def view_organization(request, org_id):
+    """
+    View an organization with contact details and probably
+    some stats later
+    """
+    organization = get_object_or_404(Organization, pk=org_id)
+
+    return render(
+        request, 'organization/view.html',
+        {'organization': organization})
 
 
 def new_organization(request):
