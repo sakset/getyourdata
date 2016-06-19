@@ -103,6 +103,11 @@ def create_organization(test_case):
         email_address="valid@address.com",
         verified=True)
 
+def verify_all_organizations():
+    organizations = Organization.objects.all()
+    for organization in organizations:
+        organization.verified = True
+        organization.save()
 
 @isDjangoTest()
 class OrganizationListingTests(TestCase):
@@ -114,6 +119,7 @@ class OrganizationListingTests(TestCase):
     def test_existing_organizations_listed_on_page(self):
         for i in range(0, 5):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -122,6 +128,7 @@ class OrganizationListingTests(TestCase):
     def test_only_15_organizations_are_listed_per_page(self):
         for i in range(0, 20):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -130,6 +137,7 @@ class OrganizationListingTests(TestCase):
     def test_correct_amount_of_organizations_listed_per_page(self):
         for i in range(0, 25):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 

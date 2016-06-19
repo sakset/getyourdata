@@ -27,7 +27,7 @@ msgstr "Tietopyyntö"
 msgid "Request your data from"
 msgstr "Pyydä tietosi"
 
-#: data_request/templates/data_request/request_data.html:17
+#: data_request/templates/data_request/request_data.html:17, organization/templates/organization/list.html:19
 msgid "Create request"
 msgstr "Luo pyyntö"
 
@@ -140,9 +140,21 @@ msgstr "Maa"
 msgid "Verified"
 msgstr "Vahvistettu"
 
+#: organization/models.py:63
+msgid "Authentification fields request"
+msgstr "Tunniste kenttien pyyntö"
+
+#: organization/models.py:64
+msgid "Unique identifiers that organization needs to identify person and details about identifiers"
+msgstr "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja yksityiskohtainen kuvaus niistä"
+
 #: organization/models.py:54
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
+
+#: organization/templates/organization/list.html:23
+msgid "add organization"
+msgstr "lisää organisaatio"
 
 #: organization/templates/organization/new_organization/created.html:10
 msgid "Organization profile created"
@@ -173,6 +185,10 @@ msgstr ""
 #: organization/templates/organization/new_organization/new.html:10
 msgid "Create a new organization profile"
 msgstr "Luo uusi organisaatioprofiili"
+
+#: organization/templates/organization/new_organization/new.html:12
+msgid "back"
+msgstr "takaisin"
 
 #: organization/templates/organization/new_organization/new.html:24
 msgid "Creating an organization profile"
