@@ -32,6 +32,14 @@ SECRET_KEY = secrets["SECRET_KEY"] if 'SECRET_KEY' in secrets else \
              '9n2k6si$nzvbrl*k(0!*x@n#(m#@rx1jd_x4q0+e1uip7!$=t#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+# Are we running tests
+TESTING = False
+
+TEST_RUNNER = "getyourdata.testrunner.TestSuiteRunner"
+
+
 ALLOWED_HOSTS = secrets["ALLOWED_HOSTS"] if 'ALLOWED_HOSTS' in secrets else []
 
 DEBUG = False
