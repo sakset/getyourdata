@@ -16,6 +16,9 @@ urlpatterns = i18n_patterns(
     url(r'^$', home_views.home, name="home"),
     url(r'^organizations/', include(
         'organization.urls', namespace="organization")),
+    url(r'^request/', include('data_request.urls', namespace="data_request")),
+    url(r'^admin/', admin.site.urls),
+    url(r'^api/', include('api.urls', namespace="api")),
     url(r'^request/', include(
         'data_request.urls', namespace="data_request")),
     url(r'^admin/filebrowser/', include(filebrowser_site.urls)),

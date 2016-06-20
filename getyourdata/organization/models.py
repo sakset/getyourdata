@@ -58,7 +58,21 @@ class Organization(BaseModel):
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
 
-    authentication_fields = models.ManyToManyField(AuthenticationField, related_name="+")
+    authentication_fields = models.ManyToManyField(
+        AuthenticationField, related_name="+")
+
+    class Meta:
+        ordering = ('created_on',)
+
+    @property
+    def accepts_email(self):
+        return self.email_address != ""
+
+    @property
+    def accepts_mail(self):
+        return self.address_line_one != "" and \
+               self.postal_code != "" and \
+               self.country != ""
 
     def __unicode__(self):
         return self.name
