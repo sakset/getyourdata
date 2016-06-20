@@ -1,4 +1,9 @@
 from django.shortcuts import render
 
+from home.models import HomePage
+
 def home(request):
-    return render(request, "home/home.html")
+    page, created = HomePage.objects.get_or_create(admin_name='home')
+    return render(request, 'home/home.html', {
+        'content': page.content,
+    })

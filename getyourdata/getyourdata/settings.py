@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'modeltranslation',
+    'grappelli',
+    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'tinymce',
     'rosetta',
     'rest_framework',
 
@@ -192,3 +195,37 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
+# Grappelli
+
+GRAPPELLI_ADMIN_TITLE = 'GetYourData admin'
+
+# TinyMCE
+
+TINYMCE_DEFAULT_CONFIG = {
+    'valid_elements': (
+        "a[href|target=_blank],strong/b,em,span[*],"
+        "address,pre,br,#p[*],ul,ol,li,table[*],tbody[*],tr[*],td[*],"
+        "th[*],h1,h2,h3,h4,h5,h6,img[*],iframe[*],video[*],audio[*],"
+        "object[*],param[*],div[*]"
+    ),
+    'plugins': (
+        "style,media,table,spellchecker,paste,"
+        "searchreplace,preview,inlinepopups,advlink"
+    ),
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    'plugin_preview_width': 607,
+    'width': 1000,
+    'height': 800,
+    'theme': "advanced",
+    'toolbar_location' : "top",
+    'theme_advanced_buttons1': (
+        "bold,italic,underline,separator,bullist,separator,outdent,"
+        "indent,separator,undo,redo,separator,fontsizeselect,formatselect,"
+        "separator,link,image,media,code,preview"
+    ),
+    'theme_advanced_buttons2': "table,tablecontrols",
+}
+
+TINYMCE_COMPRESSOR = False
