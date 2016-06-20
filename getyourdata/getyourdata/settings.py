@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'bootstrap3',
     'tinymce',
     'rosetta',
+    'rest_framework',
+
     'getyourdata',
     'home',
     'organization',
@@ -90,6 +92,16 @@ TEMPLATES = [
 
 BOOTSTRAP3 = {
     'include_jquery': True
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+
+    'PAGE_SIZE': 15,
 }
 
 WSGI_APPLICATION = 'getyourdata.wsgi.application'
@@ -228,3 +240,33 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 TINYMCE_COMPRESSOR = False
+
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '%s/logs/error_log.txt' % BASE_DIR,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}

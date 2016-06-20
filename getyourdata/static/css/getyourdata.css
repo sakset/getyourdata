@@ -3,3 +3,7 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
 }
+
+.organization-icon-list {
+    padding-right: 20px;
+}
