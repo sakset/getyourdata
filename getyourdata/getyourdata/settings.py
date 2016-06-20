@@ -12,15 +12,24 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+from django.utils.translation import ugettext_lazy as _
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Import secrets for production environment if they exist
+try:
+    from getyourdata import secrets
+    secrets = secrets.SECRETS
+except ImportError:
+    secrets = {}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9n2k6si$nzvbrl*k(0!*x@n#(m#@rx1jd_x4q0+e1uip7!$=t#'
+SECRET_KEY = secrets["SECRET_KEY"] if 'SECRET_KEY' in secrets else \
+             '9n2k6si$nzvbrl*k(0!*x@n#(m#@rx1jd_x4q0+e1uip7!$=t#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -30,8 +39,10 @@ TESTING = False
 
 TEST_RUNNER = "getyourdata.testrunner.TestSuiteRunner"
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = secrets["ALLOWED_HOSTS"] if 'ALLOWED_HOSTS' in secrets else []
+
+DEBUG = False
 
 # Application definition
 
@@ -48,6 +59,8 @@ INSTALLED_APPS = [
     'bootstrap3',
     'tinymce',
     'rosetta',
+    'rest_framework',
+
     'getyourdata',
     'home',
     'organization',
@@ -89,6 +102,16 @@ BOOTSTRAP3 = {
     'include_jquery': True
 }
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+
+    'PAGE_SIZE': 15,
+}
+
 WSGI_APPLICATION = 'getyourdata.wsgi.application'
 
 
@@ -98,10 +121,12 @@ WSGI_APPLICATION = 'getyourdata.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'getyourdatadb',
-        'USER': 'getyourdatauser',
-        'PASSWORD': 'getyourdatapwd',
-        'HOST': 'localhost',
+        'NAME': secrets["DB_NAME"] if 'DB_NAME' in secrets else 'getyourdatadb',
+        'USER': secrets["DB_USER"] if 'DB_USER' in secrets else 'getyourdatauser',
+        'PASSWORD': secrets["DB_PASS"] if 'DB_PASS' in
+                    secrets else 'getyourdatapwd',
+        'HOST': secrets["DB_HOST"] if 'DB_HOST' in
+                secrets else 'localhost',
         'PORT': '',
     }
 }
@@ -111,7 +136,8 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': secrets["MEMCACHED_LOCATION"]
+                    if 'MEMCACHED_LOCATION' in secrets else '127.0.0.1:11211',
     }
 }
 
@@ -148,8 +174,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-from django.utils.translation import ugettext_lazy as _
-
 LANGUAGES = (
     ('en', _('English')),
     ('fi', _('Finnish')),
@@ -164,7 +188,8 @@ LOCALE_PATHS = (
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '%s/site_media' % os.getcwd()
+STATIC_ROOT = secrets["STATIC_ROOT"] if "STATIC_ROOT" in secrets else \
+              '%s/site_media' % os.getcwd()
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -179,7 +204,8 @@ STATICFILES_FINDERS = (
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '%s/media' % os.getcwd()
+MEDIA_ROOT = secrets["MEDIA_ROOT"] if "MEDIA_ROOT" in secrets else \
+             '%s/media' % os.getcwd()
 
 # Session
 
@@ -212,7 +238,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': 1000,
     'height': 800,
     'theme': "advanced",
-    'toolbar_location' : "top",
+    'toolbar_location': "top",
     'theme_advanced_buttons1': (
         "bold,italic,underline,separator,bullist,separator,outdent,"
         "indent,separator,undo,redo,separator,fontsizeselect,formatselect,"
