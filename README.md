@@ -6,7 +6,7 @@
 
 Asenna ainakin seuraavat, käytössä PostgreSQL-kanta
 
-    sudo apt-get install libpq-dev python-dev postgresql postgresql-contrib python-virtualenv
+    sudo apt-get install libpq-dev libjpeg-dev python-dev postgresql postgresql-contrib python-virtualenv
 
 Mene prjojektikansioon. Asenna virtualenv-kansio projektikansion sisään. Tämän niminen kansio on gitignoressa.
 
