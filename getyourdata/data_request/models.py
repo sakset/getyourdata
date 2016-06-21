@@ -8,23 +8,29 @@ from getyourdata.models import BaseModel
 from data_request.services import convert_html_to_pdf
 from organization.models import Organization, AuthenticationField
 
+
 class PdfContents(BaseModel):
-    title  = models.CharField(max_length=255, default="Default", unique=True)
-    header = models.CharField(max_length=255, blank=True, default="Dear recipient,")
+    title = models.CharField(max_length=255, default="Default", unique=True)
+    header = models.CharField(
+        max_length=255, blank=True, default="Dear recipient,")
     content1 = models.TextField(blank=True, default="content eka")
     content2 = models.TextField(blank=True, default="content toka")
     footer = models.CharField(max_length=255, blank=True, default="Regards,")
+
     class Meta:
-        verbose_name_plural="pdf contents"
+        verbose_name_plural = "pdf contents"
+
 
 class AuthenticationContent(BaseModel):
     # We don't actually want to save these...
     auth_field = models.ForeignKey(AuthenticationField, related_name="+")
-    data_request = models.ForeignKey("data_request.DataRequest", related_name="auth_contents")
+    data_request = models.ForeignKey(
+        "data_request.DataRequest", related_name="auth_contents")
     content = models.CharField(max_length=255)
 
     def __unicode__(self):
         return "Authentication content"
+
 
 class DataRequest(BaseModel):
     organization = models.ForeignKey(Organization, related_name="data_requests")
@@ -53,4 +59,3 @@ class DataRequest(BaseModel):
 
     def __unicode__(self):
         return "Data request for " + self.organization.name
-

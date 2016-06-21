@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -10,6 +10,9 @@ def list_organizations(request):
     ORGANIZATIONS_PER_PAGE = 15
 
     page = request.GET.get("page", 1)
+
+    org_ids = request.POST.getlist("org_ids")
+
     p = Paginator(Organization.objects.all(), ORGANIZATIONS_PER_PAGE)
 
     try:
@@ -18,9 +21,16 @@ def list_organizations(request):
         organizations = p.page(1)
     except EmptyPage:  # Reached an empty page: redirect to last page
         organizations = p.page(p.num_pages)
+
+    if request.POST.get("create_request", None) and len(org_ids) > 0:
+        # User wants to create a request with selected organizations
+        return redirect(
+            reverse("data_request:request_data", args=(",".join(org_ids),)))
+
     return render(
         request, 'organization/list.html',
         {'organizations': organizations,
+         'org_ids': org_ids,
          'pag_url': reverse("organization:list_organizations")})
 
 

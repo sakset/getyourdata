@@ -1,10 +1,13 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
+from getyourdata.test import isDjangoTest
+
 from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
 
 
+@isDjangoTest()
 class DataRequestCreationTests(TestCase):
     def setUp(self):
         self.organization = Organization.objects.create(
@@ -126,6 +129,8 @@ class DataRequestCreationTests(TestCase):
             )
         self.assertEquals(second_content.content, 'Some text here')
 
+
+@isDjangoTest()
 class AuthenticationAttributeValidationTests(TestCase):
     def setUp(self):
         self.organization = Organization.objects.create(
