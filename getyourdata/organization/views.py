@@ -13,7 +13,9 @@ def list_organizations(request):
 
     org_ids = request.POST.getlist("org_ids")
 
-    p = Paginator(Organization.objects.all(), ORGANIZATIONS_PER_PAGE)
+    p = Paginator(
+        Organization.objects.filter(verified=True),
+        ORGANIZATIONS_PER_PAGE)
 
     try:
         organizations = p.page(page)
