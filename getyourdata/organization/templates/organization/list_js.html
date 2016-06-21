@@ -17,7 +17,8 @@ MESSAGES = {
     "organizations_selected_one": "{% trans "1 organization selected." %}",
     "organizations_selected_plural": "{% trans "{0} organizations selected." %}",
     "mail_request_accepted": "{% trans "Accepts postal requests" %}",
-    "email_request_accepted": "{% trans "Accepts email requests" %}"
+    "email_request_accepted": "{% trans "Accepts email requests" %}",
+    "add_organization": "{% trans "add organization" %}"
 };
 
 window.addEventListener("load", function(evt) {
@@ -235,6 +236,10 @@ orgList.View = {
             </td>
         </tr>
         {{/each}}
+        <td>
+                <a href="/organizations/new/">{{ this.name }}</a>
+                <a class="pull-right btn btn-primary btn-xs" href="/organizations/new/">{{msg.add_organization}}</a>
+        </td>
     </tbody>
 </table>
 <div>
