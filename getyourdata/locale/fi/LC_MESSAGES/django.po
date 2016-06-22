@@ -145,7 +145,7 @@ msgid "Authentification fields request"
 msgstr "Tunniste kenttien pyyntö"
 
 #: organization/models.py:64
-msgid "Unique identifiers that organization needs to identify person and details about identifiers"
+msgid "Unique identifiers that organization needs and details of the identifiers."
 msgstr "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja yksityiskohtainen kuvaus niistä"
 
 #: organization/models.py:54
@@ -186,9 +186,13 @@ msgstr ""
 msgid "Create a new organization profile"
 msgstr "Luo uusi organisaatioprofiili"
 
-#: organization/templates/organization/new_organization/new.html:12
+#: organization/templates/organization/new_organization/new.html:16
 msgid "back"
 msgstr "takaisin"
+
+#: organization/templates/organization/new_organization/new.html:17
+msgid "Create"
+msgstr "Luo"
 
 #: organization/templates/organization/new_organization/new.html:24
 msgid "Creating an organization profile"
@@ -201,7 +205,7 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"Organisaatioprofiili tarvitsee yhteystiedot"
+"Organisaatioprofiili tarvitsee yhteystiedot."
 
 #: organization/templates/organization/new_organization/new.html:28
 msgid ""
