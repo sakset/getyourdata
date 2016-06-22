@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1>{{ organization.name }}</h1>
+			</div>
+		</div>
+	</div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">{% trans "Send a request" %}</div>
+                <div class="panel-body">
+                <p>{% blocktrans %}
+                Does this organization have your data? Send them a request.
+                {% endblocktrans %}</p>
+                <a class="btn btn-success" href="{% url "data_request:request_data" organization.id %}">{% trans "Create request" %}</a>
+                </div>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">{% trans "Feedback" %}</div>
+                <div class="panel-body">
+                <p>{% blocktrans %}
+                Is this organization's contact information incorrect or out-of-date?
+                {% endblocktrans %}</p>
+                <b>Add a feedback form here</b>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2>Contact information</h2>
+            <hr>
+			{% if not organization.verified %}
+			<div class="alert alert-danger">
+				<strong>{% trans "Unverified contact details" %}</strong><br>
+				{% blocktrans %}
+				The contact details for this organization have not been verified by a staff member yet.
+				{% endblocktrans %}
+			</div>
+			{% endif %}
+			{% if organization.accepts_mail or organization.accepts_email %}
+	            {% if organization.accepts_mail %}
+	            <p>{% trans "Data requests can be sent in mail to the following address" %}</p>
+	            <p style="font-weight: bold; font-family: monospace;">{% if organization.address_line_one %}{{ organization.address_line_one }}<br>{% endif %}
+	            {% if organization.address_line_two %}{{ organization.address_line_two }}<br>{% endif %}
+	            {% if organization.postal_code %}{{ organization.postal_code }}<br>{% endif %}
+	            {% if organization.country %}{{ organization.country }}<br>{% endif %}</p>
+	            {% endif %}
+	            <hr>
+	            {% if organization.accepts_email %}
+	            <p>{% trans "Data requests by email are sent to the following email address" %}</p>
+	            {# We shouldn't probably show the email address in plain-text as that makes it very easy for spam bots to crawl for email addresses #}
+	            {# Maybe use a library or a third-party service like one provided by Cloudflare? #}
+	            <a href="{{ organization.email_address }}">{{ organization.email_address }}</a>
+	            {% endif %}
+			{% else %}
+			<p>{% blocktrans %}
+			This organization does not have any valid contact details at the moment.
+			{% endblocktrans %}</p>
+			{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

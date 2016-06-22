@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -13,7 +13,9 @@ def list_organizations(request):
 
     org_ids = request.POST.getlist("org_ids")
 
-    p = Paginator(Organization.objects.all(), ORGANIZATIONS_PER_PAGE)
+    p = Paginator(
+        Organization.objects.filter(verified=True),
+        ORGANIZATIONS_PER_PAGE)
 
     try:
         organizations = p.page(page)
@@ -32,6 +34,18 @@ def list_organizations(request):
         {'organizations': organizations,
          'org_ids': org_ids,
          'pag_url': reverse("organization:list_organizations")})
+
+
+def view_organization(request, org_id):
+    """
+    View an organization with contact details and probably
+    some stats later
+    """
+    organization = get_object_or_404(Organization, pk=org_id)
+
+    return render(
+        request, 'organization/view.html',
+        {'organization': organization})
 
 
 def new_organization(request):

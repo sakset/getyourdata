@@ -19,8 +19,8 @@
 						<tbody>
 							{% for organization in organizations %}
 								<tr>
-									<td><input id="org-{{ organization.id }}" onclick="updateOrganizationCheckboxes()" type="checkbox" name="org_ids" value="{{ organization.id }}" {% if organization.id in org_ids %}checked{% endif %}/>
-										<a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
+									<td><input id="org-{{ organization.id }}" type="checkbox" name="org_ids" value="{{ organization.id }}" {% if organization.id in org_ids %}checked{% endif %}/>
+										<a href="{% url 'organization:view_organization' organization.id %}">{{ organization.name }}</a>
 										<a class="pull-right btn btn-primary btn-xs" href="{% url 'data_request:request_data' organization.id %}">Create request</a>
 										<span class="organization-icon-list pull-right">
 											{% if organization.accepts_mail %}<span title="{% trans "Accepts postal requests" %}" class="glyphicon glyphicon-envelope"></span> {% endif %}

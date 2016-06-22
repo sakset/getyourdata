@@ -98,13 +98,10 @@ class OrganizationCreationTests(TestCase):
 
 
 def create_organization(test_case):
-    response = test_case.client.post(
-        reverse("organization:new_organization"),
-        {"name": "The Organization",
-         "email_address": "valid@address.com"},
-        follow=True)
-
-    test_case.assertContains(response, "Organization profile created")
+    Organization.objects.create(
+        name="The Organization",
+        email_address="valid@address.com",
+        verified=True)
 
 
 @isDjangoTest()
@@ -176,6 +173,47 @@ class OrganizationListingTests(TestCase):
         self.assertContains(response, "title=\"Accepts postal requests", 1)
 
 
+@isDjangoTest()
+class OrganizationViewTests(TestCase):
+    def test_organization_postal_contact_details_displayed_if_available(self):
+        organization = Organization.objects.create(
+            name="The Organization",
+            address_line_one="Fake Street 4",
+            postal_code="00234",
+            country="Finland",
+            verified=True)
+
+        response = self.client.get(
+            reverse("organization:view_organization", args=(organization.id,)))
+
+        self.assertContains(response, "Fake Street 4")
+        self.assertContains(response, "00234")
+        self.assertContains(response, "Finland")
+
+    def test_organization_email_contact_details_displayed_if_available(self):
+        organization = Organization.objects.create(
+            name="The Organization",
+            email_address="example@example.com",
+            verified=True)
+
+        response = self.client.get(
+            reverse("organization:view_organization", args=(organization.id,)))
+
+        self.assertContains(response, "example@example.com")
+
+    def test_organization_page_has_warning_if_unverified(self):
+        organization = Organization.objects.create(
+            name="The Organization",
+            email_address="example@example.com",
+            verified=False)
+
+        response = self.client.get(
+            reverse("organization:view_organization", args=(organization.id,)))
+
+        self.assertContains(response,
+            "The contact details for this organization have not been verified")
+
+
 @isSeleniumTest()
 class OrganizationListJavascriptTests(StaticLiveServerTestCase):
     @classmethod
@@ -204,7 +242,8 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
                 address_line_one='Address one',
                 address_line_two='Address two',
                 postal_code='00000',
-                country='Finland'
+                country='Finland',
+                verified=True
                 )
 
             organization.authentication_fields.add(self.auth_field1)
