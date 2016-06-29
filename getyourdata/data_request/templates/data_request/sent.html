@@ -17,18 +17,12 @@
                 {% endif %}
                 </h1>
             </div>
-            {% if email_organizations %}
-            <div class="alert alert-success">
-                <strong>{% trans "Email requests sent successfully!" %}</strong><br>
-                <p>{% trans "Requests were sent to the following organizations by email:" %}</p>
-                <ul>
-                    {% for organization in email_organizations %}
-                    <li>{{ organization.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-            {% if mail_organizations %}
+        </div>
+    </div>
+    <div class="row">
+        {% if mail_organizations %}
+        <div class="col-md-6">
+            <h3><span class="glyphicon glyphicon-alert"></span> {% trans "Print mail requests" %}</h3>
             <div class="alert alert-warning">
                 <strong>
                     {% blocktrans count counter=mail_organizations|length %}
@@ -38,7 +32,7 @@
                     {% endblocktrans %}
                 </strong><br>
                 <p>{% blocktrans %}
-                The following organizations don't process data requests by email:
+                The following organizations require that data requests are sent by mail:
                 {% endblocktrans %}</p>
                 <ul>
                     {% for organization in mail_organizations %}
@@ -47,11 +41,25 @@
                 </ul><br>
                 <p>{% trans "You can send data requests to the listed organizations by mail. The following document contains the required pages:" %}</p>
                 <br>
-                <a class="btn btn-primary btn-xl" href="data:application/pdf;base64,{{ pdf_data }}" target="_blank" download="request.pdf">{% trans "Download PDF" %}</a>
+                <a class="btn btn-primary btn-xl" href="data:application/pdf;base64,{{ pdf_data }}" target="_blank" download="request.pdf"><span class="glyphicon glyphicon-download-alt"></span> {% trans "Download PDF" %}</a>
             </div>
-            {% endif %}
         </div>
-    </div>
+        {% endif %}
+        {% if email_organizations %}
+        <div class="col-md-6">
+            <h3>{% trans "Email requests sent!" %}</h3>
+            <div class="alert alert-success">
+                <strong>{% trans "Email requests sent successfully!" %}</strong><br>
+                <p>{% trans "Requests were sent to the following organizations by email:" %}</p>
+                <ul>
+                    {% for organization in email_organizations %}
+                    <li>{{ organization.name }}</li>
+                    {% endfor %}
+                </ul>
+                <p>{% trans "You should receive a copy of your email requests to your email address shortly." %}</p>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

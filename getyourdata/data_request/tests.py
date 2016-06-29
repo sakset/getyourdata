@@ -125,6 +125,25 @@ class DataRequestCreationTests(TestCase):
 
         self.assertIn("Organization", mail.outbox[0].body)
 
+    def test_mail_request_is_created_successfully(self):
+        mail_organization = Organization.objects.create(
+            name='Mail organization',
+            address_line_one='Address one',
+            address_line_two='Address two',
+            postal_code='00000',
+            country='Finland'
+            )
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(mail_organization.id,)),
+            {"some_number": "1234567",
+             "other_thing": "Some text here"},
+            follow=True
+            )
+
+        self.assertContains(response, "Further action required")
+        self.assertContains(response, "Download PDF")
+
     def test_pending_email_request_displayed_correctly(self):
         email_organization = Organization.objects.create(
             name='Email organization',
