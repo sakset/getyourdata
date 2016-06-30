@@ -104,11 +104,8 @@ def create_organization(test_case):
         verified=True)
 
 def verify_all_organizations():
-    organizations = Organization.objects.all()
-    for organization in organizations:
-        organization.verified = True
-        organization.save()
-
+    Organization.objects.all().update(verified=True)
+    
 @isDjangoTest()
 class OrganizationListingTests(TestCase):
     def test_no_organizations_listed_when_no_organizations_exists(self):
