@@ -18,8 +18,8 @@
                 Note that the organization profile won't be made visible until it has been verified by the site staff.
                 {% endblocktrans %}</b></p>
                 <hr>
-                <a href="#" class="btn btn-primary">View organization profile</a>
-                <a href="{% url 'organization:list_organizations'%}" class="btn btn-primary">Create a new request</a>
+                <a href="{% url 'organization:view_organization' organization.id %}" class="btn btn-primary">{% trans "View organization profile" %}</a>
+                <a href="{% url 'organization:list_organizations'%}" class="btn btn-primary">{% trans "Create a new request" %}</a>
             </div>
         </div>
     </div>
