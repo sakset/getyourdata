@@ -1,6 +1,8 @@
 # Get your data
 
 [![Build Status](https://travis-ci.org/sakset/getyourdata.svg?branch=master)](https://travis-ci.org/sakset/getyourdata)
+[![Code Climate](https://codeclimate.com/github/sakset/getyourdata/badges/gpa.svg)](https://codeclimate.com/github/sakset/getyourdata)
+[![Test Coverage](https://codeclimate.com/github/sakset/getyourdata/badges/coverage.svg)](https://codeclimate.com/github/sakset/getyourdata/coverage)
 
 ### Deviympäristön asennus ###
 

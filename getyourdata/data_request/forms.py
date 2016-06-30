@@ -56,6 +56,6 @@ class DataRequestForm(forms.Form):
         # as well
         if self.contains_email_requests:
             self.fields["user_email_address"] = forms.EmailField(
-                label=_("Sender email address"),
+                label=_("Receiving email address"),
                 help_text=_("Your data and further enquiries by organizations will be sent to this address"),
                 required=True)
