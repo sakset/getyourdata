@@ -103,7 +103,9 @@ def create_organization(test_case):
         email_address="valid@address.com",
         verified=True)
 
-
+def verify_all_organizations():
+    Organization.objects.all().update(verified=True)
+    
 @isDjangoTest()
 class OrganizationListingTests(TestCase):
     def test_no_organizations_listed_when_no_organizations_exists(self):
@@ -114,6 +116,7 @@ class OrganizationListingTests(TestCase):
     def test_existing_organizations_listed_on_page(self):
         for i in range(0, 5):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -122,6 +125,7 @@ class OrganizationListingTests(TestCase):
     def test_only_15_organizations_are_listed_per_page(self):
         for i in range(0, 20):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -130,6 +134,7 @@ class OrganizationListingTests(TestCase):
     def test_correct_amount_of_organizations_listed_per_page(self):
         for i in range(0, 25):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -148,11 +153,12 @@ class OrganizationListingTests(TestCase):
         Organization.objects.all().update(email_address="")
         organization = Organization.objects.all()[0]
         organization.email_address = "fake@address.com"
+        organization.verified = True
         organization.save()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
-        self.assertContains(response, "title=\"Accepts email requests", 1)
+        self.assertContains(response, "title=\" Accepts email requests", 1)
 
     def test_icon_displayed_next_to_organization_that_accepts_mail(self):
         for i in range(0, 5):
@@ -166,6 +172,7 @@ class OrganizationListingTests(TestCase):
         organization.address_line_one = "Fake Street"
         organization.postal_code = "012345"
         organization.country = "Finland"
+        organization.verified = True
         organization.save()
 
         response = self.client.get(reverse("organization:list_organizations"))
@@ -357,6 +364,7 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
         organization.address_line_one = "Fake Street"
         organization.postal_code = "012345"
         organization.country = "Finland"
+        organization.verified = True
         organization.save()
 
         self.selenium.get(

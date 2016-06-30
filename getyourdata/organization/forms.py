@@ -13,7 +13,8 @@ class NewOrganizationForm(forms.ModelForm):
         model = Organization
         fields = [
             "name", "email_address", "address_line_one",
-            "address_line_two", "postal_code", "country"
+            "address_line_two", "postal_code", "country",
+            "authentification_fields_request"
         ]
 
     def clean(self):

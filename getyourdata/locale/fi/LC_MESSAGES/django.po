@@ -27,7 +27,7 @@ msgstr "Tietopyyntö"
 msgid "Request your data from"
 msgstr "Pyydä tietosi"
 
-#: data_request/templates/data_request/request_data.html:17
+#: data_request/templates/data_request/request_data.html:17, organization/templates/organization/list.html:19
 msgid "Create request"
 msgstr "Luo pyyntö"
 
@@ -140,9 +140,45 @@ msgstr "Maa"
 msgid "Verified"
 msgstr "Vahvistettu"
 
+#: organization/models.py:63
+msgid "Authentification fields request"
+msgstr "Tunniste kenttien pyyntö"
+
+#: organization/models.py:64
+msgid "Unique identifiers that organization needs and details of the identifiers."
+msgstr "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja yksityiskohtainen kuvaus niistä"
+
 #: organization/models.py:54
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
+
+#: organization/templates/organization/list.html:23
+msgid "Add organization"
+msgstr "Lisää organisaatio"
+
+#: organization/templates/organization/view.html:17
+msgid "Send a request"
+msgstr "Lähetä pyyntö"
+
+#: organization/templates/organization/view.html:26
+msgid "Feedback"
+msgstr "Palaute"
+
+#: organization/templates/organization/view.html:36
+msgid "Contact information"
+msgstr "Yhteystiedot"
+
+#: organization/templates/organization/view.html:40
+msgid "Unverified contact details"
+msgstr "Tarkistamattomat yhteystiedot"
+
+#: organization/templates/organization/view.html:48
+msgid "Data requests can be sent in mail to the following address"
+msgstr "Tietopyynnöt voi lähettää postitse seuraavaan osoitteeseen."
+
+#: organization/templates/organization/view.html:56
+msgid "Data requests by email are sent to the following email address"
+msgstr "Tietopyynnöt lähetetään sähköpostilla seuraavaan sähköpostiosoitteeseen."
 
 #: organization/templates/organization/new_organization/created.html:10
 msgid "Organization profile created"
@@ -170,9 +206,25 @@ msgstr ""
 "\n"
 "Ota huomioon..."
 
+#: organization/templates/organization/created.html:21
+msgid "View organization profile"
+msgstr "Katsele organisaatio profiilia"
+
+#: organization/templates/organization/created.html:22
+msgid "Create a new request"
+msgstr "Tee uusi pyyntö"
+
 #: organization/templates/organization/new_organization/new.html:10
 msgid "Create a new organization profile"
 msgstr "Luo uusi organisaatioprofiili"
+
+#: organization/templates/organization/new_organization/new.html:16
+msgid "Back"
+msgstr "Takaisin"
+
+#: organization/templates/organization/new_organization/new.html:17
+msgid "Create"
+msgstr "Luo"
 
 #: organization/templates/organization/new_organization/new.html:24
 msgid "Creating an organization profile"
@@ -185,7 +237,7 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"Organisaatioprofiili tarvitsee yhteystiedot"
+"Organisaatioprofiili tarvitsee yhteystiedot."
 
 #: organization/templates/organization/new_organization/new.html:28
 msgid ""
