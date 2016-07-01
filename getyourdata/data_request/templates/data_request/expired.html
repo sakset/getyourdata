@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% trans "Page expired" %}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>{% blocktrans %}
+            The content on this page has expired. You may have reached this page by changing the page after sending your requests.
+            {% endblocktrans %}
+        </div>
+    </div>
+</div>
+{% endblock %}

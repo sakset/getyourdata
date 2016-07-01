@@ -21,9 +21,9 @@ def request_data(request, org_ids=None):
         org_ids = request.POST.get("org_ids", None)
 
     if not org_ids:
-        return HttpResponse(
-            _("No organization ID or organization ID list was provided!"),
-            status=400)
+        # If there are no org IDs, the user probably switched the language
+        # or came back to this page after submitting a request
+        return render(request, "data_request/expired.html")
 
     organizations = Organization.objects.filter(
         id__in=org_ids.split(","))
@@ -53,50 +53,33 @@ def request_data(request, org_ids=None):
             email_requests = []
 
             for organization in organizations:
-                data_request = DataRequest.objects.create(
-                    organization=organization)
-                auth_fields = organization.authentication_fields.all()
-                auth_contents = []
+                data_request = get_data_request(organization, form)
 
-                for auth_field in auth_fields:
-                    auth_contents.append(AuthenticationContent(
-                        auth_field=auth_field,
-                        data_request=data_request,
-                        content=form.cleaned_data[auth_field.name]
-                        ))
-                AuthenticationContent.objects.bulk_create(auth_contents)
+                # Generate PDF pages for mail requests
+                try:
+                    pdf_page = generate_pdf_page(data_request)
+                    if pdf_page:
+                        pdf_pages.append(pdf_page)
+                except RuntimeError:
+                    messages.error(
+                    request, _("The PDF file couldn't be created! Please try again later."))
+                    return render(request, 'data_request/request_data.html', {
+                    'form': form,
+                    'organizations': organizations,
+                    'mail_organizations': mail_organizations,
+                    'email_organizations': email_organizations,
+                    'org_ids': org_ids,
+                    })
 
-                if organization.accepts_mail and \
-                   not organization.accepts_email:
-                    pdf_page = data_request.to_pdf()
-
-                    if not pdf_page:
-                        messages.error(
-                            request, _("The PDF file couldn't be created! Please try again later."))
-                        return render(request, 'data_request/request_data.html', {
-                            'form': form,
-                            'organizations': organizations,
-                            'mail_organizations': mail_organizations,
-                            'email_organizations': email_organizations,
-                            'org_ids': org_ids,
-                        })
-
-                    pdf_pages.append(pdf_page)
-                elif organization.accepts_email:
+                # Generate email messages
+                if organization.accepts_email:
                     email_requests.append(data_request)
 
             # Generate PDF pages for any mail-only requests
-            if len(pdf_pages) > 0:
-                pdf_data = concatenate_pdf_pages(pdf_pages)
-                pdf_data = base64.b64encode(pdf_data)
-            else:
-                pdf_data = None
+            pdf_data = generate_request_pdf(pdf_pages)
 
-            # Send email requests if any are possible
-            if len(email_requests) > 0:
-                if not send_data_requests_by_email(
-                    data_requests=email_requests,
-                    email_address=form.cleaned_data["user_email_address"]):
+            # Send email requests
+            if send_email_requests(email_requests):
                     messages.error(
                         request, _("Email requests couldn't be sent! Please try again later."))
 
@@ -128,3 +111,78 @@ def request_data(request, org_ids=None):
         'email_organizations': email_organizations,
         'org_ids': org_ids,
     })
+
+
+def generate_pdf_page(data_request):
+    """Generate a PDF page from a given data request if it's mail-only
+
+    :returns: PDF data if successful
+              False if the data request doesn't need a PDF
+    :raises:
+    """
+    if data_request.accepts_email:
+        return False
+
+    pdf_page = data_request.to_pdf()
+
+    if not pdf_page:
+        raise RuntimeError("PDF page couldn't be generated!")
+
+    return pdf_page
+
+
+def generate_request_pdf(pdf_pages):
+    """Create a single PDF from multiple PDF pages
+
+    :returns: The created PDF as base64 encoded data to be included
+              in the view
+              None if no PDF pages were provided
+
+    """
+    if len(pdf_pages) > 0:
+        pdf_data = concatenate_pdf_pages(pdf_pages)
+        pdf_data = base64.b64encode(pdf_data)
+    else:
+        pdf_data = None
+
+    return pdf_data
+
+
+def send_email_requests(email_requests):
+    """Send all provided email requests
+
+    :returns: True if all email requests could be sent or no email requests
+              were provided
+              False if at least one email request couldn't be sent
+
+    """
+    if len(email_requests) > 0 and not send_data_requests_by_email(
+        data_requests=email_requests,
+        email_address=form.cleaned_data["user_email_address"]):
+        return False
+    else:
+        return True
+
+
+def get_data_request(organization, form):
+    """Get a temporary data request containing user's authentication details
+
+    :organization: Organization of the data request
+    :form: The view's DataRequestForm
+    :returns: A DataRequest with details filled
+
+    """
+    data_request = DataRequest.objects.create(
+        organization=organization)
+    auth_fields = organization.authentication_fields.all()
+    auth_contents = []
+
+    for auth_field in auth_fields:
+        auth_contents.append(AuthenticationContent(
+            auth_field=auth_field,
+            data_request=data_request,
+            content=form.cleaned_data[auth_field.name]
+            ))
+    AuthenticationContent.objects.bulk_create(auth_contents)
+
+    return data_request
