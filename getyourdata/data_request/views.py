@@ -79,7 +79,7 @@ def request_data(request, org_ids=None):
             pdf_data = generate_request_pdf(pdf_pages)
 
             # Send email requests
-            if send_email_requests(email_requests):
+            if send_email_requests(email_requests, form):
                     messages.error(
                         request, _("Email requests couldn't be sent! Please try again later."))
 
@@ -120,7 +120,7 @@ def generate_pdf_page(data_request):
               False if the data request doesn't need a PDF
     :raises:
     """
-    if data_request.accepts_email:
+    if data_request.organization.accepts_email:
         return False
 
     pdf_page = data_request.to_pdf()
@@ -148,9 +148,11 @@ def generate_request_pdf(pdf_pages):
     return pdf_data
 
 
-def send_email_requests(email_requests):
+def send_email_requests(email_requests, form):
     """Send all provided email requests
 
+    :email_requests: A list of DataRequests to be sent as email requests
+    :form: The current DataRequestForm
     :returns: True if all email requests could be sent or no email requests
               were provided
               False if at least one email request couldn't be sent
