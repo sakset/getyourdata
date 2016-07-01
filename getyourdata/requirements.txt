@@ -1,4 +1,6 @@
 backports.shutil-get-terminal-size==1.0.0
+codeclimate-test-reporter==0.1.2
+coverage==4.1
 decorator==4.0.9
 Django==1.9.6
 django-bootstrap3==7.0.1

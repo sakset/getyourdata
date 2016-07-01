@@ -13,12 +13,21 @@ class PdfContents(BaseModel):
     title = models.CharField(max_length=255, default="Default", unique=True)
     header = models.CharField(
         max_length=255, blank=True, default="Dear recipient,")
-    content1 = models.TextField(blank=True, default="content eka")
-    content2 = models.TextField(blank=True, default="content toka")
+    content1 = models.TextField(blank=True, default="content first")
+    content2 = models.TextField(blank=True, default="content second")
     footer = models.CharField(max_length=255, blank=True, default="Regards,")
 
     class Meta:
         verbose_name_plural = "pdf contents"
+
+
+class EmailContent(BaseModel):
+    title = models.CharField(max_length=255, default="Default", unique=True)
+    header = models.TextField(
+        blank=True, default="Dear recipient,")
+    content1 = models.TextField(blank=True, default="content first")
+    content2 = models.TextField(blank=True, default="content second")
+    footer = models.TextField(blank=True, default="Regards,")
 
 
 class AuthenticationContent(BaseModel):
