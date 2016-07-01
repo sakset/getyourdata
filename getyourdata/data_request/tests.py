@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.core import mail
 from django.test import TestCase
 
 from getyourdata.test import isDjangoTest
@@ -73,7 +74,8 @@ class DataRequestCreationTests(TestCase):
         self.client.post(
             reverse("data_request:request_data", args=(self.organization.id,)),
             {"some_number": "1234567",
-             "other_thing": "Some text here"},
+             "other_thing": "Some text here",
+             "user_email_address": "test@test.com"},
             follow=True
             )
 
@@ -90,7 +92,8 @@ class DataRequestCreationTests(TestCase):
                                      self.organization2.id),)),
             {"some_number": "1234567",
              "other_thing": "Some text here",
-             "oddest_thing": "blehbleh"},
+             "oddest_thing": "blehbleh",
+             "user_email_address": "test@test.com"},
             follow=True)
 
         self.assertEquals(DataRequest.objects.all().count(), 2)
@@ -101,33 +104,84 @@ class DataRequestCreationTests(TestCase):
         self.assertEquals(data_request1.organization, self.organization)
         self.assertEquals(data_request2.organization, self.organization2)
 
-    def test_authentication_contents_are_created(self):
-        self.client.post(
+    def test_email_request_is_sent_correctly(self):
+        response = self.client.post(
             reverse("data_request:request_data", args=(self.organization.id,)),
+            {"some_number": "1234567",
+             "other_thing": "Some text here",
+             "user_email_address": "test@test.com"},
+            follow=True
+            )
+
+        # All requests were email requests
+        self.assertContains(response, "All done!")
+
+        self.assertContains(
+            response, "Requests were sent to the following organizations")
+
+        self.assertContains(response, "Organization")
+
+        self.assertEquals(len(mail.outbox), 1)
+
+        self.assertIn("Organization", mail.outbox[0].body)
+
+    def test_mail_request_is_created_successfully(self):
+        mail_organization = Organization.objects.create(
+            name='Mail organization',
+            address_line_one='Address one',
+            address_line_two='Address two',
+            postal_code='00000',
+            country='Finland'
+            )
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(mail_organization.id,)),
             {"some_number": "1234567",
              "other_thing": "Some text here"},
             follow=True
             )
 
-        data_request = DataRequest.objects.first()
+        self.assertContains(response, "Further action required")
+        self.assertContains(response, "Download PDF")
 
-        self.assertTrue(data_request.organization == self.organization)
-
-        auth_contents = data_request.auth_contents.all()
-
-        self.assertEquals(auth_contents.count(), 2)
-
-        first_content = AuthenticationContent.objects.get(
-            auth_field=self.auth_field1,
-            data_request=data_request
+    def test_pending_email_request_displayed_correctly(self):
+        email_organization = Organization.objects.create(
+            name='Email organization',
+            email_address='fake@address.com',
+            address_line_one='Address one',
+            address_line_two='Address two',
+            postal_code='00000',
+            country='Finland'
             )
-        self.assertEquals(first_content.content, '1234567')
 
-        second_content = AuthenticationContent.objects.get(
-            auth_field=self.auth_field2,
-            data_request=data_request
+        response = self.client.get(
+            reverse("data_request:request_data", args=(email_organization.id,)),
+        )
+
+        self.assertContains(
+            response, "Following organizations will receive request by email")
+        self.assertNotContains(
+            response, "will have to be sent via mail"
+        )
+
+    def test_pending_mail_request_displayed_correctly(self):
+        mail_organization = Organization.objects.create(
+            name='Mail organization',
+            address_line_one='Address one',
+            address_line_two='Address two',
+            postal_code='00000',
+            country='Finland'
             )
-        self.assertEquals(second_content.content, 'Some text here')
+
+        response = self.client.get(
+            reverse("data_request:request_data", args=(mail_organization.id,)),
+        )
+
+        self.assertContains(
+            response, "will have to be sent via mail"
+        )
+        self.assertNotContains(
+            response, "Following organizations will receive request by email")
 
 
 @isDjangoTest()
@@ -157,7 +211,8 @@ class AuthenticationAttributeValidationTests(TestCase):
         response = self.client.post(
             reverse("data_request:request_data", args=(self.organization.id,)),
             {"phone_number": "1234567",
-             "other_thing": "Some text here"},
+             "other_thing": "Some text here",
+             "user_email_address": "test@test.com"},
             follow=True
             )
 
@@ -167,7 +222,8 @@ class AuthenticationAttributeValidationTests(TestCase):
         response = self.client.post(
             reverse("data_request:request_data", args=(self.organization.id,)),
             {"phone_number": "notaphonenumber",
-             "other_thing": "Some text here"},
+             "other_thing": "Some text here",
+             "user_email_address": "test@test.com"},
             follow=True
             )
 

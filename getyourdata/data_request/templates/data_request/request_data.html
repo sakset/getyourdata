@@ -13,6 +13,10 @@
                 <h1>{% trans 'Request your data from multiple organizations' %}</h1>
                 {% endif %}
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
             <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
                 {% csrf_token %}
                 <input type="hidden" name="org_ids" value="{{ org_ids}}"/>
@@ -21,6 +25,26 @@
                 </table>
                 <input class="btn btn-default" type="submit" value="{% trans 'Create request' %}"/>
             </form>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-info">
+                {% if email_organizations %}
+                <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
+                <ul>
+                    {% for organization in email_organizations %}
+                    <li>{{ organization.name}}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if mail_organizations %}
+                <strong>{% trans "Requests for the following organizations will have to be sent via mail" %}</strong><br>
+                <ul>
+                    {% for organization in mail_organizations %}
+                    <li>{{ organization.name}}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
