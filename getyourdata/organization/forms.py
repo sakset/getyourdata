@@ -55,11 +55,16 @@ class EditOrganizationForm(forms.ModelForm):
             "name", "title")
 
         authentication_field_choices = []
+        selected_field_choices = []
 
         for field in authentication_fields:
             authentication_field_choices.append([field.pk, field.title])
 
+        for field in self.organization.authentication_fields.all():
+            selected_field_choices.append(field.pk)
+
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
+            initial=selected_field_choices,
             choices=authentication_field_choices,
             help_text=_("What authentication fields this organizations requires"))
 

@@ -21,6 +21,9 @@ def check_organization_draft(request, draft_id):
         "original_organization").get(pk=draft_id)
     original_organization = organization_draft.original_organization
 
+    organization_draft_fields = organization_draft.authentication_fields.all()
+    original_organization_fields = original_organization.authentication_fields.all()
+
     if "update" in request.POST:
         with transaction.atomic():
             for field in ORGANIZATION_FIELDS:
@@ -29,7 +32,7 @@ def check_organization_draft(request, draft_id):
                 setattr(original_organization, field,
                     getattr(organization_draft, field))
 
-            original_organization.authentication_fields = organization_draft.authentication_fields
+            original_organization.authentication_fields = organization_draft_fields
             original_organization.save()
 
             organization_draft.updated = True
@@ -51,9 +54,6 @@ def check_organization_draft(request, draft_id):
                 original_organization.name))
 
         return redirect(reverse("admin:organization_organizationdraft_changelist"))
-
-    organization_draft_fields = organization_draft.authentication_fields.all()
-    original_organization_fields = original_organization.authentication_fields.all()
 
     return render(request, "organization/admin/check_organization_draft.html",
         {"organization_draft": organization_draft,

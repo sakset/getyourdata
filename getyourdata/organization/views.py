@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 
 from organization.models import Organization, OrganizationDraft
 from organization.models import AuthenticationField
@@ -73,7 +75,11 @@ def edit_organization(request, org_id=None):
     Edit an existing organization. The modified organization is saved as an
     OrganizationDraft which can be implemented by staff
     """
-    organization = get_object_or_404(Organization, pk=org_id)
+    try:
+        organization = Organization.objects.prefetch_related("authentication_fields").get(
+            pk=org_id)
+    except ObjectDoesNotExist:
+        raise Http404("Organization not found")
 
     form = EditOrganizationForm(
         request.POST or None, organization=organization)
