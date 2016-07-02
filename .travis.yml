@@ -9,7 +9,9 @@ before_install:
 install:
 - pip install -r requirements.txt
 - python dev_manage.py migrate
-script: python dev_manage.py test
+script: 
+- coverage run dev_manage.py test
+- codeclimate-test-reporter
 after_success:
 - test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
 - test $TRAVIS_BRANCH = "master" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; ./deploy.sh" &> /dev/null
