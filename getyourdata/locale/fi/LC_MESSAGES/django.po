@@ -23,6 +23,10 @@ msgstr ""
 msgid "Data request: "
 msgstr "Tietopyyntö"
 
+#: data_request/templates/data_request/expired.html:10
+msgid "Page expired"
+msgstr "Sivu on vanhentunut"
+
 #: data_request/templates/data_request/expired.html:17
 msgid "The content on this page has expired. You may have reached this page by changing the page after sending your requests."
 msgstr "Tämän sivun tiedot ovat vanhentuneet. Olet saattanut saada tämän sivun vaihtamalla sivua tietopyynnö lähetyksen jälkeen."
@@ -31,9 +35,33 @@ msgstr "Tämän sivun tiedot ovat vanhentuneet. Olet saattanut saada tämän siv
 msgid "Request your data from"
 msgstr "Pyydä tietosi"
 
+#: data_request/templates/data_request/request_data.html:13
+msgid "Request your data from multiple organizations"
+msgstr "Pyydä tietosi useammalta organisaatiolta"
+
 #: data_request/templates/data_request/request_data.html:17, organization/templates/organization/list.html:19
 msgid "Create request"
 msgstr "Luo pyyntö"
+
+#: data_request/templates/data_request/request_data.html:32
+msgid "Following organizations will receive request by email"
+msgstr "Seuraavat organisaatiot ottavat vastaan sähköposti pyyntöjä"
+
+#: data_request/templates/data_request/request_data.html:40
+msgid "Requests for the following organizations will have to be sent via mail"
+msgstr "Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
+
+#: data_request/templates/data_request/sent.html:13
+msgid "All done!"
+msgstr "Valmista!"
+
+#: data_request/templates/data_request/sent.html:16
+msgid "Further action required"
+msgstr "Jatkotoimenpiteitä tarvitaan"
+
+#: data_request/templates/data_request/sent.html:25
+msgid "Print mail requests"
+msgstr "Tulosta postitettava tietopyyntö"
 
 #: data_request/templates/data_request/sent.html:28
 msgid "One request needs to be printed."
@@ -44,6 +72,30 @@ msgstr[1] "%(counter) pyyntöä pitää tulostaa."
 #: data_request/templates/data_request/sent.html:35
 msgid "The following organizations require that data requests are sent by mail:"
 msgstr "Seuraavat organisaatiot vaativat että tietopyynnöt lähetetään postitse:"
+
+#: data_request/templates/data_request/sent.html:42
+msgid "You can send data requests to the listed organizations by mail. The following document contains the required pages:"
+msgstr "Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraavat dokumentti sisältää tarvittavat kirjeet:"
+
+#: data_request/templates/data_request/sent.html:44
+msgid "Download PDF"
+msgstr "Lataa PDF-tiedosto"
+
+#: data_request/templates/data_request/sent.html:50
+msgid "Email requests sent!"
+msgstr "Sähköposti pyyntö lähetetty!"
+
+#: data_request/templates/data_request/sent.html:52
+msgid "Email requests sent successfully!"
+msgstr "Sähköposti pyyntö lähetetty onnistuneesti!"
+
+#: data_request/templates/data_request/sent.html:53
+msgid "Requests were sent to the following organizations by email:"
+msgstr "Tietopyynnöt lähetettiin seuraaville organisaatioille sähköpostitse:"
+
+#: data_request/templates/data_request/sent.html:59
+msgid "You should receive a copy of your email requests to your email address shortly."
+msgstr "Sinun tulisi saada kopio sähköpostipyynnöstäsi sähköpostiisi vähän ajan kuluttua."
 
 #: data_request/templates/data_request/sent.html:68
 msgid "Note that since we don't store user information, the information on this page will become unavailable when changing the page."
@@ -165,7 +217,15 @@ msgstr "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseks
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
 
-#: organization/templates/organization/list.html:23
+#: organization/templates/organization/list.html:27
+msgid "Accepts postal requests"
+msgstr "Hyväksyy posti pyynnöt"
+
+#: organization/templates/organization/list.html:28
+msgid "Accepts email requests"
+msgstr "Hyväksyy sähköposti pyynnöt"
+
+#: organization/templates/organization/list.html:33
 msgid "Add organization"
 msgstr "Lisää organisaatio"
 
