@@ -29,13 +29,13 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                            <td>
-                                <a class="pull-right btn btn-primary btn-xs" href="{% url 'organization:new_organization' %}">{% trans "Add organization" %}</a>
-                            </td>
                         </tbody>
                     </table>
                     <div>
-                        <input type="submit" class="btn btn-primary" id="create-request" name="create_request" value="Create request" />
+                        <input type="submit" class="btn btn-success" id="create-request" name="create_request" value="{% trans "Create request" %}" />
+                        <span class="pull-right">
+                            <a class="pull-right btn btn-primary" href="{% url "organization:new_organization" %}">{% trans "Add organization" %}</a>
+                        </span>
                     </div>
                 </form>
                 {% bootstrap_pagination organizations url=pag_url %}
