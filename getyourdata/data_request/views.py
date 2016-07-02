@@ -62,13 +62,13 @@ def request_data(request, org_ids=None):
                         pdf_pages.append(pdf_page)
                 except RuntimeError:
                     messages.error(
-                    request, _("The PDF file couldn't be created! Please try again later."))
+                        request, _("The PDF file couldn't be created! Please try again later."))
                     return render(request, 'data_request/request_data.html', {
-                    'form': form,
-                    'organizations': organizations,
-                    'mail_organizations': mail_organizations,
-                    'email_organizations': email_organizations,
-                    'org_ids': org_ids,
+                        'form': form,
+                        'organizations': organizations,
+                        'mail_organizations': mail_organizations,
+                        'email_organizations': email_organizations,
+                        'org_ids': org_ids,
                     })
 
                 # Generate email messages
@@ -159,8 +159,8 @@ def send_email_requests(email_requests, form):
 
     """
     if len(email_requests) > 0 and not send_data_requests_by_email(
-        data_requests=email_requests,
-        email_address=form.cleaned_data["user_email_address"]):
+         data_requests=email_requests,
+         email_address=form.cleaned_data["user_email_address"]):
         return False
     else:
         return True

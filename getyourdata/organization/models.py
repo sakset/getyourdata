@@ -85,3 +85,7 @@ class OrganizationDraft(Organization):
     """
     original_organization = models.ForeignKey(
         "organization.Organization", related_name="original_organizations")
+
+    checked = models.BooleanField(default=False)
+    ignored = models.BooleanField(default=False)
+    updated = models.BooleanField(default=False)

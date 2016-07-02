@@ -84,13 +84,14 @@ def edit_organization(request, org_id=None):
         authentication_fields = AuthenticationField.objects.filter(
             pk__in=authentication_field_ids)
         del form.cleaned_data["authentication_fields"]
-        print(authentication_fields)
 
         organization_draft = OrganizationDraft(**form.cleaned_data)
         organization_draft.original_organization = organization
         organization_draft.save()
+
         organization_draft.authentication_fields.add(*authentication_fields)
         organization_draft.save()
+
         return render(request, "organization/edit_organization/done.html", {
             "organization": organization})
 
