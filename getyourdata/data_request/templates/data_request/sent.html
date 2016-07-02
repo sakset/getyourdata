@@ -25,13 +25,13 @@
             <h3><span class="glyphicon glyphicon-alert"></span> {% trans "Print mail requests" %}</h3>
             <div class="alert alert-warning">
                 <strong>
-                    {% blocktrans count counter=mail_organizations|length %}
+                    {% blocktrans count counter=mail_organizations|length trimmed %}
                     One request needs to be printed.
                     {% plural %}
-                    {{ mail_organizations.length }} requests need to be printed.
+                    {{counter}} requests need to be printed.
                     {% endblocktrans %}
                 </strong><br>
-                <p>{% blocktrans %}
+                <p>{% blocktrans trimmed %}
                 The following organizations require that data requests are sent by mail:
                 {% endblocktrans %}</p>
                 <ul>
@@ -64,7 +64,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-warning">
-                <p>{% blocktrans %}
+                <p>{% blocktrans trimmed %}
                 Note that since we don't store user information, the information on this page will become unavailable when changing the page.
                 {% endblocktrans %}</p>
             </div>

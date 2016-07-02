@@ -23,6 +23,10 @@ msgstr ""
 msgid "Data request: "
 msgstr "Tietopyyntö"
 
+#: data_request/templates/data_request/expired.html:17
+msgid "The content on this page has expired. You may have reached this page by changing the page after sending your requests."
+msgstr "Tämän sivun tiedot ovat vanhentuneet. Olet saattanut saada tämän sivun vaihtamalla sivua tietopyynnö lähetyksen jälkeen."
+
 #: data_request/templates/data_request/request_data.html:10
 msgid "Request your data from"
 msgstr "Pyydä tietosi"
@@ -30,6 +34,20 @@ msgstr "Pyydä tietosi"
 #: data_request/templates/data_request/request_data.html:17, organization/templates/organization/list.html:19
 msgid "Create request"
 msgstr "Luo pyyntö"
+
+#: data_request/templates/data_request/sent.html:28
+msgid "One request needs to be printed."
+msgid_plural "%(counter) requests need to be printed."
+msgstr[0] "Yksi pyyntö pitää tulostaa."
+msgstr[1] "%(counter) pyyntöä pitää tulostaa."
+
+#: data_request/templates/data_request/sent.html:35
+msgid "The following organizations require that data requests are sent by mail:"
+msgstr "Seuraavat organisaatiot vaativat että tietopyynnöt lähetetään postitse:"
+
+#: data_request/templates/data_request/sent.html:68
+msgid "Note that since we don't store user information, the information on this page will become unavailable when changing the page."
+msgstr "Huomaa että koska emme tallenna tietoja, kaikki sivulla näkyvät tiedot katoavat sivun vaihdon yhteydessä."
 
 #: data_request/views.py:42
 msgid "The PDF file couldn't be created! Please try again later."
@@ -50,13 +68,8 @@ msgstr "Ota selvää mitä yritykset tietävät sinusta"
 
 #. Translators: Front page blurb
 #: home/templates/home/home.html:13
-msgid ""
-"\n"
-"\t\t\tFind out what companies know about you.\n"
-"\t\t\t"
-msgstr ""
-"\n"
-"Ota selvää mitä yritykset tietävät sinusta."
+msgid "Find out what companies know about you."
+msgstr "Ota selvää mitä yritykset tietävät sinusta."
 
 #. Translators: Navbar link
 #: home/templates/home/home.html:18 templates/navbar.html:16
@@ -160,9 +173,17 @@ msgstr "Lisää organisaatio"
 msgid "Send a request"
 msgstr "Lähetä pyyntö"
 
+#: organization/templates/organization/new_organization/view.html:20
+msgid "Does this organization have your data? Send them a request."
+msgstr "Onko organisaatiolla tietoja sinusta? Lähetä heille kysely."
+
 #: organization/templates/organization/view.html:26
 msgid "Feedback"
 msgstr "Palaute"
+
+#: organization/templates/organization/new_organization/view.html:29
+msgid "Is this organization's contact information incorrect or out-of-date?"
+msgstr "Ovatko tämän organisaation yhteystiedot virheellisiä tai vanhentuneita?"
 
 #: organization/templates/organization/view.html:36
 msgid "Contact information"
@@ -172,6 +193,10 @@ msgstr "Yhteystiedot"
 msgid "Unverified contact details"
 msgstr "Tarkistamattomat yhteystiedot"
 
+#: organization/templates/organization/new_organization/view.html:42
+msgid "The contact details for this organization have not been verified by a staff member yet."
+msgstr "Sivun ylläpitäjät eivät ole vielä varmistaneet organisaation yhteystietoja."
+
 #: organization/templates/organization/view.html:48
 msgid "Data requests can be sent in mail to the following address"
 msgstr "Tietopyynnöt voi lähettää postitse seuraavaan osoitteeseen."
@@ -179,6 +204,10 @@ msgstr "Tietopyynnöt voi lähettää postitse seuraavaan osoitteeseen."
 #: organization/templates/organization/view.html:56
 msgid "Data requests by email are sent to the following email address"
 msgstr "Tietopyynnöt lähetetään sähköpostilla seuraavaan sähköpostiosoitteeseen."
+
+#: organization/templates/organization/new_organization/view.html:63
+msgid "This organization does not have any valid contact details at the moment."
+msgstr "Organisaatiolla ei ole tällä hetkellä voimassa olevia yhteystietoja."
 
 #: organization/templates/organization/new_organization/created.html:10
 msgid "Organization profile created"
@@ -189,22 +218,12 @@ msgid "Organization profile created!"
 msgstr "Organisaation profiili luotiin!"
 
 #: organization/templates/organization/new_organization/created.html:14
-msgid ""
-"\n"
-"                An organization profile has been created! You can view the created organization profile, create a new user request using the provided details or return to the homepage.\n"
-"                "
-msgstr ""
-"\n"
-"Organisaation profiili luotiin! Voit tehdä nyt kaikkea..."
+msgid "An organization profile has been created! You can view the created organization profile, create a new user request using the provided details or return to the homepage."
+msgstr "Organisaation profiili luotiin! Voit tehdä nyt kaikkea..."
 
 #: organization/templates/organization/new_organization/created.html:17
-msgid ""
-"\n"
-"                Note that the organization profile won't be made visible until it has been verified by the site staff.\n"
-"                "
-msgstr ""
-"\n"
-"Ota huomioon..."
+msgid "Note that the organization profile won't be made visible until it has been verified by the site staff."
+msgstr "Ota huomioon..."
 
 #: organization/templates/organization/created.html:21
 msgid "View organization profile"
@@ -231,22 +250,12 @@ msgid "Creating an organization profile"
 msgstr "Organisaatioprofiilin luominen"
 
 #: organization/templates/organization/new_organization/new.html:25
-msgid ""
-"\n"
-"                The organization profile needs contact information (email address, postal information or both) that can be used to send the request.\n"
-"                "
-msgstr ""
-"\n"
-"Organisaatioprofiili tarvitsee yhteystiedot."
+msgid "The organization profile needs contact information (email address, postal information or both) that can be used to send the request."
+msgstr "Organisaatio tarvitsee yhteystiedot."
 
 #: organization/templates/organization/new_organization/new.html:28
-msgid ""
-"\n"
-"                Before the organization profile can be seen by other users it will be verified by site staff.\n"
-"                "
-msgstr ""
-"\n"
-"Organisaatioprofiili varmennetaan ennen kuin se näkyy käyttäjille"
+msgid "Before the organization profile can be seen by other users it will be verified by site staff."
+msgstr "Organisaatioprofiili varmennetaan ennen kuin se näkyy käyttäjille"
 
 #: templates/navbar.html:6
 msgid "Toggle navigation"
