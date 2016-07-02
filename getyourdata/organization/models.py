@@ -58,12 +58,6 @@ class Organization(BaseModel):
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
 
-    authentification_fields_request = models.TextField(
-        null=True, blank=True,
-        default="",
-        verbose_name=_("Authentification fields request"),
-        help_text=_("Unique identifiers that organization needs and details of the identifiers."))
-
     authentication_fields = models.ManyToManyField(
         AuthenticationField, related_name="+")
 
@@ -82,3 +76,12 @@ class Organization(BaseModel):
 
     def __unicode__(self):
         return self.name
+
+
+class OrganizationDraft(Organization):
+    """
+    Organization draft created when an user modifies an existing organization
+    and submits the suggestions
+    """
+    original_organization = models.ForeignKey(
+        "organization.Organization", related_name="original_organizations")

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% trans "Organization profile suggestion sent" %}</h1>
+            </div>
+            <div class="alert alert-success">
+                <strong>{% trans "Organization profile edit suggestion sent!" %}</strong>
+                <p>{% blocktrans %}
+                An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff.
+                {% endblocktrans %}</p>
+                <hr>
+                <a href="{% url 'organization:view_organization' organization.id %}" class="btn btn-primary">{% trans "View organization profile" %}</a>
+                <a href="{% url 'organization:list_organizations'%}" class="btn btn-primary">{% trans "Create a new request" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
