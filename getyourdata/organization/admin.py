@@ -30,7 +30,6 @@ class OrganizationAdmin(admin.ModelAdmin):
 class OrganizationDraftAdmin(admin.ModelAdmin):
     list_display = [
         'name',
-        'verified',
         'original_organization',
         'check_organization_draft',
         'created_on',
@@ -48,14 +47,20 @@ class OrganizationDraftAdmin(admin.ModelAdmin):
         return new_urls + urls
 
     def check_organization_draft(self, obj):
+        """
+        Display a link to review the organization draft and possibly replace the
+        original organization details with it
+        """
+        link = "<a href=\"%s\">{0}</a>" % (
+            reverse("admin:organization_organizationdraft_check_organization_draft",
+                args=[obj.id]))
+
         if not obj.checked:
-            return "<a href=\"%s\">%s</a>" % (
-                reverse("admin:organization_organizationdraft_check_organization_draft",
-                    args=[obj.id]),
-                _("Check draft"))
+            return link.format(_("Review"))
         else:
+            link = link.format(_("Review again"))
             if obj.updated:
-                return _("Updated")
+                return "{0} - {1}".format(link, _("Updated"))
             else:
-                return _("Ignored")
+                return "{0} - {1}".format(link, _("Ignored"))
     check_organization_draft.allow_tags = True

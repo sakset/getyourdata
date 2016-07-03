@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'tinymce',
     'rosetta',
     'rest_framework',
+    'debug_toolbar',
 
     'getyourdata',
     'home',

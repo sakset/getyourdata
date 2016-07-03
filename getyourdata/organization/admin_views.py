@@ -14,8 +14,9 @@ def check_organization_draft(request, draft_id):
     """
     Process a report for a paste
     """
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return HttpResponse("You are not an admin!", status=422)
+    if not request.user.is_authenticated or not request.user.has_perm(
+        "organization.check_organization_draft"):
+        return HttpResponse("You don't have the permission to do this.", status=422)
 
     organization_draft = OrganizationDraft.objects.select_related(
         "original_organization").get(pk=draft_id)

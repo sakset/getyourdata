@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="page-header">
-                <h1>{% trans "Edit organization: " %}{{ organization.name }}</h1>
+                <h1>{% trans "Update organization: " %}{{ organization.name }}</h1>
             </div>
             <form method="post">
                 {% csrf_token %}
@@ -15,19 +15,19 @@
                 <hr>
                 <div class="pull-right">
                     <a class="btn btn-primary" href="{% url 'organization:list_organizations' %}">{% trans "Back" %}</a>
-                    <input type="submit" class="btn btn-primary" value={% trans "Create" %} />
+                    <input type="submit" class="btn btn-primary" value={% trans "Update" %} />
                 </div>
             </form>
         </div>
         <div class="col-md-4">
             <br>
             <div class="alert alert-info">
-                <strong>{% trans "Creating an organization profile" %}</strong>
+                <strong>{% trans "Updating an organization profile" %}</strong>
                 <p>{% blocktrans %}
                 The organization profile needs contact information (email address, postal information or both) that can be used to send the request.
                 {% endblocktrans %}</p>
                 <p>{% blocktrans %}
-                Before the organization profile can be seen by other users it will be verified by site staff.
+                Before the updated organization profile can be seen by other users it will be verified by site staff.
                 {% endblocktrans %}</p>
             </div>
         </div>
