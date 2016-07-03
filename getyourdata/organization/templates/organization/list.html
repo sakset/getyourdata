@@ -42,6 +42,9 @@
             </div>
             {% else %}
             <p>{% trans "No organizations yet." %}</p>
+            <div>
+                <a class="btn btn-primary" href="{% url "organization:new_organization" %}">{% trans "Add organization" %}</a>
+            </div>
             {% endif %} {% include "organization/list_js.html" %}
         </div>
     </div>
