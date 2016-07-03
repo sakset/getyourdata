@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="page-header">
+                <h1>{% trans "Update organization: " %}{{ organization.name }}</h1>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <hr>
+                <div class="pull-right">
+                    <a class="btn btn-primary" href="{% url 'organization:list_organizations' %}">{% trans "Back" %}</a>
+                    <input type="submit" class="btn btn-primary" value={% trans "Update" %} />
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <br>
+            <div class="alert alert-info">
+                <strong>{% trans "Updating an organization profile" %}</strong>
+                <p>{% blocktrans trimmed %}
+                The organization profile needs contact information (email address, postal information or both) that can be used to send the request.
+                {% endblocktrans %}</p>
+                <p>{% blocktrans trimmed %}
+                Before the updated organization profile can be seen by other users it will be verified by site staff.
+                {% endblocktrans %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

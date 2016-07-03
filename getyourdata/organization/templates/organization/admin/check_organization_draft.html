@@ -1,0 +1,49 @@
+{% extends "admin/base_site.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% block content %}
+<form action="{% url 'admin:organization_organizationdraft_check_organization_draft' organization_draft.id %}" method="post">
+	{% csrf_token %}
+	<div class="module aligned">
+		<h2>{% trans "Organization draft: " %}{{ original_organization.name }}</h2>
+		<div class="form-row">
+			<h3>Original details</h3>
+            <p><b>{% trans "Name" %}</b>: {{ original_organization.name }}</p>
+            <p><b>{% trans "Email address" %}</b>: {{ original_organization.email_address }}</p>
+            <p><b>{% trans "Address line 1" %}</b>: {{ original_organization.address_line_one }}</p>
+            <p><b>{% trans "Address line 2" %}</b>: {{ original_organization.address_line_two }}</p>
+            <p><b>{% trans "Postal code" %}</b>: {{ original_organization.postal_code }}</p>
+            <p><b>{% trans "Country" %}</b>: {{ original_organization.country }}</p>
+            <p><b>{% trans "Authentication fields" %}</b>:</p>
+            <p>
+                <ul>
+                    {% for field in original_organization_fields %}
+                    <li>{{ field }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+		</div>
+		<div class="form-row">
+            <h3>{% trans "Suggested new details" %}</h3>
+            <p><b>{% trans "Name" %}</b>: {{ organization_draft.name }}</p>
+            <p><b>{% trans "Email address" %}</b>: {{ organization_draft.email_address }}</p>
+            <p><b>{% trans "Address line 1" %}</b>: {{ organization_draft.address_line_one }}</p>
+            <p><b>{% trans "Address line 2" %}</b>: {{ organization_draft.address_line_two }}</p>
+            <p><b>{% trans "Postal code" %}</b>: {{ organization_draft.postal_code }}</p>
+            <p><b>{% trans "Country" %}</b>: {{ organization_draft.country }}</p>
+            <p><b>{% trans "Authentication fields" %}</b>:</p>
+            <p>
+                <ul>
+                    {% for field in organization_draft_fields %}
+                    <li>{{ field }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+		</div>
+	</div>
+	<div class="submit-row">
+		<input class="default" type="submit" name="ignore" value="{% trans "Ignore suggestions" %}"></input>
+		<input type="submit" name="update" value="{% trans "Update organization" %}"></input>
+	</div>
+</form>
+{% endblock %}

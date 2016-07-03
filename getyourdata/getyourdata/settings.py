@@ -28,8 +28,8 @@ except ImportError:
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secrets["SECRET_KEY"] if 'SECRET_KEY' in secrets else \
-             '9n2k6si$nzvbrl*k(0!*x@n#(m#@rx1jd_x4q0+e1uip7!$=t#'
+SECRET_KEY = secrets.get(
+    "SECRET_KEY", '9n2k6si$nzvbrl*k(0!*x@n#(m#@rx1jd_x4q0+e1uip7!$=t#')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -40,7 +40,7 @@ TESTING = False
 TEST_RUNNER = "getyourdata.testrunner.TestSuiteRunner"
 
 
-ALLOWED_HOSTS = secrets["ALLOWED_HOSTS"] if 'ALLOWED_HOSTS' in secrets else []
+ALLOWED_HOSTS = secrets.get("ALLOWED_HOSTS", [])
 
 DEBUG = False
 
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'tinymce',
     'rosetta',
     'rest_framework',
+    'debug_toolbar',
 
     'getyourdata',
     'home',
@@ -108,9 +109,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-    
+
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication'   
+        'rest_framework.authentication.SessionAuthentication'
     ],
 
     'PAGE_SIZE': 15,
@@ -125,12 +126,10 @@ WSGI_APPLICATION = 'getyourdata.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': secrets["DB_NAME"] if 'DB_NAME' in secrets else 'getyourdatadb',
-        'USER': secrets["DB_USER"] if 'DB_USER' in secrets else 'getyourdatauser',
-        'PASSWORD': secrets["DB_PASS"] if 'DB_PASS' in
-                    secrets else 'getyourdatapwd',
-        'HOST': secrets["DB_HOST"] if 'DB_HOST' in
-                secrets else 'localhost',
+        'NAME': secrets.get("DB_NAME", "getyourdatadb"),
+        'USER': secrets.get("DB_USER", "getyourdatauser"),
+        'PASSWORD': secrets.get("DB_PASS", "getyourdatapwd"),
+        'HOST': secrets.get("DB_HOST", "localhost"),
         'PORT': '',
     }
 }
@@ -140,8 +139,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': secrets["MEMCACHED_LOCATION"]
-                    if 'MEMCACHED_LOCATION' in secrets else '127.0.0.1:11211',
+        'LOCATION': secrets.get("MEMCACHED_LOCATION", "127.0.0.1:11211")
     }
 }
 
@@ -187,13 +185,21 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, "locale"),
 )
 
+# Email settings
+
+EMAIL_HOST = secrets.get("EMAIL_HOST", "")
+EMAIL_HOST_PASSWORD = secrets.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_USER = secrets.get("EMAIL_HOST_USER", "")
+EMAIL_PORT = secrets.get("EMAIL_PORT", 25)
+EMAIL_USE_TLS = secrets.get("EMAIL_USE_TLS", False)
+EMAIL_USE_SSL = secrets.get("EMAIL_USE_SSL", False)
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = secrets["STATIC_ROOT"] if "STATIC_ROOT" in secrets else \
-              '%s/site_media' % os.getcwd()
+STATIC_ROOT = secrets.get("STATIC_ROOT", '%s/site_media' % os.getcwd())
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -208,8 +214,7 @@ STATICFILES_FINDERS = (
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = secrets["MEDIA_ROOT"] if "MEDIA_ROOT" in secrets else \
-             '%s/media' % os.getcwd()
+MEDIA_ROOT = secrets.get("MEDIA_ROOT", '%s/media' % os.getcwd())
 
 # Session
 

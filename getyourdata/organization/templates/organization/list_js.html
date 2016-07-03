@@ -232,7 +232,7 @@ orgList.View = {
         <tr>
             <td>
                 <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
-                <a href="/organizations/view/{{ this.id }}">{{ this.name }}</a>
+                <a href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ this.name }}</a>
                 <a class="pull-right btn btn-primary btn-xs" href="{{ ../ORIGIN_WITH_LANG_CODE }}request/new/{{ this.id }}">{{ ../msg.create_request }}</a>
                 <span class="organization-icon-list pull-right">
                     {{#if this.accepts_mail}}<a href="#" data-toggle="tooltip" title="{{ ../msg.mail_request_accepted }}"><span class="glyphicon glyphicon-envelope"></span></a> {{/if}}
@@ -241,15 +241,14 @@ orgList.View = {
             </td>
         </tr>
         {{/each}}
-        <td>
-                <a href="/organizations/new/">{{ this.name }}</a>
-                <a class="pull-right btn btn-primary btn-xs" href="/organizations/new/">{{msg.add_organization}}</a>
-        </td>
     </tbody>
 </table>
 <div>
-    <button id="create-request" class="btn btn-primary" onclick="orgList.Controller.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
+    <button id="create-request" class="btn btn-success" onclick="orgList.Controller.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
     {{printOrganizationsChecked}}
+    <span class="pull-right">
+        <a class="pull-right btn btn-primary" href="{{ ORIGIN_WITH_LANG_CODE }}organizations/new/">{{msg.add_organization}}</a>
+    </span>
 </div>
 <ul class="pagination">
     {{#each pages}}
