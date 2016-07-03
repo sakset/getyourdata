@@ -16,7 +16,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">{% trans "Send a request" %}</div>
                 <div class="panel-body">
-                <p>{% blocktrans %}
+                <p>{% blocktrans trimmed %}
                 Does this organization have your data? Send them a request.
                 {% endblocktrans %}</p>
                 <a class="btn btn-success" href="{% url "data_request:request_data" organization.id %}">{% trans "Create request" %}</a>
@@ -25,7 +25,7 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">{% trans "Feedback" %}</div>
                 <div class="panel-body">
-                <p>{% blocktrans %}
+                <p>{% blocktrans trimmed %}
                 Is this organization's contact information incorrect or out-of-date?
                 {% endblocktrans %}</p>
                 <b>Add a feedback form here</b>
@@ -38,7 +38,7 @@
 			{% if not organization.verified %}
 			<div class="alert alert-danger">
 				<strong>{% trans "Unverified contact details" %}</strong><br>
-				{% blocktrans %}
+				{% blocktrans trimmed %}
 				The contact details for this organization have not been verified by a staff member yet.
 				{% endblocktrans %}
 			</div>
@@ -59,7 +59,7 @@
 	            <a href="{{ organization.email_address }}">{{ organization.email_address }}</a>
 	            {% endif %}
 			{% else %}
-			<p>{% blocktrans %}
+			<p>{% blocktrans trimmed %}
 			This organization does not have any valid contact details at the moment.
 			{% endblocktrans %}</p>
 			{% endif %}
