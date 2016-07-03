@@ -15,11 +15,17 @@ from organization.models import AuthenticationField
 
 @isDjangoTest()
 class OrganizationCreationTests(TestCase):
+    def setUp(self):
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
     def test_organization_with_valid_email_address_can_be_added(self):
         response = self.client.post(
             reverse("organization:new_organization"),
             {"name": "The Organization",
-             "email_address": "valid@address.com"},
+             "email_address": "valid@address.com",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -33,7 +39,8 @@ class OrganizationCreationTests(TestCase):
         response = self.client.post(
             reverse("organization:new_organization"),
             {"name": "The Organization",
-             "email_address": "notavalidaddrss"},
+             "email_address": "notavalidaddrss",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertNotContains(response, "Organization profile created")
@@ -43,7 +50,8 @@ class OrganizationCreationTests(TestCase):
     def test_organization_with_missing_contact_information_cant_be_added(self):
         response = self.client.post(
             reverse("organization:new_organization"),
-            {"name": "The Organization"},
+            {"name": "The Organization",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(
@@ -56,7 +64,8 @@ class OrganizationCreationTests(TestCase):
             {"name": "The Organization",
              "address_line_one": "Fake Street 4",
              "postal_code": "00444",
-             "country": "Finland"},
+             "country": "Finland",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -72,7 +81,8 @@ class OrganizationCreationTests(TestCase):
         response = self.client.post(
             reverse("organization:new_organization"),
             {"name": "The Organization",
-             "address_line_one": "Fake Street 4"},
+             "address_line_one": "Fake Street 4",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertNotContains(response, "Organization profile created")
@@ -85,7 +95,8 @@ class OrganizationCreationTests(TestCase):
              "address_line_one": "Fake Street 4",
              "postal_code": "00444",
              "country": "Finland",
-             "email_address": "fake@address.com"},
+             "email_address": "fake@address.com",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -97,6 +108,20 @@ class OrganizationCreationTests(TestCase):
         self.assertEquals(organization.postal_code, "00444")
         self.assertEquals(organization.country, "Finland")
         self.assertEquals(organization.email_address, "fake@address.com")
+
+    def test_organization_with_no_authentication_fields_cant_be_added(self):
+        response = self.client.post(
+            reverse("organization:new_organization"),
+            {"name": "The Organization",
+             "address_line_one": "Fake Street 4",
+             "postal_code": "00444",
+             "country": "Finland",
+             "email_address": "fake@address.com"},
+            follow=True)
+
+        self.assertNotContains(response, "Organization profile created")
+
+        self.assertEquals(Organization.objects.all().count(), 0)
 
 
 def create_organization(test_case):

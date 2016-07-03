@@ -59,8 +59,18 @@ def new_organization(request):
     form = NewOrganizationForm(request.POST or None)
 
     if form.is_valid():
+        # Get authentication fields from the form
+        authentication_field_ids = form.cleaned_data["authentication_fields"]
+        authentication_fields = AuthenticationField.objects.filter(
+            pk__in=authentication_field_ids)
+        del form.cleaned_data["authentication_fields"]
+
         organization = Organization(**form.cleaned_data)
         organization.save()
+
+        organization.authentication_fields.add(*authentication_fields)
+        organization.save()
+
         return render(
             request, "organization/new_organization/created.html",
             {"organization": organization})

@@ -19,6 +19,21 @@ class NewOrganizationForm(forms.ModelForm):
         model = Organization
         fields = ORGANIZATION_FIELDS
 
+    def __init__(self, *args, **kwargs):
+        super(NewOrganizationForm, self).__init__(*args, **kwargs)
+
+        authentication_fields = AuthenticationField.objects.all().only(
+            "name", "title")
+
+        authentication_field_choices = []
+
+        for field in authentication_fields:
+            authentication_field_choices.append([field.pk, field.title])
+
+        self.fields["authentication_fields"] = forms.MultipleChoiceField(
+            choices=authentication_field_choices,
+            help_text=_("What authentication fields this organizations requires"))
+
     def clean(self):
         """
         Form must contain email address or postal information
@@ -39,6 +54,9 @@ class EditOrganizationForm(forms.ModelForm):
     """
     A form to edit an existing organization and to save it as a draft
     """
+    class Meta:
+        model = Organization
+        fields = ORGANIZATION_FIELDS
 
     def __init__(self, *args, **kwargs):
         self.organization = kwargs.pop('organization', None)
@@ -68,9 +86,6 @@ class EditOrganizationForm(forms.ModelForm):
             choices=authentication_field_choices,
             help_text=_("What authentication fields this organizations requires"))
 
-    class Meta:
-        model = Organization
-        fields = ORGANIZATION_FIELDS
 
     def clean(self):
         """
