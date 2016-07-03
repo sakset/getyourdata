@@ -21,4 +21,3 @@ python manage.py collectstatic --noinput;
 
 echo "Restarting uWSGI..."
 touch /tmp/getyourdata-restart;
-

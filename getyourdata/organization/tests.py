@@ -411,6 +411,7 @@ class OrganizationUpdateAdminTests(TestCase):
         self.assertEquals(organization_draft.checked, True)
         self.assertEquals(organization_draft.ignored, True)
 
+
 @isSeleniumTest()
 class OrganizationListJavascriptTests(StaticLiveServerTestCase):
     @classmethod

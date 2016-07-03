@@ -1,0 +1,60 @@
+# AUTHENTICATION FIELDS
+- model: organization.authenticationfield
+  pk: 1
+  fields:
+    name: name
+    title: Name
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+- model: organization.authenticationfield
+  pk: 2
+  fields:
+    name: phone_number
+    title: Phone number
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+- model: organization.authenticationfield
+  pk: 3
+  fields:
+    name: email_address
+    title: Email address
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+- model: organization.authenticationfield
+  pk: 4
+  fields:
+    name: address
+    title: Address
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+- model: organization.authenticationfield
+  pk: 5
+  fields:
+    name: zip_code
+    title: Zip code
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+- model: organization.authenticationfield
+  pk: 6
+  fields:
+    name: country
+    title: Country
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+# ORGANIZATIONS
+- model: organization.organization
+  pk: 1
+  fields:
+    name: Fake Organization
+    address_line_one: Fake Street 2
+    postal_code: 12345
+    country: Fakeria
+    authentication_fields: [1, 3]
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
