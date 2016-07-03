@@ -79,17 +79,19 @@ def request_data(request, org_ids=None):
             pdf_data = generate_request_pdf(pdf_pages)
 
             # Send email requests
-            if send_email_requests(email_requests, form):
-                    messages.error(
-                        request, _("Email requests couldn't be sent! Please try again later."))
+            if not send_email_requests(email_requests, form):
+                messages.error(
+                    request, _("Email requests couldn't be sent! Please try again later."))
 
-                    return render(request, "data_request/sent.html", {
-                        'form': form,
-                        'organizations': organizations,
-                        'mail_organizations': mail_organizations,
-                        'email_organizations': email_organizations,
-                        'org_ids': org_ids
-                    })
+                util.rollback()
+
+                return render(request, "data_request/request_data.html", {
+                    'form': form,
+                    'organizations': organizations,
+                    'mail_organizations': mail_organizations,
+                    'email_organizations': email_organizations,
+                    'org_ids': org_ids
+                })
 
             # Cancel transaction to clear everything from memory
             util.rollback()
