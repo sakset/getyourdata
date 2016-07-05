@@ -74,5 +74,25 @@ class Organization(BaseModel):
                self.postal_code != "" and \
                self.country != ""
 
+    @property
+    def has_registers(self):
+        return self.register_set is not None
+
+
+    def __unicode__(self):
+        return self.name
+
+
+class Register(BaseModel):
+
+    # name of the register
+    name = models.CharField(max_length=255,
+                            help_text=_("The name of the register used by the organization. Eg. Customer register"),
+                            verbose_name=_("Name of the person register"))
+
+    # which organization this register belongs to
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    help_text = models.CharField(max_length=255, default="", blank=True)
+
     def __unicode__(self):
         return self.name

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from organization.models import Organization, AuthenticationField
+from organization.models import Organization, AuthenticationField, Register
 
 
 @admin.register(AuthenticationField)
@@ -20,3 +20,9 @@ class OrganizationAdmin(admin.ModelAdmin):
         'updated_on',
     ]
 
+@admin.register(Register)
+class RegisterAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'created_on',
+    ]
