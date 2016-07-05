@@ -28,6 +28,11 @@ def request_data(request, org_ids=None):
     organizations = Organization.objects.filter(
         id__in=org_ids.split(","))
 
+    if request.POST.get("action", None) == "review":
+        # Review the form first
+        return review_request(
+            request, org_ids, organizations)
+
     # Add organizations into only one of the following lists
     # email is preferred if organization supports it, otherwise
     # fallback to normal mail
@@ -40,6 +45,9 @@ def request_data(request, org_ids=None):
         elif organization.accepts_mail:
             mail_organizations.append(organization)
 
+    # Is the user sending the request or reviewing it
+    action = request.POST.get("action", None)
+
     if request.method == 'POST':
         form = DataRequestForm(request.POST, organizations=organizations)
 
@@ -49,60 +57,61 @@ def request_data(request, org_ids=None):
         util.set_autocommit_off()
 
         if form.is_valid():
-            pdf_pages = []
-            email_requests = []
+            if action == "send" or len(email_organizations) == 0:
+                pdf_pages = []
+                email_requests = []
 
-            for organization in organizations:
-                data_request = get_data_request(organization, form)
+                for organization in organizations:
+                    data_request = get_data_request(organization, form)
 
-                # Generate PDF pages for mail requests
-                try:
-                    pdf_page = generate_pdf_page(data_request)
-                    if pdf_page:
-                        pdf_pages.append(pdf_page)
-                except RuntimeError:
+                    # Generate PDF pages for mail requests
+                    try:
+                        pdf_page = generate_pdf_page(data_request)
+                        if pdf_page:
+                            pdf_pages.append(pdf_page)
+                    except RuntimeError:
+                        messages.error(
+                            request, _("The PDF file couldn't be created! Please try again later."))
+                        return render(request, 'data_request/request_data.html', {
+                            'form': form,
+                            'organizations': organizations,
+                            'mail_organizations': mail_organizations,
+                            'email_organizations': email_organizations,
+                            'org_ids': org_ids,
+                        })
+
+                    # Generate email messages
+                    if organization.accepts_email:
+                        email_requests.append(data_request)
+
+                # Generate PDF pages for any mail-only requests
+                pdf_data = generate_request_pdf(pdf_pages)
+
+                # Send email requests
+                if not send_email_requests(email_requests, form):
                     messages.error(
-                        request, _("The PDF file couldn't be created! Please try again later."))
-                    return render(request, 'data_request/request_data.html', {
+                        request, _("Email requests couldn't be sent! Please try again later."))
+
+                    util.rollback()
+
+                    return render(request, "data_request/request_data.html", {
                         'form': form,
                         'organizations': organizations,
                         'mail_organizations': mail_organizations,
                         'email_organizations': email_organizations,
-                        'org_ids': org_ids,
+                        'org_ids': org_ids
                     })
 
-                # Generate email messages
-                if organization.accepts_email:
-                    email_requests.append(data_request)
-
-            # Generate PDF pages for any mail-only requests
-            pdf_data = generate_request_pdf(pdf_pages)
-
-            # Send email requests
-            if not send_email_requests(email_requests, form):
-                messages.error(
-                    request, _("Email requests couldn't be sent! Please try again later."))
-
+                # Cancel transaction to clear everything from memory
                 util.rollback()
+                util.set_autocommit_on()
 
-                return render(request, "data_request/request_data.html", {
-                    'form': form,
+                return render(request, 'data_request/sent.html', {
                     'organizations': organizations,
                     'mail_organizations': mail_organizations,
                     'email_organizations': email_organizations,
-                    'org_ids': org_ids
-                })
-
-            # Cancel transaction to clear everything from memory
-            util.rollback()
-            util.set_autocommit_on()
-
-            return render(request, 'data_request/sent.html', {
-                'organizations': organizations,
-                'mail_organizations': mail_organizations,
-                'email_organizations': email_organizations,
-                'pdf_data': pdf_data
-                })
+                    'pdf_data': pdf_data
+                    })
     else:
         form = DataRequestForm(organizations=organizations)
 
@@ -114,6 +123,45 @@ def request_data(request, org_ids=None):
         'org_ids': org_ids,
     })
 
+
+def review_request(request, org_ids, organizations):
+    """
+    Let user review his email requests if he's sending any
+    """
+    # Add organizations into only one of the following lists
+    # email is preferred if organization supports it, otherwise
+    # fallback to normal mail
+    mail_organizations = []
+    email_organizations = []
+
+    for organization in organizations:
+        if organization.accepts_email:
+            email_organizations.append(organization)
+        elif organization.accepts_mail:
+            mail_organizations.append(organization)
+
+    data_requests = []
+
+    if request.method == 'POST':
+        form = DataRequestForm(
+            request.POST, organizations=organizations, visible=False)
+
+        if form.is_valid():
+            for organization in email_organizations:
+                data_request = get_data_request(organization, form)
+                data_requests.append(data_request)
+
+    return render(request, "data_request/request_data_review.html", {
+        "form": form,
+        "email_organizations": email_organizations,
+        "mail_organizations": mail_organizations,
+        "data_requests": data_requests,
+        "org_ids": org_ids,
+    })
+
+
+def send_request(request, form):
+    pass
 
 def generate_pdf_page(data_request):
     """Generate a PDF page from a given data request if it's mail-only

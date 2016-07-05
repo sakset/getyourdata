@@ -19,11 +19,12 @@
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
                 {% csrf_token %}
-                <input type="hidden" name="org_ids" value="{{ org_ids}}"/>
+                <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
+                <input type="hidden" name="action" value="{% if email_organizations|length == 0 %}send{% else %}review{% endif %}"/>
                 <table class="table">
                 {% bootstrap_form form layout='horizontal' %}
                 </table>
-                <input class="btn btn-default" type="submit" value="{% trans 'Create request' %}"/>
+                <input class="btn btn-default" type="submit" value="{% if email_organizations|length == 0 %}{% trans 'Create request' %}{% else %}{% trans 'Review request' %}{% endif %}"/>
             </form>
         </div>
         <div class="col-md-4">

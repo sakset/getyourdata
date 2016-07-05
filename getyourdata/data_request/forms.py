@@ -23,6 +23,7 @@ class AuthenticationAttributeField(forms.CharField):
 class DataRequestForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.organizations = kwargs.pop('organizations', None)
+        self.visible = kwargs.pop('visible', True)
         self.contains_email_requests = False
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
@@ -59,3 +60,8 @@ class DataRequestForm(forms.Form):
                 label=_("Receiving email address"),
                 help_text=_("Your data and further enquiries by organizations will be sent to this address"),
                 required=True)
+
+        # Make the fields invisible if needed
+        if not self.visible:
+            for name, field in self.fields.iteritems():
+                self.fields[name].widget = forms.HiddenInput()
