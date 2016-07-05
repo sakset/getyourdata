@@ -445,7 +445,7 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
         cls.selenium = WebDriver()
         # Prevent tests from failing by making the test wait longer
         # if element isn't immediately available
-        cls.selenium.implicitly_wait(200)
+        cls.selenium.implicitly_wait(3)
 
     @classmethod
     def tearDownClass(cls):

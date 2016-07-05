@@ -24,7 +24,7 @@
                 <table class="table">
                 {% bootstrap_form form layout='horizontal' %}
                 </table>
-                <input class="btn btn-default" type="submit" value="{% if email_organizations|length == 0 %}{% trans 'Create request' %}{% else %}{% trans 'Review request' %}{% endif %}"/>
+                <input class="btn btn-default" id="create_request" type="submit" value="{% if email_organizations|length == 0 %}{% trans 'Create request' %}{% else %}{% trans 'Review request' %}{% endif %}"/>
             </form>
         </div>
         <div class="col-md-4">

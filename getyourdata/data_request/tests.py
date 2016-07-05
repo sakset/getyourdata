@@ -1,6 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.core import mail
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase
+
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
 
@@ -248,8 +253,84 @@ class DataRequestCreationTests(TestCase):
 
 
 @isSeleniumTest()
-class LiveDataRequestCreationTests(TestCase):
-    pass
+class LiveDataRequestCreationTests(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(LiveDataRequestCreationTests, cls).setUpClass()
+        cls.selenium = WebDriver()
+        # Prevent tests from failing by making the test wait longer
+        # if element isn't immediately available
+        cls.selenium.implicitly_wait(3)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(LiveDataRequestCreationTests, cls).tearDownClass()
+
+    def test_selenium_email_request_can_be_created_successfully(self):
+        self.organization = Organization.objects.create(
+            name='Organization Two',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+            )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field)
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        field = self.selenium.find_element_by_name("user_email_address")
+        field.send_keys("test@test.com")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn(
+            "Please review the following email messages", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn("All done!", self.selenium.page_source)
+        self.assertIn("Email requests sent!", self.selenium.page_source)
+
+    def test_selenium_mail_request_can_be_created_successfully(self):
+        self.organization = Organization.objects.create(
+            name='Organization Two',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+            )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field)
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn("Further action required", self.selenium.page_source)
+        self.assertIn("Download PDF", self.selenium.page_source)
 
 @isDjangoTest()
 class AuthenticationAttributeValidationTests(TestCase):
