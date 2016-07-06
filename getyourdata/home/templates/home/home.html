@@ -12,7 +12,7 @@
 			</div>
 			{# Translators: Front page blurb #}
 			{% blocktrans trimmed %}
-			Find out what companies know about you.
+                You have a right to get copy of the data companies and public sector has about you. GetYourData helps you with making the enquiries.
 			{% endblocktrans %}
 			<br>
 			<br>
@@ -22,7 +22,7 @@
 		</div>
 		<div class="col-md-6">
 			<br>
-			<img src="{% static 'img/frontpage-icons.jpg' %}"/>
+			<img src="{% static 'img/home/frontpage-icons.jpg' %}"/>
 		</div>
 	</div>
 	<div class="row">
@@ -32,19 +32,19 @@
 				<h3>{% trans "How do I make a request?" %}</h3>
 				<hr>
 				<div class="col-md-3">
-					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					<img class="thumbnail" src="{% static 'img/home/step1-envelope-icon.png' %}"/>
 					{# Translators: How do I make a request: First step #}
 					<h3>1 <small>{% trans "Send a request with this site" %}</small></h3>
 				</div>
 				<div class="col-md-3">
-					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					<img class="thumbnail" src="{% static 'img/home/step2-person-icon.png' %}"/>
 					{# Translators: How do I make a request: Second step #}
-					<h3>2 <small>{% trans "Receive updates to your request via email" %}</small></h3>
+					<h3>2 <small>{% trans "Authenticate yourself to organization" %}</small></h3>
 				</div>
 				<div class="col-md-3">
-					<img class="thumbnail" src="http://placekitten.com/200/200"/>
+					<img class="thumbnail" src="{% static 'img/home/step3-data-icon.png' %}"/>
 					{# Translators: How do I make a request: Third step #}
-					<h3>3 <small>{% trans "Download your data once it arrives" %}</small></h3>
+					<h3>3 <small>{% trans "Receive your data from the organization(s)" %}</small></h3>
 				</div>
 				<div class="col-md-3">
 					<img class="thumbnail" src="http://placekitten.com/200/200"/>
@@ -52,7 +52,7 @@
 					<h3>4 <small>{% trans "Tell us how your request went to help other users" %}</small></h3>
 				</div>
 				<hr>
-				<a href="#">{% trans "More information about how to request your data" %}</a>
+				{% trans "More information about" %} <a href="#">{% trans "how to request your data" %}</a>
 			</div>
 		</div>
 	</div>
