@@ -11,6 +11,15 @@
                 <h1>{% trans "Organizations" %}</h1>
             </div>
             {% if organizations %}
+
+            <div>
+
+            {% blocktrans trimmed %}
+            Choose the organizations you want to get your data from and click the Create Request button.
+			{% endblocktrans %}
+            </div>
+
+
             <div id="organization-list">
                 <form action="{% url 'organization:list_organizations' %}" method="post">
                     {% csrf_token %}
@@ -22,7 +31,7 @@
                                 <td>
                                     <input id="org-{{ organization.id }}" onclick="updateOrganizationCheckboxes()" type="checkbox" name="org_ids" value="{{ organization.id }}" {% if organization.id in org_ids %}checked{% endif %}/>
                                     <a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
-                                    <a class="pull-right btn btn-primary btn-xs" href="{% url 'data_request:request_data' organization.id %}">{% trans "Create request" %}</a>
+
                                     <span class="organization-icon-list pull-right">
 											{% if organization.accepts_mail %}<span title="{% trans "Accepts postal requests" %}" class="glyphicon glyphicon-envelope"></span> {% endif %}
                                             {% if organization.accepts_email %}<span title="{% trans "Accepts email requests " %}" class="glyphicon glyphicon-cloud"></span>{% endif %}</span>

@@ -233,7 +233,7 @@ orgList.View = {
             <td>
                 <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
                 <a href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ this.name }}</a>
-                <a class="pull-right btn btn-primary btn-xs" href="{{ ../ORIGIN_WITH_LANG_CODE }}request/new/{{ this.id }}">{{ ../msg.create_request }}</a>
+
                 <span class="organization-icon-list pull-right">
                     {{#if this.accepts_mail}}<a href="#" data-toggle="tooltip" title="{{ ../msg.mail_request_accepted }}"><span class="glyphicon glyphicon-envelope"></span></a> {{/if}}
                     {{#if this.accepts_email}}<a href="#" data-toggle="tooltip" title="{{ ../msg.email_request_accepted }}"><span class="glyphicon glyphicon-cloud"></span></a> {{/if}}

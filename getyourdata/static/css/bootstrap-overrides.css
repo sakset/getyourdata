@@ -1,3 +1,6 @@
+/* front page:
+*/
+
 #bootstrap-overrides .body, body{
     color: #a2a7ad;
 }
@@ -19,7 +22,7 @@
     color: #fff;
 }
 
-#bootstrap-overrides .btn-primary {
+#bootstrap-overrides .btn {
     color: #fff;
     background-color: #46494e;
     border-color: #d2d3d2;
@@ -63,4 +66,34 @@
 #bootstrap-overrides .well .thumbnail {
     padding: 0px;
     border: 0px;
+}
+
+
+/* org. list specific */
+
+#organization-list, #organization-list a {
+    margin-top: 1em;
+    background: #f5f6f6;
+    color: #959595;
+}
+
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 4px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 0px;
+}
+
+#bootstrap-overrides .panel>.panel-heading {
+    color: #fff;
+    background-color: #fed665;
+    border-color: #fed665;
+    font-weight: bold;
+}
+
+#bootstrap-overrides .panel {
+    color: #fff;
+    background-color: #fed665;
+    border-color: #fed665;
 }
