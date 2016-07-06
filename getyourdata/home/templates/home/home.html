@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
 
 {% block content %}
@@ -15,13 +16,13 @@
 			{% endblocktrans %}
 			<br>
 			<br>
-			<p><a class="btn btn-primary btn-lg" href="#"><span class="glyphicon glyphicon-pencil"></span> {% trans "Make a request" %}</a></p>
-			<p><a class="btn btn-link">{% trans "I've already made a request" %}</a></p>
+			<p><a class="btn btn-primary btn-lg" href="{% url 'organization:list_organizations' %}"><span class="glyphicon glyphicon-pencil"></span> {% trans "Make a request" %}</a></p>
+
 
 		</div>
 		<div class="col-md-6">
 			<br>
-			<img src="http://placekitten.com/500/300"/>
+			<img src="{% static 'img/frontpage-icons.jpg' %}"/>
 		</div>
 	</div>
 	<div class="row">
