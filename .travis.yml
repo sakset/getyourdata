@@ -10,7 +10,7 @@ install:
 - pip install -r requirements.txt
 - python dev_manage.py migrate
 script:
-- coverage run dev_manage.py test
+- coverage run dev_manage.py test_all
 - codeclimate-test-reporter
 after_success:
 - test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
