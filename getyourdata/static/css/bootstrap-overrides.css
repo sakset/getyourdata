@@ -1,0 +1,27 @@
+#bootstrap-overrides .body {
+    color: #fff;
+}
+
+#bootstrap-overrides .navbar-inverse {
+    background-color: #ee766c;
+    border-color: #fff;
+}
+
+#bootstrap-overrides .navbar-brand {
+    color: #fff;
+}
+
+#bootstrap-overrides .navbar-inverse .navbar-nav>li>a {
+    color: #fff;
+}
+
+#bootstrap-overrides .btn-primary {
+    color: #fff;
+    background-color: #46494e;
+    border-color: #d2d3d2;
+}
+
+#bootstrap-overrides .well {
+    color: #fff;
+    background-color: #fed665;
+}

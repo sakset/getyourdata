@@ -3,10 +3,9 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from organization.models import Organization, OrganizationDraft
-from organization.models import AuthenticationField
-
+from organization.models import Organization, AuthenticationField, Register, OrganizationDraft
 from organization import admin_views
+
 
 @admin.register(AuthenticationField)
 class AuthenticationFieldAdmin(admin.ModelAdmin):
@@ -23,6 +22,14 @@ class OrganizationAdmin(admin.ModelAdmin):
         'verified',
         'created_on',
         'updated_on',
+    ]
+
+
+@admin.register(Register)
+class RegisterAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'created_on',
     ]
 
 
