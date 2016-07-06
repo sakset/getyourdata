@@ -40,8 +40,22 @@
                 {% endblocktrans %}</p>
                 <form class="form-horizontal" role="form" action="{% url 'organization:view_organization' organization.id %}" method="post">
                     {% csrf_token %}
+                    {% if form.rating.errors %}
+                        <ul>
+                        {% for error in form.rating.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
                     <input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs">
                     <div class="form-group">
+                        {% if form.message.errors %}
+                            <ul>
+                            {% for error in form.message.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
                         <textarea class="form-control" cols="40" id="id_message" name="message" placeholder="{{ form.message.label }}" required="required" rows="10" title></textarea>
                     </div>
                     <input class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}"/>
@@ -89,7 +103,6 @@
                         {% for comment in comments %}
                             <tr>
                                 <td>{{ comment.message }}</td>
-
                                 <td class="text-right"><input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs" value="{{ comment.rating }}" readonly></td>
                             </tr>
                         {% endfor %}
