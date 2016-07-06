@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rosetta',
     'rest_framework',
     'debug_toolbar',
+    'django_extensions',
 
     'getyourdata',
     'home',
