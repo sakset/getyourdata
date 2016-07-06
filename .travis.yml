@@ -9,18 +9,23 @@ before_install:
 install:
 - pip install -r requirements.txt
 - python dev_manage.py migrate
-script: 
+script:
 - coverage run dev_manage.py test
 - codeclimate-test-reporter
 after_success:
 - test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
-- test $TRAVIS_BRANCH = "master" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH; ./deploy.sh" &> /dev/null
+- test $TRAVIS_BRANCH = "master" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST
+  "cd $DEPLOY_PATH; ./deploy.sh" &> /dev/null
 addons:
   apt:
     packages:
     - sshpass
   code_climate:
-      repo_token: 42571cb2de5890d0afd0580da602aa5ceef9b7eb2d3bec7fa78f294e57b01d24
+    repo_token: 42571cb2de5890d0afd0580da602aa5ceef9b7eb2d3bec7fa78f294e57b01d24
+  sauce_connect:
+    username: "Matoking"
+    access_key:
+      secure: kbGVbEWTngbOP776hY+UJiX2JZK+Iaf7J7YSIOh/4RmKEFlqSuo07E9uOKNa3P+EEZz8I5mBLJG6W9pHhbFUhhr6mO/YJTa0d6CGwVe0nsF/ngZMcq6oaVKrjnPflb5ulkXPN37/kT4tYsXzow6JtSdqD1Z3ANPWKe72O6Fk/ISwbDxlCykYjQ+s10mx36dlO+1P789Jc6nwjk2a54FWb9zrHnNZY187FTx0TI670MSz4dV0vREoyqM89it8TYTngjEm2KPUv5qjujfcdmhqcLduop7XXenXxGr1F1R/7hRCwDsOmyfCOnh0rmQse5H8So5v8LWZSJ8iAKYuE2w2rTilhNl75oUEDO/M7JBrccoOYBhAZHkY01Sbfgl22gi3kUvaMUXd51T+NmD7uysKCl1M9MnSpczoLnaQ7AWayN7Fster39K/HG23/gigVpGudYGjtrYuvOAaoX5pJyGN3ayXRUcQYri8IWKBHNY4F9ju+e9Vu6BVubE9MyjxRX3QBWLzmLKUBpKq9ssIjsAQ/Aus7F86OdvEaTIQIfCZWyV719y/wPlC3LYwe6Za7dJwtf5PNiAX2WK+wEYqMdEyaxb0AdVlUKxlWMQlvJq441LNhET6vAtCA77vt96A0MVfcn2qEvnOeg+F+fsdwLW1vrSh2RBZ+ppXPmH/A6pejmc=
 env:
   global:
   - secure: Z0MZzP8JLezxjxfgJ6aL9uW0+8E5lBZ5zN+PxTqpJOliz/CM0coigvIoI72viX7xTd25BOPndim9nhF28LrDSuMm8VxeIOjgIsqJRkTmVa2tJhHqRTPohD46k4jzkTLBgiw4yncsBpwYYpYx9o3a0V7NpPYBkwu4NrAs/LHEv1UeW2qFNr7EpDKiHJPN4CjUgmyd3dLjky/aFvFqviG97VcZ83pvslwr4qHahV/Y/GwGoWupAqmWIOK3Msf/TSHvb+QY8QjWcES5JZYVU+or6iLk6pZ5e54gZvgIZDb/4WHnZDwvCIInn9CnVfHxuPFamEZJZbrJWZYbL3fM/5o7G6K0iiVH44rQ5eO24J3bt7SbEo6I3pYwL0Z66YxmQaPGPdPjU70Hj9O1yviMrIWf+3jVKzQjzCULNkASpXNVtbwAbRNxaN2u9iJImA21dr6sQfau0MPbsO2zuZGlOPs8dHgFXTMfS3uWqNzTi7/jlIFx/PSwXQqsxe4LEY5lg9qCAE+vIZHFWT4+kb1nA3xsUMrpATC1n9geuu6aMuCfN3LqulcIuAlj2Jj/cZe6ZVy3BK9ssD9y3V0MzvV0A/ESHNhEOJr0Om3xSoytaox6sd02ANu+YUXh18pCIEFyBEK6EAUqTDJE3JywXW1hmBWBp6Bb2N1/A/IzcZiW7tZ9cjc=

@@ -1,13 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.core import mail
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase
 
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.common.by import By
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
+from getyourdata.testcase import LiveServerTestCase
 
 from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
@@ -253,20 +251,7 @@ class DataRequestCreationTests(TestCase):
 
 
 @isSeleniumTest()
-class LiveDataRequestCreationTests(StaticLiveServerTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super(LiveDataRequestCreationTests, cls).setUpClass()
-        cls.selenium = WebDriver()
-        # Prevent tests from failing by making the test wait longer
-        # if element isn't immediately available
-        cls.selenium.implicitly_wait(3)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.selenium.quit()
-        super(LiveDataRequestCreationTests, cls).tearDownClass()
-
+class LiveDataRequestCreationTests(LiveServerTestCase):
     def test_selenium_email_request_can_be_created_successfully(self):
         self.organization = Organization.objects.create(
             name='Organization Two',
@@ -331,6 +316,7 @@ class LiveDataRequestCreationTests(StaticLiveServerTestCase):
 
         self.assertIn("Further action required", self.selenium.page_source)
         self.assertIn("Download PDF", self.selenium.page_source)
+
 
 @isDjangoTest()
 class AuthenticationAttributeValidationTests(TestCase):
