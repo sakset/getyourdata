@@ -1,46 +1,56 @@
 # Get your data
 
 [![Build Status](https://travis-ci.org/sakset/getyourdata.svg?branch=master)](https://travis-ci.org/sakset/getyourdata)
+[![Code Climate](https://codeclimate.com/github/sakset/getyourdata/badges/gpa.svg)](https://codeclimate.com/github/sakset/getyourdata)
+[![Test Coverage](https://codeclimate.com/github/sakset/getyourdata/badges/coverage.svg)](https://codeclimate.com/github/sakset/getyourdata/coverage)
 
-### Deviympäristön asennus ###
+### Description ###
 
-Asenna ainakin seuraavat, käytössä PostgreSQL-kanta
+GetYourData.org is a semi-crowdsourced site that makes it possible for a single individual to send an information request to a company. The user can select a list of companies that have information of the person, allowing every information request to be created at once. Depending on the organization, a request can be handled using either an email message (automatically sent by GetYourData.org) or in mail (printable letter is created by GetYourData.org).
+
+More information can be found at [requestyourdata.org](http://okffi.github.io/ryd/)
+
+### Setting up the development server ###
+
+Install the required dependencies using the following command (should work on Debian and derivatives such as Ubuntu)
 
     sudo apt-get install libpq-dev libjpeg-dev python-dev postgresql postgresql-contrib python-virtualenv
 
-Mene prjojektikansioon. Asenna virtualenv-kansio projektikansion sisään. Tämän niminen kansio on gitignoressa.
+Navigate to the project directory. Install virtualenv.
 
     cd getyourdata/getyourdata/
     virtualenv env
 
-Projektikansioon ilmestyi kansio nimeltä env. Aktivoi ympäristö.
+Enable the now installed virtualenv. This will help keep the project-related Python configuration and installation separate from the system-wide Python installation.
     
     source env/bin/activate
 
-Päivitä pip ja asenna requirements.txt -tiedoston sisältö.
+Upgrade pip and install dependencies in the requirements.txt file.
 
     pip install --upgrade pip
     pip install -r requirements.txt
 
-Jos olet asentanut pipillä uusia paketteja, lisää ne requirementseihin seuraavasti.
+If you've installed new packages, update requirements.txt to include the new dependencies.
 
     pip freeze > requirements.txt
 
-Suorita skripti devikannan (PostgreSQL) luomiseen/resetointiin.
+Run a script to create/flush the development database (PostgreSQL).
 
     sudo bash create_dev_db.bash
 
-Aja migraatiot uuteen/muuttuneeseen kantaan.
+Run the database migrations.
 
     python dev_manage.py migrate
 
-Luo pääkäyttäjä Djangon admin-käyttöliittymää varten.
+Create a superuser to use the admin interface at /admin/.
 
     python dev_manage.py createsuperuser
 
-Käynnistä devipalvelin (defaulttina on portti 8000, tässä käytössä portti 8080).
+Start the development server (default port is 8000, the following example uses 8080).
 
     python dev_manage.py runserver 8080
 
-Avaa selain http://localhost:8080
+Open the browser at http://localhost:8080
+
+That's it!
 

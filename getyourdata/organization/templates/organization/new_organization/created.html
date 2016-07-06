@@ -11,15 +11,15 @@
             </div>
             <div class="alert alert-success">
                 <strong>{% trans "Organization profile created!" %}</strong>
-                <p>{% blocktrans %}
+                <p>{% blocktrans trimmed %}
                 An organization profile has been created! You can view the created organization profile, create a new user request using the provided details or return to the homepage.
                 {% endblocktrans %}</p>
-                <p><b>{% blocktrans %}
+                <p><b>{% blocktrans trimmed %}
                 Note that the organization profile won't be made visible until it has been verified by the site staff.
                 {% endblocktrans %}</b></p>
                 <hr>
-                <a href="#" class="btn btn-primary">View organization profile</a>
-                <a href="#" class="btn btn-primary">Create a new request</a>
+                <a href="{% url 'organization:view_organization' organization.id %}" class="btn btn-primary">{% trans "View organization profile" %}</a>
+                <a href="{% url 'organization:list_organizations'%}" class="btn btn-primary">{% trans "Create a new request" %}</a>
             </div>
         </div>
     </div>

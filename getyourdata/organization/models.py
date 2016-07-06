@@ -21,8 +21,11 @@ class AuthenticationField(BaseModel):
     def __unicode__(self):
         return self.title
 
-
-class Organization(BaseModel):
+class OrganizationDetails(BaseModel):
+    """
+    Base organization details each organization has, whether the model
+    is an available organization profile or an edit draft made by an user
+    """
     name = models.CharField(
         max_length=255,
         verbose_name=_("Name"))
@@ -52,14 +55,22 @@ class Organization(BaseModel):
         default="",
         verbose_name=_("Country"))
 
+    authentication_fields = models.ManyToManyField(
+        AuthenticationField, related_name="+")
+
+    class Meta:
+        abstract = True
+
+
+class Organization(OrganizationDetails):
+    """
+    Organization that is accessible to all users
+    """
     # Has admin verified this organization as having correct information
     verified = models.BooleanField(
         default=False,
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
-
-    authentication_fields = models.ManyToManyField(
-        AuthenticationField, related_name="+")
 
     class Meta:
         ordering = ('created_on',)
@@ -84,7 +95,6 @@ class Organization(BaseModel):
 
 
 class Register(BaseModel):
-
     # name of the register
     name = models.CharField(max_length=255,
                             help_text=_("The name of the register used by the organization. Eg. Customer register"),
@@ -96,3 +106,26 @@ class Register(BaseModel):
 
     def __unicode__(self):
         return self.name
+
+
+class OrganizationDraft(OrganizationDetails):
+    """
+    Organization draft created when an user modifies an existing organization
+    and submits the suggestions. Only visible to the site staff.
+    """
+    class Meta:
+        verbose_name = "organization edit draft"
+        verbose_name_plural = "organization edit drafts"
+        ordering = ('updated_on',)
+
+        permissions = (
+            ("check_organization_draft",
+            _("Can check organization drafts and update the original organization")),
+        )
+
+    original_organization = models.ForeignKey(
+        "organization.Organization", related_name="original_organizations")
+
+    checked = models.BooleanField(default=False)
+    ignored = models.BooleanField(default=False)
+    updated = models.BooleanField(default=False)

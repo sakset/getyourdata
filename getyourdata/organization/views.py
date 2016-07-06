@@ -1,9 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 
-from organization.models import Organization
-from organization.forms import NewOrganizationForm
+from organization.models import Organization, OrganizationDraft
+from organization.models import AuthenticationField
+from organization.forms import NewOrganizationForm, EditOrganizationForm
 
 
 def list_organizations(request):
@@ -56,8 +59,18 @@ def new_organization(request):
     form = NewOrganizationForm(request.POST or None)
 
     if form.is_valid():
+        # Get authentication fields from the form
+        authentication_field_ids = form.cleaned_data["authentication_fields"]
+        authentication_fields = AuthenticationField.objects.filter(
+            pk__in=authentication_field_ids)
+        del form.cleaned_data["authentication_fields"]
+
         organization = Organization(**form.cleaned_data)
         organization.save()
+
+        organization.authentication_fields.add(*authentication_fields)
+        organization.save()
+
         return render(
             request, "organization/new_organization/created.html",
             {"organization": organization})
@@ -65,3 +78,40 @@ def new_organization(request):
         return render(
             request, "organization/new_organization/new.html",
             {"form": form})
+
+
+def edit_organization(request, org_id=None):
+    """
+    Edit an existing organization. The modified organization is saved as an
+    OrganizationDraft which can be implemented by staff
+    """
+    try:
+        organization = Organization.objects.prefetch_related("authentication_fields").get(
+            pk=org_id)
+    except ObjectDoesNotExist:
+        raise Http404("Organization not found")
+
+    form = EditOrganizationForm(
+        request.POST or None, organization=organization)
+
+    if form.is_valid():
+        # Get authentication fields from the form
+        authentication_field_ids = form.cleaned_data["authentication_fields"]
+        authentication_fields = AuthenticationField.objects.filter(
+            pk__in=authentication_field_ids)
+        del form.cleaned_data["authentication_fields"]
+
+        organization_draft = OrganizationDraft(**form.cleaned_data)
+        organization_draft.original_organization = organization
+        organization_draft.save()
+
+        organization_draft.authentication_fields.add(*authentication_fields)
+        organization_draft.save()
+
+        return render(request, "organization/edit_organization/done.html", {
+            "organization": organization})
+
+    return render(
+        request, "organization/edit_organization/edit.html",
+        {"form": form,
+         "organization": organization})

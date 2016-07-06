@@ -14,31 +14,40 @@
     <div class="row">
         <div class="col-md-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">{% trans "Send a request" %}</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-envelope"></span> {% trans "Send a request" %}</div>
                 <div class="panel-body">
-                <p>{% blocktrans %}
+                <p>{% blocktrans trimmed %}
                 Does this organization have your data? Send them a request.
                 {% endblocktrans %}</p>
                 <a class="btn btn-success" href="{% url "data_request:request_data" organization.id %}">{% trans "Create request" %}</a>
                 </div>
             </div>
-            <div class="panel panel-warning">
-                <div class="panel-heading">{% trans "Feedback" %}</div>
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="glyphicon glyphicon-wrench"></span> {% trans "Update details" %}</div>
                 <div class="panel-body">
-                <p>{% blocktrans %}
-                Is this organization's contact information incorrect or out-of-date?
+                <p>{% blocktrans trimmed %}
+                Is this organization's information incorrect or out-of-date? Update the organization profile to keep it up-to-date.
                 {% endblocktrans %}</p>
-                <b>Add a feedback form here</b>
+                <a class="btn btn-info" href="{% url "organization:edit_organization" organization.id %}">{% trans "Update details" %}</a>
+                </div>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading"><span class="glyphicon glyphicon-comment"></span> {% trans "Feedback" %}</div>
+                <div class="panel-body">
+                <p>{% blocktrans trimmed %}
+                Do you have feedback regarding this organization? Send us feedback using the following form.
+                {% endblocktrans %}</p>
+                <a class="btn btn-info" href="#">Feedback form here some day</a>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
-            <h2>Contact information</h2>
+            <h2>{% trans "Contact information" %}</h2>
             <hr>
 			{% if not organization.verified %}
 			<div class="alert alert-danger">
 				<strong>{% trans "Unverified contact details" %}</strong><br>
-				{% blocktrans %}
+				{% blocktrans trimmed %}
 				The contact details for this organization have not been verified by a staff member yet.
 				{% endblocktrans %}
 			</div>
@@ -59,7 +68,7 @@
 	            <a href="{{ organization.email_address }}">{{ organization.email_address }}</a>
 	            {% endif %}
 			{% else %}
-			<p>{% blocktrans %}
+			<p>{% blocktrans trimmed %}
 			This organization does not have any valid contact details at the moment.
 			{% endblocktrans %}</p>
 			{% endif %}

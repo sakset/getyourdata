@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import Permission, User
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 
@@ -8,16 +9,23 @@ from selenium.webdriver.common.by import By
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
 
-from organization.models import Organization, AuthenticationField
+from organization.models import Organization, OrganizationDraft
+from organization.models import AuthenticationField
 
 
 @isDjangoTest()
 class OrganizationCreationTests(TestCase):
+    def setUp(self):
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
     def test_organization_with_valid_email_address_can_be_added(self):
         response = self.client.post(
             reverse("organization:new_organization"),
             {"name": "The Organization",
-             "email_address": "valid@address.com"},
+             "email_address": "valid@address.com",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -31,7 +39,8 @@ class OrganizationCreationTests(TestCase):
         response = self.client.post(
             reverse("organization:new_organization"),
             {"name": "The Organization",
-             "email_address": "notavalidaddrss"},
+             "email_address": "notavalidaddrss",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertNotContains(response, "Organization profile created")
@@ -41,7 +50,8 @@ class OrganizationCreationTests(TestCase):
     def test_organization_with_missing_contact_information_cant_be_added(self):
         response = self.client.post(
             reverse("organization:new_organization"),
-            {"name": "The Organization"},
+            {"name": "The Organization",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(
@@ -54,7 +64,8 @@ class OrganizationCreationTests(TestCase):
             {"name": "The Organization",
              "address_line_one": "Fake Street 4",
              "postal_code": "00444",
-             "country": "Finland"},
+             "country": "Finland",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -70,7 +81,8 @@ class OrganizationCreationTests(TestCase):
         response = self.client.post(
             reverse("organization:new_organization"),
             {"name": "The Organization",
-             "address_line_one": "Fake Street 4"},
+             "address_line_one": "Fake Street 4",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertNotContains(response, "Organization profile created")
@@ -83,7 +95,8 @@ class OrganizationCreationTests(TestCase):
              "address_line_one": "Fake Street 4",
              "postal_code": "00444",
              "country": "Finland",
-             "email_address": "fake@address.com"},
+             "email_address": "fake@address.com",
+             "authentication_fields": (self.auth_field1.id,)},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -96,6 +109,20 @@ class OrganizationCreationTests(TestCase):
         self.assertEquals(organization.country, "Finland")
         self.assertEquals(organization.email_address, "fake@address.com")
 
+    def test_organization_with_no_authentication_fields_cant_be_added(self):
+        response = self.client.post(
+            reverse("organization:new_organization"),
+            {"name": "The Organization",
+             "address_line_one": "Fake Street 4",
+             "postal_code": "00444",
+             "country": "Finland",
+             "email_address": "fake@address.com"},
+            follow=True)
+
+        self.assertNotContains(response, "Organization profile created")
+
+        self.assertEquals(Organization.objects.all().count(), 0)
+
 
 def create_organization(test_case):
     Organization.objects.create(
@@ -103,6 +130,8 @@ def create_organization(test_case):
         email_address="valid@address.com",
         verified=True)
 
+def verify_all_organizations():
+    Organization.objects.all().update(verified=True)
 
 @isDjangoTest()
 class OrganizationListingTests(TestCase):
@@ -114,6 +143,7 @@ class OrganizationListingTests(TestCase):
     def test_existing_organizations_listed_on_page(self):
         for i in range(0, 5):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -122,6 +152,7 @@ class OrganizationListingTests(TestCase):
     def test_only_15_organizations_are_listed_per_page(self):
         for i in range(0, 20):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -130,6 +161,7 @@ class OrganizationListingTests(TestCase):
     def test_correct_amount_of_organizations_listed_per_page(self):
         for i in range(0, 25):
             create_organization(self)
+        verify_all_organizations()
 
         response = self.client.get(reverse("organization:list_organizations"))
 
@@ -148,6 +180,7 @@ class OrganizationListingTests(TestCase):
         Organization.objects.all().update(email_address="")
         organization = Organization.objects.all()[0]
         organization.email_address = "fake@address.com"
+        organization.verified = True
         organization.save()
 
         response = self.client.get(reverse("organization:list_organizations"))
@@ -166,6 +199,7 @@ class OrganizationListingTests(TestCase):
         organization.address_line_one = "Fake Street"
         organization.postal_code = "012345"
         organization.country = "Finland"
+        organization.verified = True
         organization.save()
 
         response = self.client.get(reverse("organization:list_organizations"))
@@ -182,6 +216,10 @@ class OrganizationViewTests(TestCase):
             postal_code="00234",
             country="Finland",
             verified=True)
+
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
 
         response = self.client.get(
             reverse("organization:view_organization", args=(organization.id,)))
@@ -212,6 +250,191 @@ class OrganizationViewTests(TestCase):
 
         self.assertContains(response,
             "The contact details for this organization have not been verified")
+
+
+@isDjangoTest()
+class OrganizationUpdateTests(TestCase):
+    def setUp(self):
+        self.organization = Organization.objects.create(
+            name="The Organization",
+            address_line_one="Fake Street 4",
+            postal_code="00234",
+            country="Finland",
+            verified=True)
+
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.auth_field2 = AuthenticationField.objects.create(
+            name="some_value",
+            title='Some Value')
+
+        self.auth_field3 = AuthenticationField.objects.create(
+            name="some_string",
+            title='Some string')
+
+    def test_user_can_create_organization_draft(self):
+        response = self.client.get(
+            reverse(
+                "organization:edit_organization",
+                args=(self.organization.id,)))
+
+        self.assertContains(response, "Fake Street 4")
+        self.assertContains(response, "00234")
+        self.assertContains(response, "Finland")
+
+        response = self.client.post(
+            reverse(
+                "organization:edit_organization", args=(self.organization.id,)),
+                {"name": "Da Organization",
+                 "address_line_one": "Fake Street 44",
+                 "postal_code": "00234",
+                 "country": "Finland",
+                 "authentication_fields": [
+                    self.auth_field3.id, self.auth_field1.id]})
+
+        self.assertContains(response, "Updated organization profile sent")
+
+        self.assertEquals(
+            self.organization.authentication_fields.all().count(), 0)
+
+        organization_draft = OrganizationDraft.objects.all()[0]
+
+        self.assertEquals(
+            organization_draft.authentication_fields.all().count(), 2)
+
+    def test_user_cant_create_organization_without_authentication_fields(self):
+        response = self.client.post(
+            reverse(
+                "organization:edit_organization", args=(self.organization.id,)),
+                {"name": "Da Organization",
+                 "address_line_one": "Fake Street 44",
+                 "postal_code": "00234",
+                 "country": "Finland",
+                 "authentication_fields": []})
+
+        self.assertNotContains(response, "Updated organization profile sent")
+
+        self.assertEquals(OrganizationDraft.objects.all().count(), 0)
+
+
+@isDjangoTest()
+class OrganizationUpdateAdminTests(TestCase):
+    def setUp(self):
+        self.moderator_user = User.objects.create_user(
+            'moderator', 'moderator@moderator.com', 'password')
+        self.moderator_user.is_staff = True
+
+        self.moderator_user.user_permissions.add(Permission.objects.get(
+            codename='check_organization_draft'))
+        self.moderator_user.user_permissions.add(Permission.objects.get(
+            codename='change_organizationdraft'))
+        self.moderator_user.save()
+        self.client.login(username="moderator", password="password")
+
+        self.organization = Organization.objects.create(
+            name="The Organization",
+            address_line_one="Fake Street 4",
+            postal_code="00234",
+            country="Finland",
+            verified=True)
+
+        self.organization_draft = OrganizationDraft.objects.create(
+            original_organization=self.organization,
+            name="Da Organization",
+            address_line_one="Fake Street 44",
+            postal_code="00234",
+            country="Finland")
+
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.auth_field2 = AuthenticationField.objects.create(
+            name="some_value",
+            title='Some Value')
+
+        self.organization_draft.authentication_fields.add(self.auth_field2)
+
+    def test_guest_cant_review_organization_draft(self):
+        self.client.logout()
+
+        response = self.client.get(
+            reverse(
+                "admin:organization_organizationdraft_check_organization_draft",
+                args=(self.organization_draft.id,)))
+
+        self.assertContains(
+            response, "You don't have the permission to do this.",
+            status_code=422)
+
+    def test_moderator_can_review_organization_draft(self):
+        response = self.client.get(
+            reverse(
+                "admin:organization_organizationdraft_check_organization_draft",
+                args=(self.organization_draft.id,)))
+
+        self.assertContains(response, "Organization draft")
+
+        self.assertContains(response, "The Organization")
+        self.assertContains(response, "Da Organization")
+
+        self.assertContains(response, "Fake Street 4")
+        self.assertContains(response, "Fake Street 44")
+
+        self.assertContains(response, "Some Value")
+
+    def test_moderator_can_review_organization_draft_and_update_details(self):
+        response = self.client.post(
+            reverse(
+                "admin:organization_organizationdraft_check_organization_draft",
+                args=(self.organization_draft.id,)),
+            {"update": True},
+            follow=True)
+
+        self.assertContains(
+            response,
+            "The organization Da Organization was updated with new details")
+
+        self.assertContains(response, "Review again")
+        self.assertContains(response, "Updated")
+
+        organization = Organization.objects.all()[0]
+
+        self.assertEquals(organization.name, "Da Organization")
+        self.assertEquals(organization.address_line_one, "Fake Street 44")
+        self.assertEquals(organization.verified, True)
+
+        organization_draft = OrganizationDraft.objects.all()[0]
+
+        self.assertEquals(organization_draft.checked, True)
+        self.assertEquals(organization_draft.updated, True)
+
+    def test_moderator_can_review_and_ignore_organization_draft(self):
+        response = self.client.post(
+            reverse(
+                "admin:organization_organizationdraft_check_organization_draft",
+                args=(self.organization_draft.id,)),
+            {"ignore": True},
+            follow=True)
+
+        self.assertContains(
+            response,
+            "The organization draft for The Organization was ignored")
+
+        self.assertContains(response, "Review again")
+        self.assertContains(response, "Ignored")
+
+        organization = Organization.objects.all()[0]
+
+        self.assertEquals(organization.name, "The Organization")
+        self.assertEquals(organization.address_line_one, "Fake Street 4")
+
+        organization_draft = OrganizationDraft.objects.all()[0]
+
+        self.assertEquals(organization_draft.checked, True)
+        self.assertEquals(organization_draft.ignored, True)
 
 
 @isSeleniumTest()
@@ -357,6 +580,7 @@ class OrganizationListJavascriptTests(StaticLiveServerTestCase):
         organization.address_line_one = "Fake Street"
         organization.postal_code = "012345"
         organization.country = "Finland"
+        organization.verified = True
         organization.save()
 
         self.selenium.get(
