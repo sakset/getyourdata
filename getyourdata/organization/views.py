@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
+from django.utils.translation import ugettext as _
 
 from organization.models import Organization, OrganizationDraft
 from organization.models import AuthenticationField
-from organization.forms import NewOrganizationForm, EditOrganizationForm
+from organization.forms import NewOrganizationForm, EditOrganizationForm, CommentForm
 
 
 def list_organizations(request):
@@ -45,10 +47,22 @@ def view_organization(request, org_id):
     some stats later
     """
     organization = get_object_or_404(Organization, pk=org_id)
-
-    return render(
-        request, 'organization/view.html',
-        {'organization': organization})
+    comments = organization.comments(manager='objects').all()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.organization = organization
+            comment.save()
+            messages.success(request, _('Thank you for your feedback!'))
+            return redirect(reverse('organization:view_organization', args=(organization.id,)))
+    else:
+        form = CommentForm()
+    return render(request, 'organization/view.html', {
+        'organization': organization,
+        'comments': comments,
+        'form': form,
+    })
 
 
 def new_organization(request):

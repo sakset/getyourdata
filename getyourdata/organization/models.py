@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -129,3 +130,15 @@ class OrganizationDraft(OrganizationDetails):
     checked = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
     updated = models.BooleanField(default=False)
+
+
+class Comment(BaseModel):
+    organization = models.ForeignKey(Organization, related_name='comments')
+    message = models.TextField()
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3
+    )
+
+    def __unicode__(self):
+        return 'Comment ' + unicode(self.organization)

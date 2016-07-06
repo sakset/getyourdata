@@ -25,3 +25,13 @@
     color: #fff;
     background-color: #fed665;
 }
+
+/* Hiding star-rating captions and clear buttons */
+
+#bootstrap-overrides .star-rating>.caption>.label {
+    visibility: hidden;
+}
+
+#bootstrap-overrides .star-rating>.clear-rating {
+    visibility: hidden;
+}

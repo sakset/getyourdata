@@ -3,7 +3,8 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from organization.models import Organization, AuthenticationField, Register, OrganizationDraft
+from organization.models import (Organization, AuthenticationField,
+    Register, OrganizationDraft, Comment)
 from organization import admin_views
 
 
@@ -71,3 +72,11 @@ class OrganizationDraftAdmin(admin.ModelAdmin):
             else:
                 return "{0} - {1}".format(link, _("Ignored"))
     check_organization_draft.allow_tags = True
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = [
+        'organization',
+        'message',
+        'rating',
+    ]

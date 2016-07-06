@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from organization.models import Organization, AuthenticationField
+from organization.models import Organization, AuthenticationField, Comment
 
 ORGANIZATION_FIELDS = [
     "name", "email_address", "address_line_one",
@@ -101,3 +101,15 @@ class EditOrganizationForm(forms.ModelForm):
 
         raise forms.ValidationError(
             _("Organization profile must contain either a valid email address or postal information"))
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ['rating', 'message']
+        labels = {
+            'rating': _('Rating'),
+            'message': _('Message'),
+        }
+
