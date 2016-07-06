@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="en" id="bootstrap-overrides">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -10,16 +10,17 @@
         <meta content="text/html; charset=UTF-8" http-equiv="content-type">
         <meta name="description" content="getyourdata">
 
+        {% bootstrap_css %}
+
         <link rel="stylesheet" href="{% static 'css/getyourdata.css' %}">
         <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/bootstrap-overrides.css' %}">
 
         <title>{% block title %}GetYourData.org{% endblock %}</title>
-        {% bootstrap_css %}
         {% block extrahead %}
         {% endblock extrahead %}
     </head>
-    <body class="{% block body_class %}{% endblock %}">
+    <body class="{% block body_class %}{% endblock %}" id="bootstrap-overrides">
     	{# MENUBAR #}
         {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
 

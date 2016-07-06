@@ -1,5 +1,9 @@
-#bootstrap-overrides .body {
-    color: #fff;
+#bootstrap-overrides .body, body{
+    color: #a2a7ad;
+}
+
+#bootstrap-overrides a {
+    color: #a2a7ad
 }
 
 #bootstrap-overrides .navbar-inverse {
@@ -24,4 +28,29 @@
 #bootstrap-overrides .well {
     color: #fff;
     background-color: #fed665;
+}
+
+#bootstrap-overrides .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color: #a2a7ad;
+
+}
+
+#bootstrap-overrides .h1 .small, .h1 small, .h2 .small, .h2 small, .h3 .small, .h3 small, .h4 .small, .h4 small, .h5 .small, .h5 small, .h6 .small, .h6 small, h1 .small, h1 small, h2 .small, h2 small, h3 .small, h3 small, h4 .small, h4 small, h5 .small, h5 small, h6 .small, h6 small {
+    font-weight: 400;
+    line-height: 1;
+    color: #fff;
+}
+
+#bootstrap-overrides .well h1, .well h2, .well h3, .well h4, .well h5, .well h6 {
+    color: #fff;
+}
+
+#bootstrap-overrides .well a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+#bootstrap-overrides .well .thumbnail {
+    padding: 0px;
+    border: 0px;
 }
