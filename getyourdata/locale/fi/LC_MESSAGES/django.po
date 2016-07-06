@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-06 03:22+0300\n"
-"PO-Revision-Date: 2016-06-06 00:31+0000\n"
-"Last-Translator:   <admin@admin.admin>\n"
+"POT-Creation-Date: 2016-07-06 16:13+0000\n"
+"PO-Revision-Date: 2016-07-06 16:47+0000\n"
+"Last-Translator:   <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,63 +19,105 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.7.11\n"
 
+#: data_request/forms.py:18 data_request/forms.py:46
+msgid "The value for this field was not valid"
+msgstr "Tämän kentän arvo ei ollut kelvollinen"
+
+#: data_request/forms.py:59
+#| msgid "Email address"
+msgid "Receiving email address"
+msgstr "Vastaanottava sähköpostiosoite"
+
+#: data_request/forms.py:60
+msgid ""
+"Your data and further enquiries by organizations will be sent to this "
+"address"
+msgstr ""
+"Tietosi ja organisaatioiden kyselyt lähetetään tähän sähköpostiosoitteeseen"
+
+#: data_request/services.py:69
+#, python-format
+#| msgid "Data request: "
+msgid "Data request: %s"
+msgstr "Tietopyyntö: %s"
+
+#: data_request/templates/data_request/email/request.html:2
 #: data_request/templates/data_request/mail/request.html:4
 msgid "Data request: "
-msgstr "Tietopyyntö"
+msgstr "Tietopyyntö: "
 
 #: data_request/templates/data_request/expired.html:10
 msgid "Page expired"
 msgstr "Sivu on vanhentunut"
 
-#: data_request/templates/data_request/expired.html:17
-msgid "The content on this page has expired. You may have reached this page by changing the page after sending your requests."
-msgstr "Tämän sivun tiedot ovat vanhentuneet. Olet saattanut saada tämän sivun vaihtamalla sivua tietopyynnö lähetyksen jälkeen."
+#: data_request/templates/data_request/expired.html:16
+msgid ""
+"The content on this page has expired. You may have reached this page by "
+"changing the page after sending your requests."
+msgstr ""
+"Tämän sivun tiedot ovat vanhentuneet. Olet saattanut saapua tälle sivulle "
+"vaihtamalla sivua tietopyynnön lähettämisen jälkeen."
 
-#: data_request/templates/data_request/request_data.html:10
+#: data_request/templates/data_request/request_data.html:11
 msgid "Request your data from"
-msgstr "Pyydä tietosi"
+msgstr "Pyydä tietosi organisaatiolta: "
 
 #: data_request/templates/data_request/request_data.html:13
 msgid "Request your data from multiple organizations"
 msgstr "Pyydä tietosi useammalta organisaatiolta"
 
-#: data_request/templates/data_request/request_data.html:17, organization/templates/organization/list.html:19
+#: data_request/templates/data_request/request_data.html:26
+#: organization/templates/organization/list.html:25
+#: organization/templates/organization/list.html:35
+#: organization/templates/organization/list_js.html:17
+#: organization/templates/organization/view.html:22
 msgid "Create request"
 msgstr "Luo pyyntö"
 
 #: data_request/templates/data_request/request_data.html:32
 msgid "Following organizations will receive request by email"
-msgstr "Seuraavat organisaatiot ottavat vastaan sähköposti pyyntöjä"
+msgstr "Seuraavat organisaatiot ottavat vastaan sähköpostipyyntöjä"
 
 #: data_request/templates/data_request/request_data.html:40
 msgid "Requests for the following organizations will have to be sent via mail"
 msgstr "Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
 
+#. Translators: All requests chosen by user were sent automatically via email
 #: data_request/templates/data_request/sent.html:13
 msgid "All done!"
 msgstr "Valmista!"
 
+#. Translators: User still needs to print a few requests
 #: data_request/templates/data_request/sent.html:16
 msgid "Further action required"
 msgstr "Jatkotoimenpiteitä tarvitaan"
 
 #: data_request/templates/data_request/sent.html:25
 msgid "Print mail requests"
-msgstr "Tulosta postitettava tietopyyntö"
+msgstr "Tulosta postitettavat tietopyynnöt"
 
 #: data_request/templates/data_request/sent.html:28
+#, python-format
+#| msgid "One request needs to be printed."
+#| msgid_plural "%(counter) requests need to be printed."
 msgid "One request needs to be printed."
-msgid_plural "%(counter) requests need to be printed."
+msgid_plural "%(counter)s requests need to be printed."
 msgstr[0] "Yksi pyyntö pitää tulostaa."
 msgstr[1] "%(counter) pyyntöä pitää tulostaa."
 
-#: data_request/templates/data_request/sent.html:35
-msgid "The following organizations require that data requests are sent by mail:"
-msgstr "Seuraavat organisaatiot vaativat että tietopyynnöt lähetetään postitse:"
+#: data_request/templates/data_request/sent.html:34
+msgid ""
+"The following organizations require that data requests are sent by mail:"
+msgstr ""
+"Seuraavat organisaatiot vaativat että tietopyynnöt lähetetään postitse:"
 
 #: data_request/templates/data_request/sent.html:42
-msgid "You can send data requests to the listed organizations by mail. The following document contains the required pages:"
-msgstr "Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraavat dokumentti sisältää tarvittavat kirjeet:"
+msgid ""
+"You can send data requests to the listed organizations by mail. The "
+"following document contains the required pages:"
+msgstr ""
+"Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava "
+"asiakirja sisältää tarvittavat kirjeet:"
 
 #: data_request/templates/data_request/sent.html:44
 msgid "Download PDF"
@@ -83,213 +125,369 @@ msgstr "Lataa PDF-tiedosto"
 
 #: data_request/templates/data_request/sent.html:50
 msgid "Email requests sent!"
-msgstr "Sähköposti pyyntö lähetetty!"
+msgstr "Sähköpostipyynnöt lähetetty!"
 
 #: data_request/templates/data_request/sent.html:52
 msgid "Email requests sent successfully!"
-msgstr "Sähköposti pyyntö lähetetty onnistuneesti!"
+msgstr "Sähköpostipyynnöt lähetetty onnistuneesti!"
 
 #: data_request/templates/data_request/sent.html:53
 msgid "Requests were sent to the following organizations by email:"
 msgstr "Tietopyynnöt lähetettiin seuraaville organisaatioille sähköpostitse:"
 
 #: data_request/templates/data_request/sent.html:59
-msgid "You should receive a copy of your email requests to your email address shortly."
-msgstr "Sinun tulisi saada kopio sähköpostipyynnöstäsi sähköpostiisi vähän ajan kuluttua."
+msgid ""
+"You should receive a copy of your email requests to your email address "
+"shortly."
+msgstr ""
+"Sinun tulisi saada kopio sähköpostipyynnöstäsi sähköpostiisi vähän ajan "
+"kuluttua."
 
-#: data_request/templates/data_request/sent.html:68
-msgid "Note that since we don't store user information, the information on this page will become unavailable when changing the page."
-msgstr "Huomaa että koska emme tallenna tietoja, kaikki sivulla näkyvät tiedot katoavat sivun vaihdon yhteydessä."
+#: data_request/templates/data_request/sent.html:67
+msgid ""
+"Note that since we don't store user information, the information on this "
+"page will become unavailable when changing the page."
+msgstr ""
+"Huomaa että koska emme tallenna tietoja, kaikki sivulla näkyvät tiedot "
+"katoavat sivun vaihdon yhteydessä."
 
-#: data_request/views.py:42
+#: data_request/views.py:65
 msgid "The PDF file couldn't be created! Please try again later."
 msgstr "PDF-tiedoston luonti epäonnistui! Yritä myöhemmin uudelleen."
 
-#: getyourdata/settings.py:145
+#: data_request/views.py:84
+#| msgid "The PDF file couldn't be created! Please try again later."
+msgid "Email requests couldn't be sent! Please try again later."
+msgstr "Sähköpostipyyntöjä ei voitu lähettää! Yritä myöhemmin uudelleen."
+
+#: getyourdata/settings.py:180
 msgid "English"
 msgstr "Englanti"
 
-#: getyourdata/settings.py:146
+#: getyourdata/settings.py:181
 msgid "Finnish"
 msgstr "Suomi"
 
 #. Translators: Front page blurb title
-#: home/templates/home/home.html:10
+#: home/templates/home/home.html:11
 msgid "Find out what companies know about you"
 msgstr "Ota selvää mitä yritykset tietävät sinusta"
 
 #. Translators: Front page blurb
-#: home/templates/home/home.html:13
-msgid "Find out what companies know about you."
-msgstr "Ota selvää mitä yritykset tietävät sinusta."
+#: home/templates/home/home.html:14
+msgid ""
+"You have a right to get copy of the data companies and public sector has "
+"about you. GetYourData helps you with making the enquiries."
+msgstr ""
 
-#. Translators: Navbar link
-#: home/templates/home/home.html:18 templates/navbar.html:16
+#: home/templates/home/home.html:19
 msgid "Make a request"
 msgstr "Tee pyyntö"
 
-#: home/templates/home/home.html:19
-msgid "I've already made a request"
-msgstr "Olen jo tehnyt pyynnön"
-
-#: home/templates/home/home.html:31
+#: home/templates/home/home.html:32
 msgid "How do I make a request?"
-msgstr "Kuinka tehdä pyyntö?"
+msgstr "Kuinka teen pyynnön?"
 
 #. Translators: How do I make a request: First step
-#: home/templates/home/home.html:36
+#: home/templates/home/home.html:37
 msgid "Send a request with this site"
 msgstr "Lähetä pyyntö tällä sivustolla"
 
 #. Translators: How do I make a request: Second step
-#: home/templates/home/home.html:41
-msgid "Receive updates to your request via email"
-msgstr "Vastaanota pyyntöjen vastaukset sähköpostitse"
+#: home/templates/home/home.html:42
+msgid "Authenticate yourself to organization"
+msgstr "Tunnista itsesi organisaatiolle"
 
 #. Translators: How do I make a request: Third step
-#: home/templates/home/home.html:46
-msgid "Download your data once it arrives"
-msgstr "Lataa tietosi kun ne saapuvat"
+#: home/templates/home/home.html:47
+#| msgid "Request your data from multiple organizations"
+msgid "Receive your data from the organization(s)"
+msgstr "Pyydä tietosi useammalta organisaatiolta"
 
 #. Translators: How do I make a request: Fourth step
-#: home/templates/home/home.html:51
+#: home/templates/home/home.html:52
 msgid "Tell us how your request went to help other users"
 msgstr "Kerro meille miten pyyntösi onnistui auttaaksesi muita käyttäjiä"
 
-#: home/templates/home/home.html:54
-msgid "More information about how to request your data"
-msgstr "Lisätietoa tietojen pyytämisestä"
+#: home/templates/home/home.html:55
+#| msgid "More information about how to request your data"
+msgid "More information about"
+msgstr "Lisätietoja tietojen pyytämisestä"
 
-#: home/templates/home/home.html:60
-msgid "Why does it matter?"
-msgstr "Miksi sillä on väliä?"
+#: home/templates/home/home.html:55
+#| msgid "Request your data from"
+msgid "how to request your data"
+msgstr "Pyydä tietosi"
 
-#: organization/forms.py:32
+#: organization/admin.py:66
+msgid "Review"
+msgstr "Katselmoi"
+
+#: organization/admin.py:68
+msgid "Review again"
+msgstr "Katselmoi uudestaan"
+
+#: organization/admin.py:70
+msgid "Updated"
+msgstr "Päivitetty"
+
+#: organization/admin.py:72
+msgid "Ignored"
+msgstr "Sivuutettu"
+
+#: organization/admin_views.py:44
+#, python-format
+msgid "The organization %s was updated with new details."
+msgstr "Organisaatiolle %s päivitettiin uudet tiedot."
+
+#: organization/admin_views.py:54
+#, python-format
+msgid "The organization draft for %s was ignored."
+msgstr "Organisaatioluonnos organisaatiolle %s sivuutettiin."
+
+#: organization/forms.py:35 organization/forms.py:87
+#, fuzzy
+#| msgid "Authentification fields request"
+msgid "What authentication fields this organizations requires"
+msgstr "Tunnistekenttien pyyntö"
+
+#: organization/forms.py:50 organization/forms.py:103
 msgid ""
 "Organization profile must contain either a valid email address or postal "
 "information"
 msgstr ""
-"Organisaation profiilin pitää sisältää joko kelvollinen sähköpostiosoite tai"
-" osoitetiedot"
+"Organisaatioprofiilin pitää sisältää joko kelvollinen sähköpostiosoite tai "
+"osoitetiedot"
 
-#: organization/models.py:23
+#: organization/models.py:19
+msgid "If not blank, this regex is used to validate the field value"
+msgstr "Jos kenttä ei ole tyhjä, tätä regexiä käytetään kentän validointiin"
+
+#: organization/models.py:31
+#: organization/templates/organization/admin/check_organization_draft.html:11
+#: organization/templates/organization/admin/check_organization_draft.html:28
 msgid "Name"
 msgstr "Nimi"
 
-#: organization/models.py:29
+#: organization/models.py:37
 msgid ""
 "Email address used by the organization to respond to user data requests"
 msgstr "Organisaation käyttämä sähköpostiosoite tietopyyntöihin vastaamiseen "
 
-#: organization/models.py:30
+#: organization/models.py:38
+#: organization/templates/organization/admin/check_organization_draft.html:12
+#: organization/templates/organization/admin/check_organization_draft.html:29
 msgid "Email address"
 msgstr "Sähköpostiosoite"
 
-#: organization/models.py:36
+#: organization/models.py:44
+#: organization/templates/organization/admin/check_organization_draft.html:13
+#: organization/templates/organization/admin/check_organization_draft.html:30
 msgid "Address line 1"
 msgstr "Osoiterivi 1"
 
-#: organization/models.py:40
+#: organization/models.py:48
+#: organization/templates/organization/admin/check_organization_draft.html:14
+#: organization/templates/organization/admin/check_organization_draft.html:31
 msgid "Address line 2"
 msgstr "Osoiterivi 2"
 
-#: organization/models.py:44
+#: organization/models.py:52
+#: organization/templates/organization/admin/check_organization_draft.html:15
+#: organization/templates/organization/admin/check_organization_draft.html:32
 msgid "Postal code"
 msgstr "Postinumero"
 
-#: organization/models.py:48
+#: organization/models.py:56
+#: organization/templates/organization/admin/check_organization_draft.html:16
+#: organization/templates/organization/admin/check_organization_draft.html:33
 msgid "Country"
 msgstr "Maa"
 
-#: organization/models.py:53
+#: organization/models.py:72
 msgid "Verified"
 msgstr "Vahvistettu"
 
-#: organization/models.py:63
-msgid "Authentification fields request"
-msgstr "Tunniste kenttien pyyntö"
-
-#: organization/models.py:64
-msgid "Unique identifiers that organization needs and details of the identifiers."
-msgstr "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja yksityiskohtainen kuvaus niistä"
-
-#: organization/models.py:54
+#: organization/models.py:73
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
 
+#: organization/models.py:100
+msgid ""
+"The name of the register used by the organization. Eg. Customer register"
+msgstr "Organisaation käyttämä nimi rekisterille. Esim. \"Asiakasrekisteri\""
+
+#: organization/models.py:101
+msgid "Name of the person register"
+msgstr "Henkilörekisterin nimi"
+
+#: organization/models.py:123
+msgid "Can check organization drafts and update the original organization"
+msgstr ""
+"Voi tarkistaa organisaatioluonnoksia ja päivittää alkuperäistä "
+"organisaatiota"
+
+#: organization/templates/organization/admin/check_organization_draft.html:8
+#| msgid "Organizations"
+msgid "Organization draft: "
+msgstr "Organisaatioluonnos:"
+
+#: organization/templates/organization/admin/check_organization_draft.html:17
+#: organization/templates/organization/admin/check_organization_draft.html:34
+#| msgid "Authentification fields request"
+msgid "Authentication fields"
+msgstr "Tunnistekentät"
+
+#: organization/templates/organization/admin/check_organization_draft.html:27
+msgid "Suggested new details"
+msgstr "Ehdotetut uudet tiedot"
+
+#: organization/templates/organization/admin/check_organization_draft.html:45
+msgid "Ignore suggestions"
+msgstr "Sivuuta ehdotukset"
+
+#: organization/templates/organization/admin/check_organization_draft.html:46
+#| msgid "Add organization"
+msgid "Update organization"
+msgstr "Päivitä organisaatio"
+
+#: organization/templates/organization/edit_organization/done.html:10
+#| msgid "View organization profile"
+msgid "Updated organization profile sent"
+msgstr "Päivitetty organisaatioprofiili lähetetty"
+
+#: organization/templates/organization/edit_organization/done.html:13
+#| msgid "View organization profile"
+msgid "Updated organization profile sent!"
+msgstr "Päivitetty organisaatioprofiili lähetetty!"
+
+#: organization/templates/organization/edit_organization/done.html:14
+#| msgid ""
+#| "Note that the organization profile won't be made visible until it has been "
+#| "verified by the site staff."
+msgid ""
+"An organization profile with your modifications has been sent! The changes "
+"won't be made visible until they have been verified by the site staff."
+msgstr ""
+"Muutoksesi sisältävä organisaatioprofiili lähetetty! Palvelun ylläpito "
+"tarkistaa tiedot ennen kuin ne näkyvät muille käyttäjille."
+
+#: organization/templates/organization/edit_organization/done.html:18
+#: organization/templates/organization/new_organization/created.html:21
+msgid "View organization profile"
+msgstr "Katsele organisaatioprofiilia"
+
+#: organization/templates/organization/edit_organization/edit.html:10
+#| msgid "Add organization"
+msgid "Update organization: "
+msgstr "Päivitä organisaatio:"
+
+#: organization/templates/organization/edit_organization/edit.html:17
+#: organization/templates/organization/new_organization/new.html:17
+msgid "Back"
+msgstr "Takaisin"
+
+#: organization/templates/organization/edit_organization/edit.html:18
+msgid "Update"
+msgstr "Päivitä"
+
+#: organization/templates/organization/edit_organization/edit.html:25
+#| msgid "Creating an organization profile"
+msgid "Updating an organization profile"
+msgstr "Organisaatioprofiilin päivittäminen"
+
+#: organization/templates/organization/edit_organization/edit.html:26
+#: organization/templates/organization/new_organization/new.html:26
+msgid ""
+"The organization profile needs contact information (email address, postal "
+"information or both) that can be used to send the request."
+msgstr "Organisaatio tarvitsee yhteystiedot."
+
+#: organization/templates/organization/edit_organization/edit.html:29
+#| msgid ""
+#| "Before the organization profile can be seen by other users it will be "
+#| "verified by site staff."
+msgid ""
+"Before the updated organization profile can be seen by other users it will "
+"be verified by site staff."
+msgstr ""
+"Sivuston ylläpitajat varmentavat organisaatioprofiilin ennen kuin se näkyy "
+"käyttäjille"
+
+#. Translators: On the "list organizations" view
+#. Translators: Navbar link
+#: organization/templates/organization/list.html:11 templates/navbar.html:17
+msgid "Organizations"
+msgstr "Organisaatiot"
+
 #: organization/templates/organization/list.html:27
+#: organization/templates/organization/list_js.html:21
 msgid "Accepts postal requests"
-msgstr "Hyväksyy posti pyynnöt"
+msgstr "Hyväksyy postipyynnöt"
 
 #: organization/templates/organization/list.html:28
-msgid "Accepts email requests"
-msgstr "Hyväksyy sähköposti pyynnöt"
+#| msgid "Accepts email requests"
+msgid "Accepts email requests "
+msgstr "Hyväksyy sähköpostipyynnöt"
 
-#: organization/templates/organization/list.html:33
+#: organization/templates/organization/list.html:37
+#: organization/templates/organization/list.html:46
+#: organization/templates/organization/list_js.html:23
 msgid "Add organization"
 msgstr "Lisää organisaatio"
 
-#: organization/templates/organization/view.html:17
-msgid "Send a request"
-msgstr "Lähetä pyyntö"
+#: organization/templates/organization/list.html:44
+#| msgid "Organizations"
+msgid "No organizations yet."
+msgstr "Ei organisaatioita."
 
-#: organization/templates/organization/new_organization/view.html:20
-msgid "Does this organization have your data? Send them a request."
-msgstr "Onko organisaatiolla tietoja sinusta? Lähetä heille kysely."
+#: organization/templates/organization/list_js.html:18
+#| msgid "Organization profile created"
+msgid "0 organizations selected."
+msgstr "0 organisaatiota valittu."
 
-#: organization/templates/organization/view.html:26
-msgid "Feedback"
-msgstr "Palaute"
+#: organization/templates/organization/list_js.html:19
+#| msgid "Organization profile created"
+msgid "1 organization selected."
+msgstr "1 organisaatio valittu."
 
-#: organization/templates/organization/new_organization/view.html:29
-msgid "Is this organization's contact information incorrect or out-of-date?"
-msgstr "Ovatko tämän organisaation yhteystiedot virheellisiä tai vanhentuneita?"
+#: organization/templates/organization/list_js.html:20
+#, python-brace-format
+#| msgid "Organization profile created"
+msgid "{0} organizations selected."
+msgstr "{0} organisaatiota valittu."
 
-#: organization/templates/organization/view.html:36
-msgid "Contact information"
-msgstr "Yhteystiedot"
-
-#: organization/templates/organization/view.html:40
-msgid "Unverified contact details"
-msgstr "Tarkistamattomat yhteystiedot"
-
-#: organization/templates/organization/new_organization/view.html:42
-msgid "The contact details for this organization have not been verified by a staff member yet."
-msgstr "Sivun ylläpitäjät eivät ole vielä varmistaneet organisaation yhteystietoja."
-
-#: organization/templates/organization/view.html:48
-msgid "Data requests can be sent in mail to the following address"
-msgstr "Tietopyynnöt voi lähettää postitse seuraavaan osoitteeseen."
-
-#: organization/templates/organization/view.html:56
-msgid "Data requests by email are sent to the following email address"
-msgstr "Tietopyynnöt lähetetään sähköpostilla seuraavaan sähköpostiosoitteeseen."
-
-#: organization/templates/organization/new_organization/view.html:63
-msgid "This organization does not have any valid contact details at the moment."
-msgstr "Organisaatiolla ei ole tällä hetkellä voimassa olevia yhteystietoja."
+#: organization/templates/organization/list_js.html:22
+msgid "Accepts email requests"
+msgstr "Hyväksyy sähköpostipyynnöt"
 
 #: organization/templates/organization/new_organization/created.html:10
 msgid "Organization profile created"
-msgstr "Organisaation profiili luotiin"
+msgstr "Organisaatioprofiili luotu"
 
 #: organization/templates/organization/new_organization/created.html:13
 msgid "Organization profile created!"
-msgstr "Organisaation profiili luotiin!"
+msgstr "Organisaatioprofiili luotu!"
 
 #: organization/templates/organization/new_organization/created.html:14
-msgid "An organization profile has been created! You can view the created organization profile, create a new user request using the provided details or return to the homepage."
-msgstr "Organisaation profiili luotiin! Voit tehdä nyt kaikkea..."
+msgid ""
+"An organization profile has been created! You can view the created "
+"organization profile, create a new user request using the provided details "
+"or return to the homepage."
+msgstr ""
+"Organisaatioprofiili luotu! Voit katsella luotua organisaatioprofiilia, "
+"tehdä tietopyynnön antamiesi organisaatiotietojen avulla tai palata "
+"etusivulle."
 
 #: organization/templates/organization/new_organization/created.html:17
-msgid "Note that the organization profile won't be made visible until it has been verified by the site staff."
-msgstr "Ota huomioon..."
+msgid ""
+"Note that the organization profile won't be made visible until it has been "
+"verified by the site staff."
+msgstr ""
+"Ota huomioon ettei organisaatioprofiili näy muille käyttäjille ennen "
+"kuinsivuston ylläpito on tarkistanut sen."
 
-#: organization/templates/organization/created.html:21
-msgid "View organization profile"
-msgstr "Katsele organisaatio profiilia"
-
-#: organization/templates/organization/created.html:22
+#: organization/templates/organization/new_organization/created.html:22
 msgid "Create a new request"
 msgstr "Tee uusi pyyntö"
 
@@ -297,31 +495,118 @@ msgstr "Tee uusi pyyntö"
 msgid "Create a new organization profile"
 msgstr "Luo uusi organisaatioprofiili"
 
-#: organization/templates/organization/new_organization/new.html:16
-msgid "Back"
-msgstr "Takaisin"
-
-#: organization/templates/organization/new_organization/new.html:17
+#: organization/templates/organization/new_organization/new.html:18
 msgid "Create"
 msgstr "Luo"
 
-#: organization/templates/organization/new_organization/new.html:24
+#: organization/templates/organization/new_organization/new.html:25
 msgid "Creating an organization profile"
 msgstr "Organisaatioprofiilin luominen"
 
-#: organization/templates/organization/new_organization/new.html:25
-msgid "The organization profile needs contact information (email address, postal information or both) that can be used to send the request."
-msgstr "Organisaatio tarvitsee yhteystiedot."
-
-#: organization/templates/organization/new_organization/new.html:28
-msgid "Before the organization profile can be seen by other users it will be verified by site staff."
+#: organization/templates/organization/new_organization/new.html:29
+msgid ""
+"Before the organization profile can be seen by other users it will be "
+"verified by site staff."
 msgstr "Organisaatioprofiili varmennetaan ennen kuin se näkyy käyttäjille"
 
-#: templates/navbar.html:6
-msgid "Toggle navigation"
-msgstr "Toggle navi"
+#: organization/templates/organization/view.html:17
+msgid "Send a request"
+msgstr "Lähetä pyyntö"
 
-#. Translators: Navbar link
-#: templates/navbar.html:18
-msgid "Organizations"
-msgstr "Organisaatiot"
+#: organization/templates/organization/view.html:19
+msgid "Does this organization have your data? Send them a request."
+msgstr "Onko tällä organisaatiolla tietoja sinusta? Lähetä heille kysely."
+
+#: organization/templates/organization/view.html:26
+#: organization/templates/organization/view.html:31
+#| msgid "Unverified contact details"
+msgid "Update details"
+msgstr "Päivitä tiedot"
+
+#: organization/templates/organization/view.html:28
+#| msgid ""
+#| "Is this organization's contact information incorrect or out-of-date?"
+msgid ""
+"Is this organization's information incorrect or out-of-date? Update the "
+"organization profile to keep it up-to-date."
+msgstr ""
+"Ovatko tämän organisaation yhteystiedot virheellisiä tai vanhentuneita? "
+"Päivitä organisaatioprofiili pitääksesi tiedot ajan tasalla."
+
+#: organization/templates/organization/view.html:35
+msgid "Feedback"
+msgstr "Palaute"
+
+#: organization/templates/organization/view.html:37
+msgid ""
+"Do you have feedback regarding this organization? Send us feedback using the"
+" following form."
+msgstr ""
+"Onko sinulla palautetta tästä organisaatiosta? Lähetä meille palautetta "
+"käyttämällä alla olevaa lomaketta."
+
+#: organization/templates/organization/view.html:45
+msgid "Contact information"
+msgstr "Yhteystiedot"
+
+#: organization/templates/organization/view.html:49
+msgid "Unverified contact details"
+msgstr "Tarkistamattomat yhteystiedot"
+
+#: organization/templates/organization/view.html:50
+msgid ""
+"The contact details for this organization have not been verified by a staff "
+"member yet."
+msgstr ""
+"Sivun ylläpitäjät eivät ole vielä varmistaneet organisaation yhteystietoja."
+
+#: organization/templates/organization/view.html:57
+msgid "Data requests can be sent in mail to the following address"
+msgstr "Tietopyynnöt voi lähettää postitse seuraavaan osoitteeseen"
+
+#: organization/templates/organization/view.html:65
+msgid "Data requests by email are sent to the following email address"
+msgstr ""
+"Tietopyynnöt lähetetään sähköpostilla seuraavaan sähköpostiosoitteeseen"
+
+#: organization/templates/organization/view.html:71
+msgid ""
+"This organization does not have any valid contact details at the moment."
+msgstr "Organisaatiolla ei ole tällä hetkellä voimassa olevia yhteystietoja."
+
+#: templates/base.html:41
+msgid "No results for "
+msgstr "Ei tuloksia: "
+
+#: templates/base.html:42
+msgid "Select some options"
+msgstr "Valitse vaihtoehtoja"
+
+#: templates/base.html:43
+msgid "Select an option"
+msgstr "Valitse vaihtoehto"
+
+#: templates/navbar.html:7
+msgid "Toggle navigation"
+msgstr "Vaihda navigaatio"
+
+#~ msgid "Find out what companies know about you."
+#~ msgstr "Selvitä mitä yritykset tietävät sinusta."
+
+#~ msgid "I've already made a request"
+#~ msgstr "Olen jo tehnyt pyynnön"
+
+#~ msgid "Receive updates to your request via email"
+#~ msgstr "Vastaanota pyyntöjen vastaukset sähköpostitse"
+
+#~ msgid "Download your data once it arrives"
+#~ msgstr "Lataa tietosi kun ne saapuvat"
+
+#~ msgid "Why does it matter?"
+#~ msgstr "Miksi sillä on väliä?"
+
+#~ msgid ""
+#~ "Unique identifiers that organization needs and details of the identifiers."
+#~ msgstr ""
+#~ "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja "
+#~ "yksityiskohtainen kuvaus niistä"
