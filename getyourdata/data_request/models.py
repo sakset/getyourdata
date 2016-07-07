@@ -60,6 +60,19 @@ class DataRequest(BaseModel):
                                                "pdfcontent": pdfcontent,
                                                "current_datetime": timezone.now()})
 
+    def to_email_body(self):
+        """
+        Return data request as the text used in the email request
+        """
+        email_content, created = PdfContents.objects.get_or_create(title="Default")
+
+        return render_to_string(
+            "data_request/email/request.html", {
+                "data_request": self,
+                "email_content": email_content
+            }
+        )
+
     def to_pdf(self):
         """
         Return data request as a PDF-formatted document

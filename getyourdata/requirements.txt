@@ -29,6 +29,7 @@ python-memcached==1.58
 PyYAML==3.11
 reportlab==3.3.0
 requests==2.10.0
+sauceclient==0.2.1
 selenium==2.53.5
 simplegeneric==0.8.1
 six==1.10.0

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% trans "Review your request" %}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
+                {% bootstrap_form form %}
+                {% csrf_token %}
+                <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
+                <input type="hidden" name="action" value="send"/>
+                <div class="form-group">
+                    <label class="control-label" for="select-email">{% trans "Please review the following email messages" %}</label>
+                    <select class="form-control" id="select-email" onchange="displaySelectedText()">
+                        {% for data_request in data_requests %}
+                        <option value="{{ forloop.counter0 }}">{{ data_request.organization.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="alert alert-info">
+                        <strong>{% trans "The displayed email messages will be sent when you click \"Create request\"" %}</strong>
+                    </div>
+                    {% for data_request in data_requests %}
+                    <div id="email-body-{{ forloop.counter0 }}">
+                        <pre>{{ data_request.to_email_body }}</pre>
+                    </div>
+                    {% endfor %}
+                </div>
+                <input class="btn btn-success" id="create_request" type="submit" value="{% trans 'Create request' %}"/>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-info">
+                {% if email_organizations %}
+                <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
+                <ul>
+                    {% for organization in email_organizations %}
+                    <li>{{ organization.name}}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if mail_organizations %}
+                <strong>{% trans "Requests for the following organizations will have to be sent via mail" %}</strong><br>
+                <ul>
+                    {% for organization in mail_organizations %}
+                    <li>{{ organization.name}}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+window.addEventListener("load", function(evt) {
+    $("[id^=email-body]").hide();
+    $("#email-body-0").show();
+});
+
+function displaySelectedText() {
+    $("[id^=email-body]").hide();
+    var id = $("#select-email").val();
+    $("#email-body-" + id).show();
+};
+</script>
+{% endblock %}
