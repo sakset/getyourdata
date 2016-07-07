@@ -86,14 +86,14 @@
 }
 
 #bootstrap-overrides .panel>.panel-heading {
-    color: #fff;
-    background-color: #fed665;
-    border-color: #fed665;
+    color: #959595;
+    background-color: #f5f6f6;
+    border-color: #f5f6f6;
     font-weight: bold;
 }
 
 #bootstrap-overrides .panel {
-    color: #fff;
-    background-color: #fed665;
-    border-color: #fed665;
+    color: #959595;
+    background-color: #f5f6f6;
+    border-color: #f5f6f6;
 }
