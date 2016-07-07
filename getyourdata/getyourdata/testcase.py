@@ -18,7 +18,9 @@ class LiveServerTestCase(StaticLiveServerTestCase):
             from sauceclient import SauceClient
 
             cls.sauce_labs_active = True
+
             # We are running tests using Sauce Labs
+            cls.desired_capabilities = {}
             cls.desired_capabilities['tunnel-identifier'] = \
                 os.environ['TRAVIS_JOB_NUMBER']
             cls.desired_capabilities['build'] = os.environ['TRAVIS_BUILD_NUMBER']
