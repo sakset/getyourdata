@@ -24,7 +24,7 @@
                 <form action="{% url 'organization:list_organizations' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="prev_org_ids" value="{{ org_ids }}" />
-                    <table class="table">
+                    <table class="table table-striped">
                         <tbody>
                             {% for organization in organizations %}
                             <tr>

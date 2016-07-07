@@ -78,12 +78,6 @@
 }
 
 
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-    padding: 4px;
-    line-height: 1.42857143;
-    vertical-align: top;
-    border-top: 0px;
-}
 
 #bootstrap-overrides .panel>.panel-heading {
     color: #959595;
