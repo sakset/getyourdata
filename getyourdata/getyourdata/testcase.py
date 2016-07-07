@@ -51,10 +51,10 @@ class LiveServerTestCase(StaticLiveServerTestCase):
             try:
                 if sys.exc_info() == (None, None, None):
                     cls.sauce.jobs.update_job(
-                        cls.driver.session_id, passed=True)
+                        cls.selenium.session_id, passed=True)
                 else:
                     cls.sauce.jobs.update_job(
-                        cls.driver.session_id, passed=False)
+                        cls.selenium.session_id, passed=False)
             finally:
                 cls.selenium.quit()
         else:

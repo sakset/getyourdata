@@ -10,8 +10,8 @@ install:
 - pip install -r requirements.txt
 - python dev_manage.py migrate
 script:
-- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && coverage run dev_manage.py test_all || false'
-- '[ "${TRAVIS_PULL_REQUEST}" != "false" ] && coverage run dev_manage.py test || false'
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && coverage run dev_manage.py test_all || :'
+- '[ "${TRAVIS_PULL_REQUEST}" != "false" ] && coverage run dev_manage.py test || :'
 - codeclimate-test-reporter
 after_success:
 - test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
