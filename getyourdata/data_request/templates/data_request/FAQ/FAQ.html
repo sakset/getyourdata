@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>getyourdata-info</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse1">{% trans "Mitä ovat henkilötietopyynnöt?" %}</a></h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse out">
+                        <div class="panel-body">
+                            {% blocktrans trimmed %}
+                                Henkilötietolain mukaan sinulla on oikeus pyytää kopio sinua koskevista tiedoista, tarkastettavaksi tai omaan käyttöösi. Henkilötiedoiksi lasketaan kaikki tieto mikä on liitettävissä sinuun. Pyyntöjä voi
+                                lähettää paitsi valtiolle ja kunnille, myös yrityksille ja järjestöille.
+                            {% endblocktrans %}</div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse2">{% trans "Kuinka henkilötietopyynnöt toimivat?" %}</a></h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse out">
+                        <div class="panel-body">
+                            {% blocktrans trimmed %}
+                                Pyyntöjä voi lähettää kirjallisesti, kirjeitse tai sähköpostin välityksellä, henkilötietojasi tallettaneille tahoille. Pyyntöjä tehdessä sinun täytyy todistaa henkilöllisyytesi. Se miten tunnistautuminen
+                                tapahtuu riippuu organisaatiosta. Usein sinun on lähetettävä henkilökohtaisia tietoja, kuten asiakaskorttisi numero, tunnistautumista varten. Jotkin organisaatiot käyttävät varmentamiseen tunnistautumispalveluita, kuten verkkopankkitunnuksia.
+                                Tietojasi tallettaneella taholla on 40 päivää aikaa vastata pyyntöösi. Kopio sinusta koskevasta tiedosta lähetetään sinulle joko postissa tai sähköpostissa. Pyyntöihin vastaamisesta ei ole sallittua pyytää rahallista korvausta.
+                            {% endblocktrans %}</div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse3">{% trans "Mitä Getyourdata.org tekee?" %}</a></h4>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse out">
+                        <div class="panel-body">
+                            {% blocktrans trimmed %}
+                                Tämän verkkosivun tarkoitus on helpottaa tietopyyntöjen tekemistä. Sivulle on tallennettuna tarvittavat yhteystiedot tärkeimmille tietopyyntöjen kohteille, kuten kauppaketjuille ja pankeille. Getyourdata.org
+                                auttaa sinua valmistamaan oikein muodoillun pyyntötekstin, ja voi lähettää sen sähköpostitse puolestasi tai tuottaa tulostettavan paperin jonka voit postittaa. Sivusto myös kerää muiden käyttäjien kokemuksia tietopyyntöjen
+                                tekemisestä yksittäisille organisaatioille, jotta pyynnöt onnistuisivat useammin. Sivusto on osa <a href="https://datam.me/">datam.me</a> ryhmää, joka kehittää yhteisöä ja työkaluja henkilökohtaisen datan hallintaan.
+                            {% endblocktrans %}</div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse4">{% trans "Mitä tietoja Getyourdata.org tallentaa minusta?" %}</a></h4>
+                    </div>
+                    <div id="collapse4" class="panel-collapse collapse out">
+                        <div class="panel-body">
+                            {% blocktrans trimmed %}
+                                Sivusto ei vaadi rekisteröitymistä ja ei talleta henkilökohtaisia tietoja käyttäjistään. Vaikka tietopyyntöjen tekeminen jossain tapauksissa vaatii henkilökohtaisten yksityiskohtien kuten sosiaaliturvatunnusten
+                                täyttämistä, näitä tietoja ei talleteta palvelimellemme. Sivusto tallettaa web-palveluille tyypilliseen tapaan lokitiedostoa, josta näkyy kuinka mihin ajankohtaan käyttäjä on vieraillut verkkosivulla, ja missä osoitteissa hän on käynyt.
+                            {% endblocktrans %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-primary" href="{% url 'home' %}">{% trans "Back" %}</a>
+{% endblock %}

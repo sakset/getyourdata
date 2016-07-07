@@ -244,3 +244,6 @@ def get_data_request(organization, form):
     AuthenticationContent.objects.bulk_create(auth_contents)
 
     return data_request
+
+def FAQ(request):
+    return render(request, 'data_request/FAQ/FAQ.html')
