@@ -104,7 +104,13 @@ class EditOrganizationForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-
+    rating = forms.IntegerField(error_messages={
+        'required': _('Please leave a rating'),
+        'min_value': _('Please leave a rating')
+    })
+    message = forms.CharField(error_messages={
+        'required': _('Message is required')
+    })
     class Meta:
         model = Comment
         fields = ['rating', 'message']
