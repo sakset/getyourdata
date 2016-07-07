@@ -27,6 +27,11 @@ class LiveServerTestCase(StaticLiveServerTestCase):
             cls.desired_capabilities['tags'] = \
                 [os.environ['TRAVIS_PYTHON_VERSION'], 'CI']
 
+            # Use Firefox 29 and Linux for Sauce Labs tests
+            cls.desired_capabilities['platform'] = "Linux"
+            cls.desired_capabilities['browserName'] = "firefox"
+            cls.desired_capabilities['version'] = "29"
+
             USERNAME = os.environ.get("SAUCE_USERNAME")
             ACCESS_KEY = os.environ.get("SAUCE_ACCESS_KEY")
 
