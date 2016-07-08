@@ -8,29 +8,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-08 15:42+0000\n"
+"POT-Creation-Date: 2016-07-08 17:25+0000\n"
 "PO-Revision-Date: 2016-07-08 15:47+0000\n"
 "Last-Translator:   <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.7.11\n"
 
-#: data_request/forms.py:18 data_request/forms.py:47
+#: data_request/forms.py:21 data_request/forms.py:54
 msgid "The value for this field was not valid"
 msgstr "Tämän kentän arvo ei ollut kelvollinen"
 
-#: data_request/forms.py:60
+#: data_request/forms.py:67
 msgid "Receiving email address"
 msgstr "Vastaanottava sähköpostiosoite"
 
-#: data_request/forms.py:61
+#: data_request/forms.py:68
 msgid ""
-"Your data and further enquiries by organizations will be sent to this "
-"address"
+"Your data and further enquiries by organizations will be sent to this address"
 msgstr ""
 "Tietosi ja organisaatioiden kyselyt lähetetään tähän sähköpostiosoitteeseen"
 
@@ -73,7 +72,6 @@ msgid "Create request"
 msgstr "Luo pyyntö"
 
 #: data_request/templates/data_request/request_data.html:27
-#| msgid "Create request"
 msgid "Review request"
 msgstr "Katselmoi pyyntö"
 
@@ -88,7 +86,6 @@ msgid "Requests for the following organizations will have to be sent via mail"
 msgstr "Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
 
 #: data_request/templates/data_request/request_data_review.html:10
-#| msgid "Create request"
 msgid "Review your request"
 msgstr "Katselmoi pyyntösi"
 
@@ -120,7 +117,7 @@ msgstr "Tulosta postitettavat tietopyynnöt"
 msgid "One request needs to be printed."
 msgid_plural "%(counter)s requests need to be printed."
 msgstr[0] "Yksi pyyntö pitää tulostaa."
-msgstr[1] "%(counter) pyyntöä pitää tulostaa."
+msgstr[1] "%(counter)s pyyntöä pitää tulostaa."
 
 #: data_request/templates/data_request/sent.html:34
 msgid ""
@@ -168,11 +165,11 @@ msgstr ""
 "Huomaa että koska emme tallenna tietoja, kaikki sivulla näkyvät tiedot "
 "katoavat sivun vaihdon yhteydessä."
 
-#: data_request/views.py:74
+#: data_request/views.py:83
 msgid "The PDF file couldn't be created! Please try again later."
 msgstr "PDF-tiedoston luonti epäonnistui! Yritä myöhemmin uudelleen."
 
-#: data_request/views.py:93
+#: data_request/views.py:102
 msgid "Email requests couldn't be sent! Please try again later."
 msgstr "Sähköpostipyyntöjä ei voitu lähettää! Yritä myöhemmin uudelleen."
 
@@ -250,18 +247,17 @@ msgstr "Päivitetty"
 msgid "Ignored"
 msgstr "Sivuutettu"
 
-#: organization/admin_views.py:44
+#: organization/admin_views.py:46
 #, python-format
 msgid "The organization %s was updated with new details."
 msgstr "Organisaatiolle %s päivitettiin uudet tiedot."
 
-#: organization/admin_views.py:54
+#: organization/admin_views.py:57
 #, python-format
 msgid "The organization draft for %s was ignored."
 msgstr "Organisaatioluonnos organisaatiolle %s sivuutettiin."
 
 #: organization/forms.py:35 organization/forms.py:87
-#| msgid "Authentification fields request"
 msgid "What authentication fields this organizations requires"
 msgstr "Mitä tunnistekenttiä tämä organisaatio vaatii"
 
@@ -273,81 +269,79 @@ msgstr ""
 "Organisaatioprofiilin pitää sisältää joko kelvollinen sähköpostiosoite tai "
 "osoitetiedot"
 
-#: organization/forms.py:112
+#: organization/forms.py:114
 msgid "Rating"
 msgstr "Arvosana"
 
-#: organization/forms.py:113
+#: organization/forms.py:115
 msgid "Message"
 msgstr "Viesti"
 
-#: organization/models.py:20
+#: organization/models.py:24
 msgid "If not blank, this regex is used to validate the field value"
 msgstr "Jos kenttä ei ole tyhjä, tätä regexiä käytetään kentän validointiin"
 
-#: organization/models.py:32
+#: organization/models.py:36
 #: organization/templates/organization/admin/check_organization_draft.html:11
 #: organization/templates/organization/admin/check_organization_draft.html:28
 msgid "Name"
 msgstr "Nimi"
 
-#: organization/models.py:38
-msgid ""
-"Email address used by the organization to respond to user data requests"
+#: organization/models.py:42
+msgid "Email address used by the organization to respond to user data requests"
 msgstr "Organisaation käyttämä sähköpostiosoite tietopyyntöihin vastaamiseen "
 
-#: organization/models.py:39
+#: organization/models.py:43
 #: organization/templates/organization/admin/check_organization_draft.html:12
 #: organization/templates/organization/admin/check_organization_draft.html:29
 msgid "Email address"
 msgstr "Sähköpostiosoite"
 
-#: organization/models.py:45
+#: organization/models.py:49
 #: organization/templates/organization/admin/check_organization_draft.html:13
 #: organization/templates/organization/admin/check_organization_draft.html:30
 msgid "Address line 1"
 msgstr "Osoiterivi 1"
 
-#: organization/models.py:49
+#: organization/models.py:53
 #: organization/templates/organization/admin/check_organization_draft.html:14
 #: organization/templates/organization/admin/check_organization_draft.html:31
 msgid "Address line 2"
 msgstr "Osoiterivi 2"
 
-#: organization/models.py:53
+#: organization/models.py:57
 #: organization/templates/organization/admin/check_organization_draft.html:15
 #: organization/templates/organization/admin/check_organization_draft.html:32
 msgid "Postal code"
 msgstr "Postinumero"
 
-#: organization/models.py:57
+#: organization/models.py:61
 #: organization/templates/organization/admin/check_organization_draft.html:16
 #: organization/templates/organization/admin/check_organization_draft.html:33
 msgid "Country"
 msgstr "Maa"
 
-#: organization/models.py:73
+#: organization/models.py:77
 msgid "Verified"
 msgstr "Vahvistettu"
 
-#: organization/models.py:74
+#: organization/models.py:78
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
 
-#: organization/models.py:101
+#: organization/models.py:108
 msgid ""
 "The name of the register used by the organization. Eg. Customer register"
 msgstr "Organisaation käyttämä nimi rekisterille. Esim. \"Asiakasrekisteri\""
 
-#: organization/models.py:102
+#: organization/models.py:109
 msgid "Name of the person register"
 msgstr "Henkilörekisterin nimi"
 
-#: organization/models.py:124
+#: organization/models.py:131
 msgid "Can check organization drafts and update the original organization"
 msgstr ""
-"Voi tarkistaa organisaatioluonnoksia ja päivittää alkuperäistä "
-"organisaatiota"
+"Voi tarkistaa organisaatioluonnoksia ja päivittää alkuperäistä organisaatiota"
 
 #: organization/templates/organization/admin/check_organization_draft.html:8
 msgid "Organization draft: "
@@ -430,13 +424,12 @@ msgid "Organizations"
 msgstr "Organisaatiot"
 
 #: organization/templates/organization/list.html:17
-#| msgid "Does this organization have your data? Send them a request."
 msgid ""
-"Choose the organizations you want to get your data from and click the Create"
-" Request button."
+"Choose the organizations you want to get your data from and click the Create "
+"Request button."
 msgstr ""
-"Valitse organisaatiot joilta haluat saada tietosi ja klikkaa \"Luo pyyntö\" "
-"-nappia."
+"Valitse organisaatiot joilta haluat saada tietosi ja klikkaa \"Luo pyyntö\" -"
+"nappia."
 
 #: organization/templates/organization/list.html:36
 #: organization/templates/organization/list_js.html:21
@@ -505,8 +498,10 @@ msgid "Create a new request"
 msgstr "Tee uusi pyyntö"
 
 #: organization/templates/organization/new_organization/new.html:10
+#, fuzzy
+#| msgid "Creating an organization profile"
 msgid "Create a new organization profile"
-msgstr "Luo uusi organisaatioprofiili"
+msgstr "Organisaatioprofiilin luominen"
 
 #: organization/templates/organization/new_organization/new.html:18
 msgid "Create"
@@ -549,14 +544,13 @@ msgstr "Palaute"
 
 #: organization/templates/organization/view.html:38
 msgid ""
-"Do you have feedback regarding this organization? Send us feedback using the"
-" following form."
+"Do you have feedback regarding this organization? Send us feedback using the "
+"following form."
 msgstr ""
 "Onko sinulla palautetta tästä organisaatiosta? Lähetä meille palautetta "
 "käyttämällä alla olevaa lomaketta."
 
 #: organization/templates/organization/view.html:61
-#| msgid "Feedback"
 msgid "Leave feedback"
 msgstr "Jätä palautetta"
 
@@ -593,7 +587,7 @@ msgstr "Organisaatiolla ei ole tällä hetkellä voimassa olevia yhteystietoja."
 msgid "Recieved feedback"
 msgstr "Saatu palaute"
 
-#: organization/views.py:57
+#: organization/views.py:75
 msgid "Thank you for your feedback!"
 msgstr "Kiitos palautteestasi!"
 
@@ -631,5 +625,5 @@ msgstr "Vaihda navigaatio"
 #~ msgid ""
 #~ "Unique identifiers that organization needs and details of the identifiers."
 #~ msgstr ""
-#~ "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja "
-#~ "yksityiskohtainen kuvaus niistä"
+#~ "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi "
+#~ "ja yksityiskohtainen kuvaus niistä"
