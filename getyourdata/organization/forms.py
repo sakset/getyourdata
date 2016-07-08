@@ -104,7 +104,9 @@ class EditOrganizationForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-
+    """
+    Form to submit a public comment
+    """
     class Meta:
         model = Comment
         fields = ['rating', 'message']
@@ -112,4 +114,3 @@ class CommentForm(forms.ModelForm):
             'rating': _('Rating'),
             'message': _('Message'),
         }
-

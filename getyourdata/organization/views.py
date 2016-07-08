@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -12,6 +13,9 @@ from organization.forms import NewOrganizationForm, EditOrganizationForm, Commen
 
 
 def list_organizations(request):
+    """
+    View to select organizations for a data request
+    """
     ORGANIZATIONS_PER_PAGE = 15
 
     page = request.GET.get("page", 1)
@@ -46,7 +50,21 @@ def view_organization(request, org_id):
     View an organization with contact details and probably
     some stats later
     """
-    organization = get_object_or_404(Organization, pk=org_id)
+    organization = cache.get("organization-%s" % org_id)
+
+    if not organization and organization is not None:
+        raise Http404()
+
+    if organization is None:
+        try:
+            organization = get_object_or_404(Organization, pk=org_id)
+        except Http404:
+            cache.set("organization-%s" % org_id, False, 30)
+            raise Http404()
+            return
+
+        cache.set("organization-%s" % org_id, organization, 60)
+
     comments = organization.comments(manager='objects').all()
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -99,11 +117,16 @@ def edit_organization(request, org_id=None):
     Edit an existing organization. The modified organization is saved as an
     OrganizationDraft which can be implemented by staff
     """
-    try:
-        organization = Organization.objects.prefetch_related("authentication_fields").get(
-            pk=org_id)
-    except ObjectDoesNotExist:
-        raise Http404("Organization not found")
+    organization = cache.get("org_w_fields-%s" % org_id)
+
+    if not organization and organization is not None:
+        try:
+            organization = Organization.objects.prefetch_related(
+                "authentication_fields").get(pk=org_id)
+            cache.set("org_w_fields-%s" % org_id, organization)
+        except ObjectDoesNotExist:
+            cache.set("org_w_fields-%s" % org_id, False)
+            raise Http404("Organization not found")
 
     form = EditOrganizationForm(
         request.POST or None, organization=organization)

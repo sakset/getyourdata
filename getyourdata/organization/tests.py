@@ -130,8 +130,10 @@ def create_organization(test_case):
         email_address="valid@address.com",
         verified=True)
 
+
 def verify_all_organizations():
     Organization.objects.all().update(verified=True)
+
 
 @isDjangoTest()
 class OrganizationListingTests(TestCase):

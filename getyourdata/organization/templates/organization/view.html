@@ -47,7 +47,7 @@
                         {% endfor %}
                         </ul>
                     {% endif %}
-                    <input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs">
+                    <input id="id-rating" type="number" name="rating" class="rating" min=0 max=5 step=1 data-size="xs" data-show-caption="false" data-show-clear="false">
                     <div class="form-group">
                         {% if form.message.errors %}
                             <ul>
@@ -103,7 +103,7 @@
                         {% for comment in comments %}
                             <tr>
                                 <td>{{ comment.message }}</td>
-                                <td class="text-right"><input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs" value="{{ comment.rating }}" readonly></td>
+                                <td class="text-right"><input type="number" name="rating" class="rating" min=0 max=5 step=1 value="{{ comment.rating }}" data-size="xs" data-show-caption="false" data-show-clear="false" data-disabled="true"></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -122,6 +122,5 @@
 
 
 {% block script %}
-<script src= "{% static 'js/star-rating.min.js' %}"></script>
+<script src="{% static 'js/star-rating.min.js' %}"></script>
 {% endblock %}
-

@@ -7,6 +7,9 @@ from data_request.models import DataRequest
 
 
 class AuthenticationAttributeField(forms.CharField):
+    """
+    A helper field to be used for authentication fields in DataRequestForm
+    """
     def __init__(self, *args, **kwargs):
         super(AuthenticationAttributeField, self).__init__(*args, **kwargs)
 
@@ -21,6 +24,10 @@ class AuthenticationAttributeField(forms.CharField):
 
 
 class DataRequestForm(forms.Form):
+    """
+    Data request form filled with required authentication fields in order
+    to send a data request to each selected organization
+    """
     def __init__(self, *args, **kwargs):
         self.organizations = kwargs.pop('organizations', None)
         self.visible = kwargs.pop('visible', True)

@@ -12,11 +12,13 @@ from organization.forms import ORGANIZATION_FIELDS
 
 def check_organization_draft(request, draft_id):
     """
-    Process a report for a paste
+    Process a report for a paste, allowing the staff member to either
+    ignore the suggestion or update the original organization
     """
     if not request.user.is_authenticated or not request.user.has_perm(
-        "organization.check_organization_draft"):
-        return HttpResponse("You don't have the permission to do this.", status=422)
+         "organization.check_organization_draft"):
+        return HttpResponse(
+            "You don't have the permission to do this.", status=422)
 
     organization_draft = OrganizationDraft.objects.select_related(
         "original_organization").get(pk=draft_id)
@@ -31,7 +33,7 @@ def check_organization_draft(request, draft_id):
                 # Replace the fields in the original organization
                 # with new ones
                 setattr(original_organization, field,
-                    getattr(organization_draft, field))
+                        getattr(organization_draft, field))
 
             original_organization.authentication_fields = organization_draft_fields
             original_organization.save()
@@ -42,9 +44,10 @@ def check_organization_draft(request, draft_id):
 
         messages.success(
             request, _("The organization %s was updated with new details." %
-                original_organization.name))
+                       original_organization.name))
 
-        return redirect(reverse("admin:organization_organizationdraft_changelist"))
+        return redirect(
+            reverse("admin:organization_organizationdraft_changelist"))
     elif "ignore" in request.POST:
         organization_draft.ignored = True
         organization_draft.checked = True
@@ -52,12 +55,13 @@ def check_organization_draft(request, draft_id):
 
         messages.success(
             request, _("The organization draft for %s was ignored." %
-                original_organization.name))
+                       original_organization.name))
 
-        return redirect(reverse("admin:organization_organizationdraft_changelist"))
+        return redirect(
+            reverse("admin:organization_organizationdraft_changelist"))
 
     return render(request, "organization/admin/check_organization_draft.html",
-        {"organization_draft": organization_draft,
-         "original_organization": original_organization,
-         "organization_draft_fields": organization_draft_fields,
-         "original_organization_fields": original_organization_fields})
+                  {"organization_draft": organization_draft,
+                   "original_organization": original_organization,
+                   "organization_draft_fields": organization_draft_fields,
+                   "original_organization_fields": original_organization_fields})

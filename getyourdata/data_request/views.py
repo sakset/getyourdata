@@ -17,6 +17,15 @@ import base64
 
 
 def request_data(request, org_ids=None):
+    """
+    View to create data requests for chosen organizations
+
+    The process has three steps:
+    1. entering the details
+    2. reviewing the email requests, if any
+    3. creating the PDF (for mail requests) and sending email messages
+       (for email requests)
+    """
     if org_ids is None:
         org_ids = request.POST.get("org_ids", None)
 
@@ -160,15 +169,12 @@ def review_request(request, org_ids, organizations):
     })
 
 
-def send_request(request, form):
-    pass
-
 def generate_pdf_page(data_request):
     """Generate a PDF page from a given data request if it's mail-only
 
     :returns: PDF data if successful
               False if the data request doesn't need a PDF
-    :raises:
+    :raises: RuntimeError if page couldn't be generated
     """
     if data_request.organization.accepts_email:
         return False
