@@ -39,6 +39,38 @@ msgstr ""
 msgid "Data request: %s"
 msgstr "Tietopyyntö: %s"
 
+#: data_request/templates/data_request/FAQ/FAQ.html:19
+msgid "What are datarequest?"
+msgstr "Mitä ovat henkilötietopyynnöt?"
+
+#: data_request/templates/data_request/FAQ/FAQ.html:24
+msgid "According to data protection laws you have right to ask copy of information concerning you, for evaluation or private use. Personal information includes all data that can be attached to you. Requests can be sent to goverment, municipality, companies and organizations."
+msgstr "Henkilötietolain mukaan sinulla on oikeus pyytää kopio sinua koskevista tiedoista, tarkastettavaksi tai omaan käyttöösi. Henkilötiedoiksi lasketaan kaikki tieto mikä on liitettävissä sinuun. Pyyntöjä voi lähettää paitsi valtiolle ja kunnille, myös yrityksille ja järjestöille."
+
+#: data_request/templates/data_request/FAQ/FAQ.html:30
+msgid "How datarequest work?"
+msgstr "Kuinka henkilötietopyynnöt toimivat?"
+
+#: data_request/templates/data_request/FAQ/FAQ.html:35
+msgid "Requests can be send via letter or email, to organizations that store your data. When making requests you must authenticate yourself. How authentication is done depends on organization. In most cases you must sent private information such as your cards serialnumber to authenticate. Some companies use authentication services such as bank authentication. Organization has 40 days time to respond to your request. Copy of your personal data is send to you via mail or email. No fee can be charged from you of any request."
+msgstr "Pyyntöjä voi lähettää kirjallisesti, kirjeitse tai sähköpostin välityksellä, henkilötietojasi tallettaneille tahoille. Pyyntöjä tehdessä sinun täytyy todistaa henkilöllisyytesi. Se miten tunnistautuminen tapahtuu riippuu organisaatiosta. Usein sinun on lähetettävä henkilökohtaisia tietoja, kuten asiakaskorttisi numero, tunnistautumista varten. Jotkin organisaatiot käyttävät varmentamiseen tunnistautumispalveluita, kuten verkkopankkitunnuksia. Tietojasi tallettaneella taholla on 40 päivää aikaa vastata pyyntöösi. Kopio sinusta koskevasta tiedosta lähetetään sinulle joko postissa tai sähköpostissa. Pyyntöihin vastaamisesta ei ole sallittua pyytää rahallista korvausta."
+
+#: data_request/templates/data_request/FAQ/FAQ.html:41
+msgid "What does GetYourData.org do?"
+msgstr "Mitä Getyourdata.org tekee?"
+
+#: data_request/templates/data_request/FAQ/FAQ.html:46
+msgid "This websites idea is to make the process of creating datarequest easier. Site has stored necessary contact information of big data collectors such as grocery stores and banks. GetYourData.org helps you to create validly formed request form that it can sent via email or create printable copy for you to sent via mail. Site also collects user experiences concerning the process of making data requests to individual organization, so that more request would be successfully sent to organization in the future. Site is part of datam.me group that maintains community and tools for managing personal data."
+msgstr "Tämän verkkosivun tarkoitus on helpottaa tietopyyntöjen tekemistä. Sivulle on tallennettuna tarvittavat yhteystiedot tärkeimmille tietopyyntöjen kohteille, kuten kauppaketjuille ja pankeille. Getyourdata.org auttaa sinua valmistamaan oikein muodoillun pyyntötekstin, ja voi lähettää sen sähköpostitse puolestasi tai tuottaa tulostettavan paperin jonka voit postittaa. Sivusto myös kerää muiden käyttäjien kokemuksia tietopyyntöjen tekemisestä yksittäisille organisaatioille, jotta pyynnöt onnistuisivat useammin. Sivusto on osa datam.me ryhmää, joka kehittää yhteisöä ja työkaluja henkilökohtaisen datan hallintaan."
+
+#: data_request/templates/data_request/FAQ/FAQ.html:52
+msgid "What information GetYourData.org collects about users?"
+msgstr "Mitä tietoja Getyourdata.org tallentaa minusta?"
+
+#: data_request/templates/data_request/FAQ/FAQ.html:57
+msgid "Site doesn't require registration and doesn't store private data concerning user. Although datarequests sometimes require private information such as social security number, it isn't stored in our servers. Site maintains log file that shows when user has been to website and in what sub-addresses he has been."
+msgstr "Sivusto ei vaadi rekisteröitymistä ja ei talleta henkilökohtaisia tietoja käyttäjistään. Vaikka tietopyyntöjen tekeminen jossain tapauksissa vaatii henkilökohtaisten yksityiskohtien kuten sosiaaliturvatunnusten täyttämistä, näitä tietoja ei talleteta palvelimellemme. Sivusto tallettaa web-palveluille tyypilliseen tapaan lokitiedostoa, josta näkyy kuinka mihin ajankohtaan käyttäjä on vieraillut verkkosivulla, ja missä osoitteissa hän on käynyt."
+
 #: data_request/templates/data_request/email/request.html:2
 #: data_request/templates/data_request/mail/request.html:4
 msgid "Data request: "
@@ -217,7 +249,7 @@ msgstr "Lähetä sähköposti tai kirje organisaatiolle"
 
 #. Translators: How do I make a request: Fourth step
 #: home/templates/home/home.html:51
-msgid "Finaly give others feedback about organization responds"
+msgid "Finaly give others feedback about organization response"
 msgstr "Anna lopulta palautetta organisaation vastauksesta"
 
 #: home/templates/home/home.html:55
