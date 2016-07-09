@@ -86,6 +86,4 @@ def check_organization_draft(request, draft_id):
     return render(request, "organization/admin/check_organization_draft.html",
                   {"organization_draft": organization_draft,
                    "original_organization": original_organization,
-                   "organization_draft_fields": organization_draft_fields,
-                   "original_organization_fields": original_organization_fields,
                    "fields": fields})

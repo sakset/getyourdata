@@ -42,7 +42,7 @@ class LiveServerTestCase(StaticLiveServerTestCase):
                 desired_capabilities=cls.desired_capabilities,
                 command_executor=sauce_url % (USERNAME, ACCESS_KEY)
             )
-            cls.selenium.implicitly_wait(5)
+            cls.selenium.implicitly_wait(10)
         else:
             # We are running test locally
             cls.selenium = WebDriver()
