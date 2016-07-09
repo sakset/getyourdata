@@ -120,6 +120,9 @@ def edit_organization(request, org_id=None):
     organization = cache.get("org_w_fields-%s" % org_id)
 
     if not organization and organization is not None:
+        raise Http404("Organization not found")
+
+    if organization is None:
         try:
             organization = Organization.objects.prefetch_related(
                 "authentication_fields").get(pk=org_id)

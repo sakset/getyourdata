@@ -68,7 +68,12 @@
 
 /* org. list specific */
 
-#organization-list, #organization-list td > a {
+#organization-list {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#organization-list td > a {
     margin-top: 1em;
     background: #f5f6f6;
     color: #959595;

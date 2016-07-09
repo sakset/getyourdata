@@ -27,6 +27,29 @@ def check_organization_draft(request, draft_id):
     organization_draft_fields = organization_draft.authentication_fields.all()
     original_organization_fields = original_organization.authentication_fields.all()
 
+    organization_default_fields = ("name", "email_address",
+        "address_line_one", "address_line_two", "postal_code",
+        "country")
+
+    # Create a list of (field_name, original_value, new_value) tuples
+    fields = []
+    for field in organization_default_fields:
+        fields.append(
+            (unicode(original_organization._meta.get_field(field).verbose_name),
+             getattr(original_organization, field),
+             getattr(organization_draft, field)))
+
+    original_auth_fields = ", ".join(
+        original_organization_fields.values_list("title", flat=True))
+    new_auth_fields = ", ".join(
+        organization_draft_fields.values_list("title", flat=True))
+
+    fields.append(
+        (unicode(
+            original_organization._meta.get_field("authentication_fields").verbose_name),
+         original_auth_fields,
+         new_auth_fields))
+
     if "update" in request.POST:
         with transaction.atomic():
             for field in ORGANIZATION_FIELDS:
@@ -64,4 +87,5 @@ def check_organization_draft(request, draft_id):
                   {"organization_draft": organization_draft,
                    "original_organization": original_organization,
                    "organization_draft_fields": organization_draft_fields,
-                   "original_organization_fields": original_organization_fields})
+                   "original_organization_fields": original_organization_fields,
+                   "fields": fields})
