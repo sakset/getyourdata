@@ -8,6 +8,7 @@ from getyourdata.models import BaseModel
 from data_request.services import convert_html_to_pdf
 from organization.models import Organization, AuthenticationField
 
+from tinymce import models as tinymce_models
 
 class PdfContents(BaseModel):
     """
@@ -103,10 +104,8 @@ class DataRequest(BaseModel):
 
 class FaqContent(BaseModel):
     title = models.CharField(
-    max_length=65,
+    max_length=75,
     default="",
     )
 
-    content = models.TextField(
-    default="",
-    )
+    content = tinymce_models.HTMLField(blank=True, default='')

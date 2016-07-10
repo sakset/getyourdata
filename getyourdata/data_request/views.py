@@ -245,6 +245,6 @@ def get_data_request(organization, form):
 
     return data_request
 
-def FAQ(request):
+def faq(request):
     faqs = FaqContent.objects.all()
-    return render(request, 'data_request/FAQ/FAQ.html', {"faqs": faqs})
+    return render(request, 'data_request/faq/faq.html', {"faqs": faqs})
