@@ -108,4 +108,8 @@ class FaqContent(BaseModel):
     default="",
     )
 
+    priority = models.IntegerField(
+    default=777,
+    )
+
     content = tinymce_models.HTMLField(blank=True, default='')

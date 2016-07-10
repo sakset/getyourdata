@@ -20,4 +20,4 @@ class PdfContentsAdmin(admin.ModelAdmin):
 
 @admin.register(FaqContent)
 class FaqContent(admin.ModelAdmin):
-    list_display =['title']
+    list_display =['title', 'priority']
