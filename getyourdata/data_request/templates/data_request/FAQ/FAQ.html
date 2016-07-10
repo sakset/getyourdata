@@ -7,57 +7,29 @@
     <div class="row">
         <div class="col-md-12">
             <div class="page-header">
-                <h1>getyourdata-info</h1>
+                <h1>{% trans "Frequently asked questions" %}</h1>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">
             <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse1">{% trans "What are datarequest?" %}</a></h4>
+            {% if faqs %}
+                {% for faq in faqs %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#content-{{ faq.id }}">{{ faq.title }}</a></h4>
+                        </div>
+                        <div id="content-{{ faq.id }}" class="panel-collapse collapse out">
+                            <div class="panel-body">
+                                {{faq.content}}
+                            </div>
+                        </div>
                     </div>
-                    <div id="collapse1" class="panel-collapse collapse out">
-                        <div class="panel-body">
-                            {% blocktrans trimmed %}
-                                According to data protection laws you have right to ask copy of information concerning you, for evaluation or private use. Personal information includes all data that can be attached to you. Requests can be sent to goverment, municipality, companies and organizations.
-                            {% endblocktrans %}</div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse2">{% trans "How datarequest work?" %}</a></h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse out">
-                        <div class="panel-body">
-                            {% blocktrans trimmed %}
-                                Requests can be send via letter or email, to organizations that store your data. When making requests you must authenticate yourself. How authentication is done depends on organization. In most cases you must sent private information such as your cards serialnumber to authenticate. Some companies use authentication services such as bank authentication. Organization has 40 days time to respond to your request. Copy of your personal data is send to you via mail or email. No fee can be charged from you of any request.
-                            {% endblocktrans %}</div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse3">{% trans "What does GetYourData.org do?" %}</a></h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse out">
-                        <div class="panel-body">
-                            {% blocktrans trimmed %}
-                                This websites idea is to make the process of creating datarequest easier. Site has stored necessary contact information of big data collectors such as grocery stores and banks. GetYourData.org helps you to create validly formed request form that it can sent via email or create printable copy for you to sent via mail. Site also collects user experiences concerning the process of making data requests to individual organization, so that more request would be successfully sent to organization in the future. Site is part of datam.me group that maintains community and tools for managing personal data.
-                            {% endblocktrans %}</div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse4">{% trans "What information GetYourData.org collects about users?" %}</a></h4>
-                    </div>
-                    <div id="collapse4" class="panel-collapse collapse out">
-                        <div class="panel-body">
-                            {% blocktrans trimmed %}
-                                Site doesn't require registration and doesn't store private data concerning user. Although datarequests sometimes require private information such as social security number, it isn't stored in our servers. Site maintains log file that shows when user has been to website and in what sub-addresses he has been.
-                            {% endblocktrans %}</div>
-                    </div>
-                </div>
+                {% endfor %}
+            {% else %}
+                <p>{% trans "This site doesn't contain any answers at the moment." %}</p>
+            {% endif %}
             </div>
         </div>
     </div>

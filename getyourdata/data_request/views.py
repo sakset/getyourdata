@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
-from data_request.models import DataRequest, AuthenticationContent
+from data_request.models import DataRequest, AuthenticationContent, FaqContent
 from organization.models import Organization
 
 from getyourdata import util
@@ -246,4 +246,5 @@ def get_data_request(organization, form):
     return data_request
 
 def FAQ(request):
-    return render(request, 'data_request/FAQ/FAQ.html')
+    faqs = FaqContent.objects.all()
+    return render(request, 'data_request/FAQ/FAQ.html', {"faqs": faqs})
