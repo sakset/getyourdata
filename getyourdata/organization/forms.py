@@ -32,6 +32,7 @@ class NewOrganizationForm(forms.ModelForm):
 
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
             choices=authentication_field_choices,
+            label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
     def clean(self):
@@ -84,6 +85,7 @@ class EditOrganizationForm(forms.ModelForm):
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
             initial=selected_field_choices,
             choices=authentication_field_choices,
+            label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
 
