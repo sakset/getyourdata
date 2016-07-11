@@ -194,10 +194,14 @@ msgstr "Englanti"
 msgid "Finnish"
 msgstr "Suomi"
 
-#. Translators: Front page blurb title
-#: home/templates/home/home.html:10
-msgid "You have a right to get copy of the data companies and public sector has about you. GetYourData helps you with making the enquiries."
-msgstr "Sinulla on oikeus saada kopio sinua koskevasta tiedosta yrityksiltä ja julkiselta sektorilta. Getyourdata.org auttaa tietopyyntöjen tekemisessä."
+#. Translators: Front page blurb
+#: home/templates/home/home.html:14
+msgid ""
+"You have a right to get copy of the data companies and public sector has "
+"about you. GetYourData helps you with making the enquiries."
+msgstr ""
+"Sinulla on oikeus saada kopio yritysten ja julkisen sektorin sinusta "
+"säilyttävästä datasta. GetYourData auttaa sinua tietopyyntöjen tekemisessä."
 
 #. Translators: Front page blurb
 #: home/templates/home/home.html:13
@@ -228,9 +232,9 @@ msgid "Send request to organization using email or a letter"
 msgstr "Lähetä sähköposti tai kirje organisaatiolle"
 
 #. Translators: How do I make a request: Fourth step
-#: home/templates/home/home.html:51
-msgid "Finaly give others feedback about organization response"
-msgstr "Anna lopulta palautetta organisaation vastauksesta"
+#: home/templates/home/home.html:52
+msgid "Tell us how your request went to help other users"
+msgstr "Kerro meille miten pyyntösi onnistui auttaaksesi muita käyttäjiä"
 
 #: home/templates/home/home.html:55
 msgid "More information about"
