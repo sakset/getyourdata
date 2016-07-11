@@ -4,5 +4,4 @@ from organization.models import AuthenticationField
 
 @register(AuthenticationField)
 class AuthenticationFieldTranslationOptions(TranslationOptions):
-    fields = ('title',)
-
+    fields = ('title', 'help_text')

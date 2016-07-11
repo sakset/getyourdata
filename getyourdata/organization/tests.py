@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.contrib.auth.models import Permission, User
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 
 from selenium.common.exceptions import NoSuchElementException
@@ -8,6 +7,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
+from getyourdata.testcase import LiveServerTestCase
 
 from organization.models import Organization, OrganizationDraft, Comment, AuthenticationField
 
@@ -129,8 +129,10 @@ def create_organization(test_case):
         email_address="valid@address.com",
         verified=True)
 
+
 def verify_all_organizations():
     Organization.objects.all().update(verified=True)
+
 
 @isDjangoTest()
 class OrganizationListingTests(TestCase):
@@ -437,20 +439,7 @@ class OrganizationUpdateAdminTests(TestCase):
 
 
 @isSeleniumTest()
-class OrganizationListJavascriptTests(StaticLiveServerTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super(OrganizationListJavascriptTests, cls).setUpClass()
-        cls.selenium = WebDriver()
-        # Prevent tests from failing by making the test wait longer
-        # if element isn't immediately available
-        cls.selenium.implicitly_wait(200)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.selenium.quit()
-        super(OrganizationListJavascriptTests, cls).tearDownClass()
-
+class OrganizationListJavascriptTests(LiveServerTestCase):
     def setUp(self):
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",

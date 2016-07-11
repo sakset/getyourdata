@@ -2,10 +2,42 @@ from django.core.urlresolvers import reverse
 from django.core import mail
 from django.test import TestCase
 
-from getyourdata.test import isDjangoTest
+from selenium.webdriver.firefox.webdriver import WebDriver
+
+from getyourdata.test import isDjangoTest, isSeleniumTest
+from getyourdata.testcase import LiveServerTestCase
 
 from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
+
+
+def create_email_organization(test_case):
+    email_organization = Organization.objects.create(
+        name='Email organization',
+        email_address='fake@address.com',
+        address_line_one='Address one',
+        address_line_two='Address two',
+        postal_code='00000',
+        country='Finland'
+        )
+
+    email_organization.authentication_fields.add(test_case.auth_field1)
+
+    return email_organization
+
+
+def create_mail_organization(test_case):
+    mail_organization = Organization.objects.create(
+        name='Mail organization',
+        address_line_one='Address one',
+        address_line_two='Address two',
+        postal_code='00000',
+        country='Finland'
+        )
+
+    mail_organization.authentication_fields.add(test_case.auth_field1)
+
+    return mail_organization
 
 
 @isDjangoTest()
@@ -75,7 +107,8 @@ class DataRequestCreationTests(TestCase):
             reverse("data_request:request_data", args=(self.organization.id,)),
             {"some_number": "1234567",
              "other_thing": "Some text here",
-             "user_email_address": "test@test.com"},
+             "user_email_address": "test@test.com",
+             "action": "send"},
             follow=True
             )
 
@@ -93,7 +126,8 @@ class DataRequestCreationTests(TestCase):
             {"some_number": "1234567",
              "other_thing": "Some text here",
              "oddest_thing": "blehbleh",
-             "user_email_address": "test@test.com"},
+             "user_email_address": "test@test.com",
+             "action": "send"},
             follow=True)
 
         self.assertEquals(DataRequest.objects.all().count(), 2)
@@ -109,7 +143,8 @@ class DataRequestCreationTests(TestCase):
             reverse("data_request:request_data", args=(self.organization.id,)),
             {"some_number": "1234567",
              "other_thing": "Some text here",
-             "user_email_address": "test@test.com"},
+             "user_email_address": "test@test.com",
+             "action": "send"},
             follow=True
             )
 
@@ -137,7 +172,7 @@ class DataRequestCreationTests(TestCase):
         response = self.client.post(
             reverse("data_request:request_data", args=(mail_organization.id,)),
             {"some_number": "1234567",
-             "other_thing": "Some text here"},
+             "action": "send"},
             follow=True
             )
 
@@ -153,9 +188,9 @@ class DataRequestCreationTests(TestCase):
             postal_code='00000',
             country='Finland'
             )
-
         response = self.client.get(
-            reverse("data_request:request_data", args=(email_organization.id,)),
+            reverse("data_request:request_data",
+                    args=(email_organization.id,)),
         )
 
         self.assertContains(
@@ -165,13 +200,7 @@ class DataRequestCreationTests(TestCase):
         )
 
     def test_pending_mail_request_displayed_correctly(self):
-        mail_organization = Organization.objects.create(
-            name='Mail organization',
-            address_line_one='Address one',
-            address_line_two='Address two',
-            postal_code='00000',
-            country='Finland'
-            )
+        mail_organization = create_mail_organization(self)
 
         response = self.client.get(
             reverse("data_request:request_data", args=(mail_organization.id,)),
@@ -182,6 +211,111 @@ class DataRequestCreationTests(TestCase):
         )
         self.assertNotContains(
             response, "Following organizations will receive request by email")
+
+    def test_pending_email_request_needs_to_be_reviewed(self):
+        email_organization = create_email_organization(self)
+
+        response = self.client.get(
+            reverse("data_request:request_data",
+                    args=(email_organization.id,)))
+
+        self.assertContains(response, "Review request")
+        self.assertNotContains(response, "Create request")
+
+    def test_pending_mail_request_doesnt_need_to_be_reviewed(self):
+        mail_organization = create_mail_organization(self)
+
+        response = self.client.get(
+            reverse("data_request:request_data", args=(mail_organization.id,)))
+
+        self.assertContains(response, "Create request")
+        self.assertNotContains(response, "Review request")
+
+    def test_pending_email_request_displays_email_body_for_request(self):
+        email_organization = create_email_organization(self)
+
+        response = self.client.post(
+            reverse("data_request:request_data",
+                    args=(email_organization.id,)),
+            {"some_number": "1234567",
+             "user_email_address": "test@test.com",
+             "action": "review"})
+
+        self.assertContains(
+            response, "Please review the following email messages")
+        self.assertContains(
+            response, "Email organization</option>")
+
+        self.assertContains(response, "Create request")
+        self.assertNotContains(response, "Review request")
+
+
+@isSeleniumTest()
+class LiveDataRequestCreationTests(LiveServerTestCase):
+    def test_selenium_email_request_can_be_created_successfully(self):
+        self.organization = Organization.objects.create(
+            name='Organization Two',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+            )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field)
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        field = self.selenium.find_element_by_name("user_email_address")
+        field.send_keys("test@test.com")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn(
+            "Please review the following email messages", self.selenium.page_source)
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn("All done!", self.selenium.page_source)
+        self.assertIn("Email requests sent!", self.selenium.page_source)
+
+    def test_selenium_mail_request_can_be_created_successfully(self):
+        self.organization = Organization.objects.create(
+            name='Organization Two',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+            )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field)
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn("Further action required", self.selenium.page_source)
+        self.assertIn("Download PDF", self.selenium.page_source)
 
 
 @isDjangoTest()

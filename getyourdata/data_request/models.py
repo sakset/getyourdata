@@ -10,6 +10,9 @@ from organization.models import Organization, AuthenticationField
 
 
 class PdfContents(BaseModel):
+    """
+    The text content of a mail request
+    """
     title = models.CharField(max_length=255, default="Default", unique=True)
     header = models.CharField(
         max_length=255, blank=True, default="Dear recipient,")
@@ -22,6 +25,9 @@ class PdfContents(BaseModel):
 
 
 class EmailContent(BaseModel):
+    """
+    The text content of an email request
+    """
     title = models.CharField(max_length=255, default="Default", unique=True)
     header = models.TextField(
         blank=True, default="Dear recipient,")
@@ -31,6 +37,12 @@ class EmailContent(BaseModel):
 
 
 class AuthenticationContent(BaseModel):
+    """
+    A single entry in user's data request
+
+    This is not saved to the database and only exists during the request
+    creation process
+    """
     # We don't actually want to save these...
     auth_field = models.ForeignKey(AuthenticationField, related_name="+")
     data_request = models.ForeignKey(
@@ -42,6 +54,12 @@ class AuthenticationContent(BaseModel):
 
 
 class DataRequest(BaseModel):
+    """
+    User's data request to a single organization
+
+    This is not saved to the database and only exists during the request
+    creation process
+    """
     organization = models.ForeignKey(Organization, related_name="data_requests")
 
     def to_html(self):
@@ -59,6 +77,19 @@ class DataRequest(BaseModel):
                                                "person_name": person_name,
                                                "pdfcontent": pdfcontent,
                                                "current_datetime": timezone.now()})
+
+    def to_email_body(self):
+        """
+        Return data request as the text used in the email request
+        """
+        email_content, created = PdfContents.objects.get_or_create(title="Default")
+
+        return render_to_string(
+            "data_request/email/request.html", {
+                "data_request": self,
+                "email_content": email_content
+            }
+        )
 
     def to_pdf(self):
         """

@@ -4,6 +4,7 @@
   fields:
     name: name
     title: Name
+    title_fi: Nimi
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"
 
@@ -12,6 +13,7 @@
   fields:
     name: phone_number
     title: Phone number
+    title_fi: Puhelinnumero
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"
 
@@ -20,6 +22,7 @@
   fields:
     name: email_address
     title: Email address
+    title_fi: Sähköpostiosoite
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"
 
@@ -28,6 +31,7 @@
   fields:
     name: address
     title: Address
+    title_fi: Osoite
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"
 
@@ -36,6 +40,7 @@
   fields:
     name: zip_code
     title: Zip code
+    title_fi: Postinumero
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"
 
@@ -44,6 +49,7 @@
   fields:
     name: country
     title: Country
+    title_fi: Maa
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"
 
@@ -51,10 +57,21 @@
 - model: organization.organization
   pk: 1
   fields:
-    name: Fake Organization
+    name: Mail Organization
     address_line_one: Fake Street 2
     postal_code: 12345
     country: Fakeria
     authentication_fields: [1, 3]
+    verified: true
+    created_on: "2016-01-01T12:00:00.000Z"
+    updated_on: "2016-01-01T12:00:00.000Z"
+
+- model: organization.organization
+  pk: 2
+  fields:
+    name: Email Organization
+    email_address: test@test.com
+    authentication_fields: [1, 3]
+    verified: true
     created_on: "2016-01-01T12:00:00.000Z"
     updated_on: "2016-01-01T12:00:00.000Z"

@@ -5,41 +5,26 @@
 <form action="{% url 'admin:organization_organizationdraft_check_organization_draft' organization_draft.id %}" method="post">
 	{% csrf_token %}
 	<div class="module aligned">
-		<h2>{% trans "Organization draft: " %}{{ original_organization.name }}</h2>
-		<div class="form-row">
-			<h3>Original details</h3>
-            <p><b>{% trans "Name" %}</b>: {{ original_organization.name }}</p>
-            <p><b>{% trans "Email address" %}</b>: {{ original_organization.email_address }}</p>
-            <p><b>{% trans "Address line 1" %}</b>: {{ original_organization.address_line_one }}</p>
-            <p><b>{% trans "Address line 2" %}</b>: {{ original_organization.address_line_two }}</p>
-            <p><b>{% trans "Postal code" %}</b>: {{ original_organization.postal_code }}</p>
-            <p><b>{% trans "Country" %}</b>: {{ original_organization.country }}</p>
-            <p><b>{% trans "Authentication fields" %}</b>:</p>
-            <p>
-                <ul>
-                    {% for field in original_organization_fields %}
-                    <li>{{ field }}</li>
-                    {% endfor %}
-                </ul>
-            </p>
-		</div>
-		<div class="form-row">
-            <h3>{% trans "Suggested new details" %}</h3>
-            <p><b>{% trans "Name" %}</b>: {{ organization_draft.name }}</p>
-            <p><b>{% trans "Email address" %}</b>: {{ organization_draft.email_address }}</p>
-            <p><b>{% trans "Address line 1" %}</b>: {{ organization_draft.address_line_one }}</p>
-            <p><b>{% trans "Address line 2" %}</b>: {{ organization_draft.address_line_two }}</p>
-            <p><b>{% trans "Postal code" %}</b>: {{ organization_draft.postal_code }}</p>
-            <p><b>{% trans "Country" %}</b>: {{ organization_draft.country }}</p>
-            <p><b>{% trans "Authentication fields" %}</b>:</p>
-            <p>
-                <ul>
-                    {% for field in organization_draft_fields %}
-                    <li>{{ field }}</li>
-                    {% endfor %}
-                </ul>
-            </p>
-		</div>
+		<h1>{% trans "Organization draft: " %}{{ original_organization.name }}</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>Field</th>
+					<th><b>Original</b></th>
+					<th><b>Suggestion</b></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for field, original, new in fields %}
+				<tr>
+					<th>{{ field }}</th>
+					<th {% if original != new %}style="color: red;"{% endif %}>{{ original }}</th>
+					<th {% if original != new %}style="color: green;"{% endif %}>{{ new }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<br>
 	</div>
 	<div class="submit-row">
 		<input class="default" type="submit" name="ignore" value="{% trans "Ignore suggestions" %}"></input>

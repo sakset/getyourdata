@@ -52,19 +52,10 @@ def send_data_requests_by_email(data_requests, email_address):
     :returns: True if all data requests could be sent, False if not
 
     """
-    from data_request.models import EmailContent
-
     email_messages = []
 
     for data_request in data_requests:
-        email_content, created = EmailContent.objects.get_or_create(
-            title="Default")
-        email_body = render_to_string(
-            "data_request/email/request.html",
-            {"data_request": data_request,
-             "email_content": email_content,
-             "current_datetime": timezone.now()}
-        )
+        email_body = data_request.to_email_body()
         email = EmailMessage(
             subject=_("Data request: %s" % data_request.organization.name),
             body=email_body,

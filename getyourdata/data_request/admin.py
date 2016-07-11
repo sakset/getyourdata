@@ -12,6 +12,7 @@ class DataRequestAdmin(admin.ModelAdmin):
 class AuthenticationContentAdmin(admin.ModelAdmin):
     list_display = ['auth_field', 'data_request', 'content', 'created_on']
 
+
 @admin.register(PdfContents)
 class PdfContentsAdmin(admin.ModelAdmin):
     list_display = ['title']

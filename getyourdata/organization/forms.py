@@ -32,6 +32,7 @@ class NewOrganizationForm(forms.ModelForm):
 
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
             choices=authentication_field_choices,
+            label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
     def clean(self):
@@ -84,6 +85,7 @@ class EditOrganizationForm(forms.ModelForm):
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
             initial=selected_field_choices,
             choices=authentication_field_choices,
+            label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
 
@@ -104,6 +106,9 @@ class EditOrganizationForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    """
+    Form to submit a public comment
+    """
     rating = forms.IntegerField(error_messages={
         'required': _('Please leave a rating'),
         'min_value': _('Please leave a rating')
@@ -118,4 +123,3 @@ class CommentForm(forms.ModelForm):
             'rating': _('Rating'),
             'message': _('Message'),
         }
-

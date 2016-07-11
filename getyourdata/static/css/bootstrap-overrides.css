@@ -18,29 +18,26 @@
     color: #fff;
 }
 
-#bootstrap-overrides .navbar-inverse .navbar-nav>li>a {
+#bootstrap-overrides .navbar-inverse .navbar-nav > li > a {
     color: #fff;
 }
 
 #bootstrap-overrides .btn {
     color: #fff;
+}
+
+#bootstrap-overrides .btn-primary {
     background-color: #46494e;
     border-color: #d2d3d2;
+}
+
+#bootstrap-overrides .btn-default {
+    color: #000;
 }
 
 #bootstrap-overrides .well {
     color: #fff;
     background-color: #fed665;
-}
-
-/* Hiding star-rating captions and clear buttons */
-
-#bootstrap-overrides .star-rating>.caption>.label {
-    visibility: hidden;
-}
-
-#bootstrap-overrides .star-rating>.clear-rating {
-    visibility: hidden;
 }
 
 #bootstrap-overrides .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
@@ -71,21 +68,18 @@
 
 /* org. list specific */
 
-#organization-list, #organization-list a {
+#organization-list {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#organization-list td > a {
     margin-top: 1em;
     background: #f5f6f6;
     color: #959595;
 }
 
-
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-    padding: 4px;
-    line-height: 1.42857143;
-    vertical-align: top;
-    border-top: 0px;
-}
-
-#bootstrap-overrides .panel>.panel-heading {
+#bootstrap-overrides .panel > .panel-heading {
     color: #959595;
     background-color: #f5f6f6;
     border-color: #f5f6f6;
