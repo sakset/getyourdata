@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
 from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext as _
 
 from organization.models import Organization, OrganizationDraft
@@ -16,15 +17,13 @@ def list_organizations(request):
     """
     View to select organizations for a data request
     """
-    ORGANIZATIONS_PER_PAGE = 15
-
     page = request.GET.get("page", 1)
 
     org_ids = request.POST.getlist("org_ids")
 
     p = Paginator(
         Organization.objects.filter(verified=True),
-        ORGANIZATIONS_PER_PAGE)
+        settings.ORGANIZATIONS_PER_PAGE)
 
     try:
         organizations = p.page(page)
@@ -65,7 +64,17 @@ def view_organization(request, org_id):
 
         cache.set("organization-%s" % org_id, organization, 60)
 
-    comments = organization.comments(manager='objects').all()
+    page = request.GET.get("page", 1)
+    p = Paginator(
+        organization.comments(manager='objects').all(),
+        settings.COMMENTS_PER_PAGE
+    )
+    try:
+        comments = p.page(page)
+    except PageNotAnInteger:
+        comments = p.page(1)
+    except EmptyPage:
+        comments = p.page(p.num_pages)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -80,6 +89,7 @@ def view_organization(request, org_id):
         'organization': organization,
         'comments': comments,
         'form': form,
+        'pag_url': reverse("organization:view_organization", args=(org_id,)),
     })
 
 

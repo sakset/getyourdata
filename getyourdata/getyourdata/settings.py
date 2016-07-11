@@ -288,3 +288,9 @@ LOGGING = {
         },
     },
 }
+
+# Pagination
+
+ORGANIZATIONS_PER_PAGE = 15
+
+COMMENTS_PER_PAGE = 10

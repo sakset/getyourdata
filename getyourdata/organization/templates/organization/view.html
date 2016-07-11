@@ -97,9 +97,11 @@
 			{% endblocktrans %}</p>
 			{% endif %}
             <hr>
+
             <div class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Received feedback" %}<span class="pull-right">{% trans 'Average rating' %} {{ organization.average_rating }}/5</span></div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Received feedback" %}{% if comments %}<span class="pull-right">{% trans 'Average rating' %} {{ organization.average_rating }}/5</span>{% endif %}</div>
                 <div class="panel-body">
+                    {% if comments %}
                     <table class="table table-striped">
                         <tbody>
                         {% for comment in comments %}
@@ -114,6 +116,10 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    {% bootstrap_pagination comments url=pag_url %}
+                    {% else %}
+                    <p>{% trans 'No feedback yet.' %}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
