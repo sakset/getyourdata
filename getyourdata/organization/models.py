@@ -152,7 +152,7 @@ class Comment(BaseModel):
     Public comment posted on an organization profile
     """
     organization = models.ForeignKey(Organization, related_name='comments')
-    message = models.TextField()
+    message = models.TextField(max_length=2000)
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=3
