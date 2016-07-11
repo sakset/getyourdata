@@ -22,7 +22,7 @@
     <div class="row">
         {% if mail_organizations %}
         <div class="col-md-6">
-            <h3><span class="glyphicon glyphicon-alert"></span> {% trans "Print mail requests" %}</h3>
+            <h3 class="text-danger"><span class="glyphicon glyphicon-alert"></span> {% trans "Print mail requests" %}</h3>
             <div class="alert alert-warning">
                 <strong>
                     {% blocktrans count counter=mail_organizations|length trimmed %}
@@ -41,7 +41,7 @@
                 </ul><br>
                 <p>{% trans "You can send data requests to the listed organizations by mail. The following document contains the required pages:" %}</p>
                 <br>
-                <a class="btn btn-primary btn-xl" href="data:application/pdf;base64,{{ pdf_data }}" target="_blank" download="request.pdf"><span class="glyphicon glyphicon-download-alt"></span> {% trans "Download PDF" %}</a>
+                <a class="btn btn-xl btn-success" href="data:application/pdf;base64,{{ pdf_data }}" target="_blank" download="request.pdf"><span class="glyphicon glyphicon-download-alt"></span> {% trans "Download PDF" %}</a>
             </div>
         </div>
         {% endif %}

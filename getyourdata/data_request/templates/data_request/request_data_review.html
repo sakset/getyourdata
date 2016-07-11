@@ -28,7 +28,9 @@
                 </div>
                 <div class="form-group">
                     <div class="alert alert-info">
-                        <strong>{% trans "The displayed email messages will be sent when you click \"Create request\"" %}</strong>
+                        <strong>{% blocktrans trimmed %}
+                        The displayed email messages will be sent when you click "Create request"
+                        {% endblocktrans %}</strong>
                     </div>
                     {% for data_request in data_requests %}
                     <div id="email-body-{{ forloop.counter0 }}">

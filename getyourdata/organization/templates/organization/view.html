@@ -38,7 +38,7 @@
                 <p>{% blocktrans trimmed %}
                 Do you have feedback regarding this organization? Send us feedback using the following form.
                 {% endblocktrans %}</p>
-                <form class="form-horizontal" role="form" action="{% url 'organization:view_organization' organization.id %}" method="post">
+                <form role="form" action="{% url 'organization:view_organization' organization.id %}" method="post">
                     {% csrf_token %}
                     {% if form.rating.errors %}
                         <ul>
@@ -47,7 +47,7 @@
                         {% endfor %}
                         </ul>
                     {% endif %}
-                    <input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs">
+						<input id="id-rating" type="number" name="rating" class="rating" min=0 max=5 step=1 data-size="xs" data-show-caption="false" data-show-clear="false">
                     <div class="form-group">
                         {% if form.message.errors %}
                             <ul>
@@ -82,7 +82,9 @@
 	            {% if organization.postal_code %}{{ organization.postal_code }}<br>{% endif %}
 	            {% if organization.country %}{{ organization.country }}<br>{% endif %}</p>
 	            {% endif %}
-	            <hr>
+				{% if organization.accepts_email and organization.accepts_mail %}
+				<hr>
+				{% endif %}
 	            {% if organization.accepts_email %}
 	            <p>{% trans "Data requests by email are sent to the following email address" %}</p>
 	            {# We shouldn't probably show the email address in plain-text as that makes it very easy for spam bots to crawl for email addresses #}
@@ -96,14 +98,14 @@
 			{% endif %}
             <hr>
             <div class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Recieved feedback" %}</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Received feedback" %}</div>
                 <div class="panel-body">
                     <table class="table table-striped">
                         <tbody>
                         {% for comment in comments %}
                             <tr>
                                 <td>{{ comment.message }}</td>
-                                <td class="text-right"><input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs" value="{{ comment.rating }}" readonly></td>
+                                <td class="text-right"><input type="number" name="rating" class="rating" min=0 max=5 step=1 value="{{ comment.rating }}" data-size="xs" data-show-caption="false" data-show-clear="false" data-disabled="true"></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -122,6 +124,5 @@
 
 
 {% block script %}
-<script src= "{% static 'js/star-rating.min.js' %}"></script>
+<script src="{% static 'js/star-rating.min.js' %}"></script>
 {% endblock %}
-

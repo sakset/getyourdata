@@ -8,6 +8,10 @@ from getyourdata.models import BaseModel
 
 
 class AuthenticationField(BaseModel):
+    """
+    Authentication field that organizations use to identify people
+    eg. email address
+    """
     # The canonical name of the field (NOT TRANSLATED!)
     name = models.CharField(max_length=255, unique=True, db_index=True)
 
@@ -96,6 +100,9 @@ class Organization(OrganizationDetails):
 
 
 class Register(BaseModel):
+    """
+    Organization may have multiple registers
+    """
     # name of the register
     name = models.CharField(max_length=255,
                             help_text=_("The name of the register used by the organization. Eg. Customer register"),
@@ -133,6 +140,9 @@ class OrganizationDraft(OrganizationDetails):
 
 
 class Comment(BaseModel):
+    """
+    Public comment posted on an organization profile
+    """
     organization = models.ForeignKey(Organization, related_name='comments')
     message = models.TextField()
     rating = models.IntegerField(

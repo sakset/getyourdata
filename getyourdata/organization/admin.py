@@ -59,7 +59,7 @@ class OrganizationDraftAdmin(admin.ModelAdmin):
         Display a link to review the organization draft and possibly replace the
         original organization details with it
         """
-        link = "<a href=\"%s\">{0}</a>" % (
+        link = u"<a href=\"%s\">{0}</a>" % (
             reverse("admin:organization_organizationdraft_check_organization_draft",
                 args=[obj.id]))
 
@@ -68,10 +68,11 @@ class OrganizationDraftAdmin(admin.ModelAdmin):
         else:
             link = link.format(_("Review again"))
             if obj.updated:
-                return "{0} - {1}".format(link, _("Updated"))
+                return u"{0} - {1}".format(link, _("Updated"))
             else:
-                return "{0} - {1}".format(link, _("Ignored"))
+                return u"{0} - {1}".format(link, _("Ignored"))
     check_organization_draft.allow_tags = True
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
