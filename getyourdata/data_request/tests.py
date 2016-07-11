@@ -1,4 +1,3 @@
-import ipdb
 from django.core.urlresolvers import reverse
 from django.core import mail
 from django.test import TestCase
