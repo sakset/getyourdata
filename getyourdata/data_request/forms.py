@@ -3,6 +3,8 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from captcha.fields import ReCaptchaField
+
 from data_request.models import DataRequest
 
 
@@ -31,6 +33,7 @@ class DataRequestForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.organizations = kwargs.pop('organizations', None)
         self.visible = kwargs.pop('visible', True)
+
         self.contains_email_requests = False
         super(DataRequestForm, self).__init__(*args, **kwargs)
 

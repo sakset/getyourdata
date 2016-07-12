@@ -14,7 +14,6 @@
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
-                {% bootstrap_form form %}
                 {% csrf_token %}
                 <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
                 <input type="hidden" name="action" value="send"/>
@@ -38,6 +37,8 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% bootstrap_form form %}
+                {% bootstrap_form captcha_form %}
                 <input class="btn btn-success" id="create_request" type="submit" value="{% trans 'Create request' %}"/>
             </form>
         </div>

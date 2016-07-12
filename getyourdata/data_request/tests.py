@@ -108,7 +108,8 @@ class DataRequestCreationTests(TestCase):
             {"some_number": "1234567",
              "other_thing": "Some text here",
              "user_email_address": "test@test.com",
-             "action": "send"},
+             "action": "send",
+             "g-recaptcha-response": "PASSED"},
             follow=True
             )
 
@@ -127,7 +128,8 @@ class DataRequestCreationTests(TestCase):
              "other_thing": "Some text here",
              "oddest_thing": "blehbleh",
              "user_email_address": "test@test.com",
-             "action": "send"},
+             "action": "send",
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertEquals(DataRequest.objects.all().count(), 2)
@@ -144,7 +146,8 @@ class DataRequestCreationTests(TestCase):
             {"some_number": "1234567",
              "other_thing": "Some text here",
              "user_email_address": "test@test.com",
-             "action": "send"},
+             "action": "send",
+             "g-recaptcha-response": "PASSED"},
             follow=True
             )
 

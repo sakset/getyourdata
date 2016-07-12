@@ -24,7 +24,8 @@ class OrganizationCreationTests(TestCase):
             reverse("organization:new_organization"),
             {"name": "The Organization",
              "email_address": "valid@address.com",
-             "authentication_fields": (self.auth_field1.id,)},
+             "authentication_fields": (self.auth_field1.id,),
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -64,7 +65,8 @@ class OrganizationCreationTests(TestCase):
              "address_line_one": "Fake Street 4",
              "postal_code": "00444",
              "country": "Finland",
-             "authentication_fields": (self.auth_field1.id,)},
+             "authentication_fields": (self.auth_field1.id,),
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -95,7 +97,8 @@ class OrganizationCreationTests(TestCase):
              "postal_code": "00444",
              "country": "Finland",
              "email_address": "fake@address.com",
-             "authentication_fields": (self.auth_field1.id,)},
+             "authentication_fields": (self.auth_field1.id,),
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -293,7 +296,8 @@ class OrganizationUpdateTests(TestCase):
                  "postal_code": "00234",
                  "country": "Finland",
                  "authentication_fields": [
-                    self.auth_field3.id, self.auth_field1.id]})
+                    self.auth_field3.id, self.auth_field1.id],
+                 "g-recaptcha-response": "PASSED"})
 
         self.assertContains(response, "Updated organization profile sent")
 
@@ -601,22 +605,39 @@ class CommentCreationTests(TestCase):
         )
         self.assertEquals(self.organization.comments.all().count(), 1)
 
+    def test_user_can_create_a_comment(self):
+        response = self.client.post(
+            reverse("organization:view_organization",
+                    args=(self.organization.id,)),
+            {"message": "It is okay.",
+             "rating": 3,
+             "g-recaptcha-response": "PASSED"},
+            follow=True)
+
+        self.assertContains(response, "It is okay.")
+        self.assertContains(response, "Thank you for your feedback!")
+
     def test_organization_rating_average(self):
         self.assertEquals(self.organization.average_rating, '0')
+
         Comment.objects.create(
             organization=self.organization,
             message='Test message',
             rating=1
         )
+
         Comment.objects.create(
             organization=self.organization,
             message='Test message2',
             rating=3
         )
+
         self.assertEquals(self.organization.average_rating, '2.0')
+
         Comment.objects.create(
             organization=self.organization,
             message='Test message3',
             rating=1
         )
+
         self.assertEquals(self.organization.average_rating, '1.7')

@@ -58,6 +58,7 @@
                         {% endif %}
                         <textarea style="resize:none" class="form-control" cols="40" id="id_message" name="message" placeholder="{{ form.message.label }}" required="required" rows="10" title>{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
                     </div>
+					{% bootstrap_form captcha_form %}
                     <input class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}"/>
                 </form>
                 </div>
