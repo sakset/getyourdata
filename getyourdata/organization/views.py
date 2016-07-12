@@ -78,20 +78,23 @@ def view_organization(request, org_id):
         comments = p.page(1)
     except EmptyPage:
         comments = p.page(p.num_pages)
+
+    form = CommentForm(request.POST or None)
+    captcha_form = CaptchaForm(request.POST or None)
+
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and captcha_form.is_valid():
             comment = form.save(commit=False)
             comment.organization = organization
             comment.save()
             messages.success(request, _('Thank you for your feedback!'))
             return redirect(reverse('organization:view_organization', args=(organization.id,)))
-    else:
-        form = CommentForm()
+            
     return render(request, 'organization/view.html', {
         'organization': organization,
         'comments': comments,
         'form': form,
+        'captcha_form': captcha_form,
         'pag_url': reverse("organization:view_organization", args=(org_id,)),
     })
 

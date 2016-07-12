@@ -119,8 +119,6 @@ class CommentForm(forms.ModelForm):
         'required': _('Message is required')
     })
 
-    captcha = ReCaptchaField()
-
     class Meta:
         model = Comment
         fields = ['rating', 'message']
