@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% trans "Frequently asked questions" %}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel-group" id="accordion">
+            {% if faqs %}
+                {% for faq in faqs %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#content-{{ faq.id }}">{{ faq.title }}</a></h4>
+                        </div>
+                        <div id="content-{{ faq.id }}" class="panel-collapse collapse out">
+                            <div class="panel-body">
+                                {{faq.content|safe}}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>{% trans "This site doesn't contain any answers at the moment." %}</p>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-primary" href="{% url 'home' %}">{% trans "Back" %}</a>
+</div>
+{% endblock %}

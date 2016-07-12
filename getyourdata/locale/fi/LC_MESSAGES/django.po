@@ -39,6 +39,18 @@ msgstr ""
 msgid "Data request: %s"
 msgstr "Tietopyyntö: %s"
 
+#: data_request/templates/data_request/FAQ/FAQ.html:19
+msgid "What are datarequest?"
+msgstr "Mitä ovat henkilötietopyynnöt?"
+
+#: data_request/templates/data_request/FAQ/FAQ.html:10
+msgid "Frequently asked questions"
+msgstr "Usein kysyttyjä kysymyksiä"
+
+#: data_request/templates/data_request/FAQ/FAQ.html:31
+msgid "This site doesn't contain any answers at the moment."
+msgstr "Tällä sivulla ei ole vielä vastauksia tällä hetkellä."
+
 #: data_request/templates/data_request/email/request.html:2
 #: data_request/templates/data_request/mail/request.html:4
 msgid "Data request: "
@@ -182,11 +194,6 @@ msgstr "Englanti"
 msgid "Finnish"
 msgstr "Suomi"
 
-#. Translators: Front page blurb title
-#: home/templates/home/home.html:11
-msgid "Find out what companies know about you"
-msgstr "Ota selvää mitä yritykset tietävät sinusta"
-
 #. Translators: Front page blurb
 #: home/templates/home/home.html:14
 msgid ""
@@ -195,6 +202,11 @@ msgid ""
 msgstr ""
 "Sinulla on oikeus saada kopio yritysten ja julkisen sektorin sinusta "
 "säilyttävästä datasta. GetYourData auttaa sinua tietopyyntöjen tekemisessä."
+
+#. Translators: Front page blurb
+#: home/templates/home/home.html:13
+msgid "Get a copy of your own data"
+msgstr "Hanki kopio omasta datastasi"
 
 #: home/templates/home/home.html:19
 msgid "Make a request"
@@ -205,19 +217,19 @@ msgid "How do I make a request?"
 msgstr "Kuinka teen pyynnön?"
 
 #. Translators: How do I make a request: First step
-#: home/templates/home/home.html:37
-msgid "Send a request with this site"
-msgstr "Lähetä pyyntö tällä sivustolla"
+#: home/templates/home/home.html:36
+msgid "Choose organization from the list"
+msgstr "Valitse organisaatio listasta"
 
 #. Translators: How do I make a request: Second step
-#: home/templates/home/home.html:42
-msgid "Authenticate yourself to organization"
-msgstr "Tunnista itsesi organisaatiolle"
+#: home/templates/home/home.html:41
+msgid "Fill your personal information for the authentication"
+msgstr "Täytä henkilötietosi tunnistautumista varten"
 
 #. Translators: How do I make a request: Third step
-#: home/templates/home/home.html:47
-msgid "Receive your data from the organization(s)"
-msgstr "Pyydä tietosi useammalta organisaatiolta"
+#: home/templates/home/home.html:46
+msgid "Send request to organization using email or a letter"
+msgstr "Lähetä sähköposti tai kirje organisaatiolle"
 
 #. Translators: How do I make a request: Fourth step
 #: home/templates/home/home.html:52
