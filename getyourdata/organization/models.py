@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Avg
 from django.utils.translation import ugettext_lazy as _
 
 from getyourdata.models import BaseModel
@@ -94,6 +95,13 @@ class Organization(OrganizationDetails):
     def has_registers(self):
         return self.register_set is not None
 
+    @property
+    def average_rating(self):
+        rating = self.comments(manager='objects').all().aggregate(avg=Avg('rating'))['avg']
+        if rating:
+            return format(float(rating), '.1f')
+        return '0'
+        
 
     def __unicode__(self):
         return self.name
@@ -144,11 +152,14 @@ class Comment(BaseModel):
     Public comment posted on an organization profile
     """
     organization = models.ForeignKey(Organization, related_name='comments')
-    message = models.TextField()
+    message = models.TextField(max_length=2000)
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=3
     )
+
+    class Meta:
+        ordering = ('-created_on',)
 
     def __unicode__(self):
         return 'Comment ' + unicode(self.organization)

@@ -9,8 +9,7 @@ from selenium.webdriver.common.by import By
 from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
 
-from organization.models import Organization, OrganizationDraft
-from organization.models import AuthenticationField
+from organization.models import Organization, OrganizationDraft, Comment, AuthenticationField
 
 
 @isDjangoTest()
@@ -581,3 +580,43 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             self.assertTrue(element)
         except NoSuchElementException:
             self.fail("'Accepts postal requests' element not found")
+
+
+@isDjangoTest()
+class CommentCreationTests(TestCase):
+
+    def setUp(self):
+        self.organization = Organization.objects.create(
+            name="The Organization",
+            address_line_one="Fake Street 4",
+            postal_code="00234",
+            country="Finland",
+            verified=True)
+
+    def test_comment_can_be_created(self):
+        Comment.objects.create(
+            organization=self.organization,
+            message='Test message',
+            rating=1
+        )
+        self.assertEquals(self.organization.comments.all().count(), 1)
+
+    def test_organization_rating_average(self):
+        self.assertEquals(self.organization.average_rating, '0')
+        Comment.objects.create(
+            organization=self.organization,
+            message='Test message',
+            rating=1
+        )
+        Comment.objects.create(
+            organization=self.organization,
+            message='Test message2',
+            rating=3
+        )
+        self.assertEquals(self.organization.average_rating, '2.0')
+        Comment.objects.create(
+            organization=self.organization,
+            message='Test message3',
+            rating=1
+        )
+        self.assertEquals(self.organization.average_rating, '1.7')

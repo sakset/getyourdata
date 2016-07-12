@@ -56,7 +56,7 @@
                             {% endfor %}
                             </ul>
                         {% endif %}
-                        <textarea class="form-control" cols="40" id="id_message" name="message" placeholder="{{ form.message.label }}" required="required" rows="10" title></textarea>
+                        <textarea style="resize:none" class="form-control" cols="40" id="id_message" name="message" placeholder="{{ form.message.label }}" required="required" rows="10" title>{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
                     </div>
                     <input class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}"/>
                 </form>
@@ -97,19 +97,29 @@
 			{% endblocktrans %}</p>
 			{% endif %}
             <hr>
+
             <div class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Received feedback" %}</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Received feedback" %}{% if comments %}<span class="pull-right">{% trans 'Average rating' %} {{ organization.average_rating }}/5</span>{% endif %}</div>
                 <div class="panel-body">
+                    {% if comments %}
                     <table class="table table-striped">
                         <tbody>
                         {% for comment in comments %}
                             <tr>
-                                <td>{{ comment.message }}</td>
-                                <td class="text-right"><input type="number" name="rating" class="rating" min=0 max=5 step=1 value="{{ comment.rating }}" data-size="xs" data-show-caption="false" data-show-clear="false" data-disabled="true"></td>
+
+                                <td class="col-md-9">{{ comment.message }}</td>
+                                <td class="text-right col-md-3">
+                                    <span class="small">{{ comment.created_on|date:"j.n.Y H:i" }}</span>
+                                    <input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs" value="{{ comment.rating }}" data-show-caption="false" data-show-clear="false" data-disabled="true">
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                    {% bootstrap_pagination comments url=pag_url %}
+                    {% else %}
+                    <p>{% trans 'No feedback yet.' %}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
