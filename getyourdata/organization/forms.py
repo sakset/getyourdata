@@ -37,8 +37,6 @@ class NewOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
-        self.fields["captcha"] = ReCaptchaField()
-
     def clean(self):
         """
         Form must contain email address or postal information
@@ -91,8 +89,6 @@ class EditOrganizationForm(forms.ModelForm):
             choices=authentication_field_choices,
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
-
-        self.fields["captcha"] = ReCaptchaField()
 
 
     def clean(self):

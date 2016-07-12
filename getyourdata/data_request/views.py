@@ -9,6 +9,7 @@ from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization
 
 from getyourdata import util
+from getyourdata.forms import CaptchaForm
 
 from data_request.services import concatenate_pdf_pages
 from data_request.services import send_data_requests_by_email
@@ -58,15 +59,19 @@ def request_data(request, org_ids=None):
     action = request.POST.get("action", None)
 
     if request.method == 'POST':
-        form = DataRequestForm(request.POST, organizations=organizations,
-            include_captcha=True if len(email_organizations) > 0 else False)
+        form = DataRequestForm(request.POST or None, organizations=organizations)
+
+        captcha_form = None
+
+        if len(email_organizations) > 0:
+            captcha_form = CaptchaForm(request.POST or None)
 
         # To make sure we don't store any data, do everything
         # inside a transaction which is rolled back instead of being
         # committed
         util.set_autocommit_off()
 
-        if not form.is_valid() and "captcha" in form._errors:
+        if captcha_form and not captcha_form.is_valid():
             # If form validation failed, user didn't fill CAPTCHA correctly
             # Redirect to review page
             return review_request(request, org_ids, organizations, False)
@@ -172,18 +177,25 @@ def review_request(request, org_ids, organizations, ignore_captcha=True):
 
     if request.method == 'POST':
         form = DataRequestForm(
-            request.POST, organizations=organizations, visible=False,
-            include_captcha=True)
+            request.POST, organizations=organizations, visible=False)
+
+        captcha_form = CaptchaForm(
+            request.POST if not ignore_captcha else None)
+
+        data_requests = []
 
         if not form.is_valid() and ignore_captcha:
             # Ignore any errors in CAPTCHA while still reviewing
-            del form._errors["captcha"]
+            del captcha_form._errors["captcha"]
 
-        data_requests = get_data_requests(
-            form, email_organizations, mail_organizations)
+        if form.is_valid():
+            data_requests = get_data_requests(
+                form, email_organizations, mail_organizations)
+
 
     return render(request, "data_request/request_data_review.html", {
         "form": form,
+        "captcha_form": captcha_form,
         "email_organizations": email_organizations,
         "mail_organizations": mail_organizations,
         "data_requests": data_requests,

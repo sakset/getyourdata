@@ -34,9 +34,6 @@ class DataRequestForm(forms.Form):
         self.organizations = kwargs.pop('organizations', None)
         self.visible = kwargs.pop('visible', True)
 
-        # If the user is reviewing email requests
-        self.include_captcha = kwargs.pop('include_captcha', False)
-
         self.contains_email_requests = False
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
@@ -78,6 +75,3 @@ class DataRequestForm(forms.Form):
         if not self.visible:
             for name, field in self.fields.iteritems():
                 self.fields[name].widget = forms.HiddenInput()
-
-        if self.include_captcha:
-            self.fields["captcha"] = ReCaptchaField()

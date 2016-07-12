@@ -12,6 +12,8 @@ class LiveServerTestCase(StaticLiveServerTestCase):
     def setUpClass(cls):
         super(LiveServerTestCase, cls).setUpClass()
 
+        os.environ["SELENIUM_TESTS"] = 'True'
+
         cls.sauce_labs_active = False
 
         if os.environ.get("SAUCE_ACCESS_KEY", None):

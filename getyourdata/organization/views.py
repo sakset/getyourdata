@@ -8,9 +8,12 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext as _
 
+from getyourdata.forms import CaptchaForm
+
 from organization.models import Organization, OrganizationDraft
 from organization.models import AuthenticationField
-from organization.forms import NewOrganizationForm, EditOrganizationForm, CommentForm
+from organization.forms import NewOrganizationForm, EditOrganizationForm
+from organization.forms import CommentForm
 
 
 def list_organizations(request):
@@ -99,8 +102,9 @@ def new_organization(request):
     staff
     """
     form = NewOrganizationForm(request.POST or None)
+    captcha_form = CaptchaForm(request.POST or None)
 
-    if form.is_valid():
+    if form.is_valid() and captcha_form.is_valid():
         # Get authentication fields from the form
         authentication_field_ids = form.cleaned_data["authentication_fields"]
         authentication_fields = AuthenticationField.objects.filter(
@@ -119,7 +123,8 @@ def new_organization(request):
     else:
         return render(
             request, "organization/new_organization/new.html",
-            {"form": form})
+            {"form": form,
+             "captcha_form": captcha_form})
 
 
 def edit_organization(request, org_id=None):
@@ -143,8 +148,9 @@ def edit_organization(request, org_id=None):
 
     form = EditOrganizationForm(
         request.POST or None, organization=organization)
+    captcha_form = CaptchaForm(request.POST or None)
 
-    if form.is_valid():
+    if form.is_valid() and captcha_form.is_valid():
         # Get authentication fields from the form
         authentication_field_ids = form.cleaned_data["authentication_fields"]
         authentication_fields = AuthenticationField.objects.filter(
@@ -164,4 +170,5 @@ def edit_organization(request, org_id=None):
     return render(
         request, "organization/edit_organization/edit.html",
         {"form": form,
+         "captcha_form": captcha_form,
          "organization": organization})

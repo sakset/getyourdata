@@ -24,7 +24,8 @@ class OrganizationCreationTests(TestCase):
             reverse("organization:new_organization"),
             {"name": "The Organization",
              "email_address": "valid@address.com",
-             "authentication_fields": (self.auth_field1.id,)},
+             "authentication_fields": (self.auth_field1.id,),
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -64,7 +65,8 @@ class OrganizationCreationTests(TestCase):
              "address_line_one": "Fake Street 4",
              "postal_code": "00444",
              "country": "Finland",
-             "authentication_fields": (self.auth_field1.id,)},
+             "authentication_fields": (self.auth_field1.id,),
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -95,7 +97,8 @@ class OrganizationCreationTests(TestCase):
              "postal_code": "00444",
              "country": "Finland",
              "email_address": "fake@address.com",
-             "authentication_fields": (self.auth_field1.id,)},
+             "authentication_fields": (self.auth_field1.id,),
+             "g-recaptcha-response": "PASSED"},
             follow=True)
 
         self.assertContains(response, "Organization profile created")
@@ -293,7 +296,8 @@ class OrganizationUpdateTests(TestCase):
                  "postal_code": "00234",
                  "country": "Finland",
                  "authentication_fields": [
-                    self.auth_field3.id, self.auth_field1.id]})
+                    self.auth_field3.id, self.auth_field1.id],
+                 "g-recaptcha-response": "PASSED"})
 
         self.assertContains(response, "Updated organization profile sent")
 
