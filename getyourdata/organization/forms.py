@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from organization.models import Organization, AuthenticationField, Comment
 
+from captcha.fields import ReCaptchaField
+
 ORGANIZATION_FIELDS = [
     "name", "email_address", "address_line_one",
     "address_line_two", "postal_code", "country",
@@ -34,6 +36,8 @@ class NewOrganizationForm(forms.ModelForm):
             choices=authentication_field_choices,
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
+
+        self.fields["captcha"] = ReCaptchaField()
 
     def clean(self):
         """
@@ -88,6 +92,8 @@ class EditOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
+        self.fields["captcha"] = ReCaptchaField()
+
 
     def clean(self):
         """
@@ -116,6 +122,9 @@ class CommentForm(forms.ModelForm):
     message = forms.CharField(error_messages={
         'required': _('Message is required')
     })
+
+    captcha = ReCaptchaField()
+
     class Meta:
         model = Comment
         fields = ['rating', 'message']

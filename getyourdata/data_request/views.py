@@ -58,14 +58,27 @@ def request_data(request, org_ids=None):
     action = request.POST.get("action", None)
 
     if request.method == 'POST':
-        form = DataRequestForm(request.POST, organizations=organizations)
+        form = DataRequestForm(request.POST, organizations=organizations,
+            include_captcha=True if len(email_organizations) > 0 else False)
 
         # To make sure we don't store any data, do everything
         # inside a transaction which is rolled back instead of being
         # committed
         util.set_autocommit_off()
 
-        if form.is_valid():
+        if not form.is_valid() and "captcha" in form._errors:
+            # If form validation failed, user didn't fill CAPTCHA correctly
+            # Redirect to review page
+            return review_request(request, org_ids, organizations, False)
+        elif not form.is_valid():
+            return render(request, 'data_request/request_data.html', {
+                'form': form,
+                'organizations': organizations,
+                'mail_organizations': mail_organizations,
+                'email_organizations': email_organizations,
+                'org_ids': org_ids,
+            })
+        elif form.is_valid():
             if action == "send" or len(email_organizations) == 0:
                 pdf_pages = []
                 email_requests = []
@@ -133,9 +146,17 @@ def request_data(request, org_ids=None):
     })
 
 
-def review_request(request, org_ids, organizations):
+def review_request(request, org_ids, organizations, ignore_captcha=True):
     """
     Let user review his email requests if he's sending any
+
+    :request: Current request
+    :org_ids: List of organization IDs as a comma separated string
+    :organizations: A list of Organization objects
+    :ignore_captcha: Whether to ignore any errors thrown by CAPTCHA
+                     The first time the user enters the page the user hasn't
+                     filled the captcha; this parameter prevents an
+                     error from showing up
     """
     # Add organizations into only one of the following lists
     # email is preferred if organization supports it, otherwise
@@ -149,16 +170,17 @@ def review_request(request, org_ids, organizations):
         elif organization.accepts_mail:
             mail_organizations.append(organization)
 
-    data_requests = []
-
     if request.method == 'POST':
         form = DataRequestForm(
-            request.POST, organizations=organizations, visible=False)
+            request.POST, organizations=organizations, visible=False,
+            include_captcha=True)
 
-        if form.is_valid():
-            for organization in email_organizations:
-                data_request = get_data_request(organization, form)
-                data_requests.append(data_request)
+        if not form.is_valid() and ignore_captcha:
+            # Ignore any errors in CAPTCHA while still reviewing
+            del form._errors["captcha"]
+
+        data_requests = get_data_requests(
+            form, email_organizations, mail_organizations)
 
     return render(request, "data_request/request_data_review.html", {
         "form": form,
@@ -167,6 +189,23 @@ def review_request(request, org_ids, organizations):
         "data_requests": data_requests,
         "org_ids": org_ids,
     })
+
+
+def get_data_requests(form, email_organizations, mail_organizations):
+    """
+    Get a list of every data request
+
+    :form: A filled DataRequestForm
+    :email_organizations: A list of organizations that accept email requests
+    :mail_organizations: A list of organizations that only accept mail requests
+    """
+    data_requests = []
+
+    for organization in email_organizations:
+        data_request = get_data_request(organization, form)
+        data_requests.append(data_request)
+
+    return data_requests
 
 
 def generate_pdf_page(data_request):

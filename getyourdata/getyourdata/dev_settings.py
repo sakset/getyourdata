@@ -1,5 +1,7 @@
 from .settings import *
 
+import os
+
 DEBUG = True
 
 DATABASES = {
@@ -19,3 +21,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 if TESTING:
     EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+os.environ["RECAPTCHA_TESTING"] = 'True'

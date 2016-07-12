@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
     'django_extensions',
+    'captcha',
 
     'getyourdata',
     'home',
@@ -194,6 +195,16 @@ EMAIL_HOST_USER = secrets.get("EMAIL_HOST_USER", "")
 EMAIL_PORT = secrets.get("EMAIL_PORT", 25)
 EMAIL_USE_TLS = secrets.get("EMAIL_USE_TLS", False)
 EMAIL_USE_SSL = secrets.get("EMAIL_USE_SSL", False)
+
+# reCAPTCHA settings
+
+RECAPTCHA_PUBLIC_KEY = secrets.get(
+    "RECAPTCHA_PUBLIC_KEY", "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI")
+RECAPTCHA_PRIVATE_KEY = secrets.get(
+    "RECAPTCHA_PRIVATE_KEY", "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe")
+# Use the new "No Captcha" CAPTCHA
+NOCAPTCHA = secrets.get("NOCAPTCHA", True)
+RECAPTCHA_USE_SSL = secrets.get("RECAPTCHA_USE_SSL", True)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
