@@ -1,37 +1,125 @@
 {% load i18n %}
 <html>
-    <head>
-        <title>{% trans "Data request: " %}{{ data_request.organization.name }}</title>
-        <style>
+<head>
+    <title>{% trans "Data request: " %}{{ data_request.organization.name }}</title>
+    <style>
         body {
             font-size: 16px;
         }
-        </style>
-    </head>
-    <body>
-        <div style="text-align: left;">
-            <p>{{ data_request.organization.name }}</p>
-            <p>{{ data_request.organization.address_line_one }}</p>
-            <p>{{ data_request.organization.address_line_two }}</p>
-            <p>{{ data_request.organization.postal_code }}</p>
-            <p>{{ data_request.organization.country }}</p>
-        </div>
-        <div style="width: 100%; text-align: right;">
-            <p>{{ current_datetime }}</p>
-        </div>
-        <div style="text-align: left;">
-            <h5>{{ pdfcontent.header }}</h5>
-            <p>{{ pdfcontent.content1 }}</p>
-            <p>{{ pdfcontent.content2 }}</p>
 
-            {% for auth_content in data_request.auth_contents.all %}
+        .letter-spacer {
+            color: transparent;
+            opacity: 0;
+            padding-bottom: 4cm;
+        }
+
+        .recipient-address {
+            text-align: right;
+            padding-right: 1.5cm;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .datetime-row {
+            width: 100%;
+            text-align: right;
+            padding-bottom: 3cm;
+        }
+
+        .datarequest {
+            text-align: left;
+        }
+
+        .datarequest-heading {
+            font-weight: bold;
+            padding-bottom: 1cm;
+        }
+
+        .datarequest-content {
+
+        }
+
+        .datarequest-footer {
+            padding-top: 2cm;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+
+
+<!-- the idea is to produce
+ printouts (papers) that can be folded, stapled together
+ and are then ready to be mailed.
+
+ the recipient organization address will be in the right part of
+ the first page
+ -->
+
+<!-- a simple spacer element to circumvent a bug in pdf converter that can't
+handle margin-top property -->
+<div class="letter-spacer">&nbsp;</div>
+
+<div class="recipient-address">
+    <p>{{ data_request.organization.name }}</p>
+    <p>{{ data_request.organization.address_line_one }}</p>
+    <p>{{ data_request.organization.address_line_two }}</p>
+    <p>{{ data_request.organization.postal_code }}</p>
+    <p>{{ data_request.organization.country }}</p>
+</div>
+
+
+<!-- a page break goes here. -->
+
+<div class="page-break"></div>
+
+
+<!-- the actual data request text below will be on the second page
+and the user is supposed to configure his/her printer to print
+everything two sided -->
+
+<div class="datetime-row">
+    <p>{{ current_datetime }}</p>
+</div>
+
+<div class="datarequest">
+
+    <div class="datarequest-heading">{{ pdfcontent.header }}</div>
+
+    <div class="datarequest-content">
+
+        <p>{{ pdfcontent.content1 }}</p>
+        <p>{{ pdfcontent.content2 }}</p>
+
+        {% for auth_content in data_request.auth_contents.all %}
             <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
-            {% endfor %}
+        {% endfor %}
 
-            {% if person_name %}
+
+    </div>
+
+    {% if person_name %}
+
+        <div class="datarequest-footer">
             <p>{{ pdfcontent.footer }}</p>
             <p>{{ person_name.content }}</p>
-            {% endif %}
         </div>
-    </body>
+
+    {% endif %}
+
+
+</div>
+
+
+<!-- the text below will be on the second page
+and the user is supposed to configure his/her printer
+to print everything two sided -->
+
+
+</body>
 </html>
