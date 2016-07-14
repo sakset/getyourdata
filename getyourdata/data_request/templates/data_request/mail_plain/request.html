@@ -1,0 +1,22 @@
+{% load i18n %}
+{{ data_request.organization.name }}
+{{ data_request.organization.address_line_one }}
+{{ data_request.organization.address_line_two }}
+{{ data_request.organization.postal_code }}
+{{ data_request.organization.country }}
+
+{{ current_datetime }}
+
+{{ pdfcontent.header }}
+
+{{ pdfcontent.content1 }}
+{{ pdfcontent.content2 }}
+
+{% for auth_content in data_request.auth_contents.all %}
+{{ auth_content.auth_field }}: {{ auth_content.content }}
+{% endfor %}
+
+{% if person_name %}
+{{ pdfcontent.footer }}
+{{ person_name.content }}
+{% endif %}

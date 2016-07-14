@@ -59,7 +59,8 @@ def request_data(request, org_ids=None):
     action = request.POST.get("action", None)
 
     if request.method == 'POST':
-        form = DataRequestForm(request.POST or None, organizations=organizations)
+        form = DataRequestForm(
+            request.POST or None, organizations=organizations)
 
         captcha_form = None
 
@@ -84,7 +85,7 @@ def request_data(request, org_ids=None):
                 'org_ids': org_ids,
             })
         elif form.is_valid():
-            if action == "send" or len(email_organizations) == 0:
+            if action == "send":
                 pdf_pages = []
                 email_requests = []
 
@@ -189,9 +190,7 @@ def review_request(request, org_ids, organizations, ignore_captcha=True):
             del captcha_form._errors["captcha"]
 
         if form.is_valid():
-            data_requests = get_data_requests(
-                form, email_organizations, mail_organizations)
-
+            data_requests = get_data_requests(form, organizations)
 
     return render(request, "data_request/request_data_review.html", {
         "form": form,
@@ -203,7 +202,7 @@ def review_request(request, org_ids, organizations, ignore_captcha=True):
     })
 
 
-def get_data_requests(form, email_organizations, mail_organizations):
+def get_data_requests(form, organizations):
     """
     Get a list of every data request
 
@@ -213,7 +212,7 @@ def get_data_requests(form, email_organizations, mail_organizations):
     """
     data_requests = []
 
-    for organization in email_organizations:
+    for organization in organizations:
         data_request = get_data_request(organization, form)
         data_requests.append(data_request)
 

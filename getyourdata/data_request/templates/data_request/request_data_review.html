@@ -18,28 +18,47 @@
                 <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
                 <input type="hidden" name="action" value="send"/>
                 <div class="form-group">
-                    <label class="control-label" for="select-email">{% trans "Please review the following email messages" %}</label>
+                    <label class="control-label" for="select-email">
+                        {% blocktrans count counter=data_requests|length trimmed %}
+                        Please review the following message
+                        {% plural %}
+                        Please review the following messages
+                        {% endblocktrans %}
+                    </label>
+                    {% if data_requests|length > 1 %}
                     <select class="form-control" id="select-email" onchange="displaySelectedText()">
                         {% for data_request in data_requests %}
-                        <option value="{{ forloop.counter0 }}">{{ data_request.organization.name }}</option>
+                        <option value="{{ forloop.counter0 }}">{{ data_request.organization.name }} {% if data_request.organization.accepts_email %}{% trans "(Email)" %}{% else %}{% trans "(Mail)" %}{% endif %}</option>
                         {% endfor %}
                     </select>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <div class="alert alert-info">
-                        <strong>{% blocktrans trimmed %}
-                        The displayed email messages will be sent when you click "Create request"
+                        <strong>{% blocktrans count counter=data_requests|length trimmed %}
+                        The displayed message will be created when you continue
+                        {% plural %}
+                        The displayed messages will be created when you continue
                         {% endblocktrans %}</strong>
                     </div>
                     {% for data_request in data_requests %}
-                    <div id="email-body-{{ forloop.counter0 }}">
-                        <pre>{{ data_request.to_email_body }}</pre>
+                    <div id="message-body-{{ forloop.counter0 }}">
+                        <span>{% if data_request.organization.accepts_email %}
+                        <span class="glyphicon glyphicon-cloud"></span> {% blocktrans %}Email request to{% endblocktrans %} <b>{{ data_request.organization.name }}</b></span>
+                        {% else %}
+                        <span class="glyphicon glyphicon-envelope"></span> {% blocktrans %}Mail request to{% endblocktrans %} <b>{{ data_request.organization.name }}</b></span>
+                        {% endif %}
+                        <pre>{% if data_request.organization.accepts_email %}{{ data_request.to_email_body }}{% else %}{{ data_request.to_plain_text }}{% endif %}</pre>
                     </div>
                     {% endfor %}
                 </div>
                 {% bootstrap_form form %}
                 {% bootstrap_form captcha_form %}
-                <input class="btn btn-success" id="create_request" type="submit" value="{% trans 'Create request' %}"/>
+                <input class="btn btn-primary" type="button" onclick="window.history.back()" value="{% trans 'Back' %}">
+                <input class="btn btn-success" id="create_request" type="submit"
+                    value="{% if email_organizations and mail_organizations %}{% trans 'Send and create requests' %}
+                           {% elif email_organizations %}{% trans 'Send requests' %}
+                           {% elif mail_organizations %}{% trans 'Create request PDF' %}{% endif %}"/>
             </form>
         </div>
         <div class="col-md-4">
@@ -66,14 +85,14 @@
 </div>
 <script>
 window.addEventListener("load", function(evt) {
-    $("[id^=email-body]").hide();
-    $("#email-body-0").show();
+    $("[id^=message-body]").hide();
+    $("#message-body-0").show();
 });
 
 function displaySelectedText() {
-    $("[id^=email-body]").hide();
+    $("[id^=message-body]").hide();
     var id = $("#select-email").val();
-    $("#email-body-" + id).show();
+    $("#message-body-" + id).show();
 };
 </script>
 {% endblock %}
