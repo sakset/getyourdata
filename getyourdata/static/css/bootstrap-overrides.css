@@ -92,3 +92,11 @@
     background-color: #f5f6f6;
     border-color: #f5f6f6;
 }
+
+
+/* FAQ list */
+
+#bootstrap-overrides h4.panel-title {
+    font-weight: bold;
+}
+

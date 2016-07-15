@@ -15,6 +15,10 @@
 	    	<ul class="pull-right nav navbar-nav">
 				{# Translators: Navbar link #}
 		        <li><a href="{% url 'organization:list_organizations' %}">{% trans "Organizations" %}</a></li>
+
+
+                <li><a href="{% url 'data_request:faq' %}">{% trans "FAQ" %}</a></li>
+
 		        {# Language selection #}
 		        <li class="dropdown">
 					{% get_current_language as current_language %}
