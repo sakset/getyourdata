@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 echo "Running migrations..."
 
-python manage.py makemigrations
+python manage.py makemigrations flatpages
 python manage.py migrate
 python manage.py update_translation_fields
 
