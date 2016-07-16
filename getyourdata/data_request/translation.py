@@ -1,10 +1,11 @@
 from modeltranslation.translator import register, TranslationOptions
-from data_request.models import PdfContents, FaqContent
+from data_request.models import FaqContent, RequestContent
 
 
-@register(PdfContents)
-class PdfContentsTranslationOptions(TranslationOptions):
+@register(RequestContent)
+class RequestContentTranslationOptions(TranslationOptions):
     fields = ('header', 'content1', 'content2', 'footer')
+
 
 @register(FaqContent)
 class FaqContentTranslationOptions(TranslationOptions):
