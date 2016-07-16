@@ -25,9 +25,9 @@ class PdfContents(BaseModel):
         verbose_name_plural = "pdf contents"
 
 
-class EmailContent(BaseModel):
+class RequestContent(BaseModel):
     """
-    The text content of an email request
+    The text content of a request
     """
     title = models.CharField(max_length=255, default="Default", unique=True)
     header = models.TextField(
@@ -72,23 +72,24 @@ class DataRequest(BaseModel):
         except:
             person_name = None
 
-        pdfcontent, created = PdfContents.objects.get_or_create(title="Default")
+        request_content, created = RequestContent.objects.get_or_create(title="Default")
         return render_to_string(
             "data_request/mail/request.html", {"data_request": self,
                                                "person_name": person_name,
-                                               "pdfcontent": pdfcontent,
+                                               "request_content": request_content,
                                                "current_datetime": timezone.now()})
 
     def to_email_body(self):
         """
         Return data request as the text used in the email request
         """
-        email_content, created = PdfContents.objects.get_or_create(title="Default")
+        request_content, created = RequestContent.objects.get_or_create(
+            title="Default")
 
         return render_to_string(
             "data_request/email/request.html", {
                 "data_request": self,
-                "email_content": email_content
+                "request_content": request_content
             }
         )
 

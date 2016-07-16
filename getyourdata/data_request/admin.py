@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from data_request.models import DataRequest, AuthenticationContent, PdfContents, FaqContent
+from data_request.models import DataRequest, AuthenticationContent
+from data_request.models import FaqContent, RequestContent
 
 
 @admin.register(DataRequest)
@@ -13,11 +14,11 @@ class AuthenticationContentAdmin(admin.ModelAdmin):
     list_display = ['auth_field', 'data_request', 'content', 'created_on']
 
 
-@admin.register(PdfContents)
-class PdfContentsAdmin(admin.ModelAdmin):
-    list_display = ['title']
+@admin.register(RequestContent)
+class RequestContentAdmin(admin.ModelAdmin):
+    list_display = ["title"]
 
 
 @admin.register(FaqContent)
-class FaqContent(admin.ModelAdmin):
-    list_display =['title', 'priority']
+class FaqContentAdmin(admin.ModelAdmin):
+    list_display = ['title', 'priority']
