@@ -37,6 +37,8 @@ DEBUG = False
 # Are we running tests
 TESTING = False
 
+SITE_ID = 1
+
 TEST_RUNNER = "getyourdata.testrunner.TestSuiteRunner"
 
 
@@ -56,6 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'bootstrap3',
     'tinymce',
     'rosetta',
