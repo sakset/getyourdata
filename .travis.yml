@@ -8,7 +8,9 @@ before_install:
 - sudo ./create_dev_db.bash
 install:
 - pip install -r requirements.txt
+- python dev_manage.py makemigrations flatpages
 - python dev_manage.py migrate
+- python dev_manage.py update_translation_fields
 script:
 - (test -n "$SAUCE_ACCESS_KEY" && coverage run dev_manage.py test_all) || (test -z "$SAUCE_ACCESS_KEY" && coverage run dev_manage.py test)
 - codeclimate-test-reporter

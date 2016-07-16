@@ -3,13 +3,15 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from modeltranslation.admin import TranslationAdmin
+
 from organization.models import (Organization, AuthenticationField,
     Register, OrganizationDraft, Comment)
 from organization import admin_views
 
 
 @admin.register(AuthenticationField)
-class AuthenticationFieldAdmin(admin.ModelAdmin):
+class AuthenticationFieldAdmin(TranslationAdmin):
     list_display = [
         'name',
         'created_on',

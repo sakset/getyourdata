@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from modeltranslation.admin import TranslationAdmin
+
 from data_request.models import DataRequest, AuthenticationContent, PdfContents, FaqContent
 
 
@@ -14,10 +16,10 @@ class AuthenticationContentAdmin(admin.ModelAdmin):
 
 
 @admin.register(PdfContents)
-class PdfContentsAdmin(admin.ModelAdmin):
+class PdfContentsAdmin(TranslationAdmin):
     list_display = ['title']
 
 
 @admin.register(FaqContent)
-class FaqContent(admin.ModelAdmin):
+class FaqContent(TranslationAdmin):
     list_display =['title', 'priority']

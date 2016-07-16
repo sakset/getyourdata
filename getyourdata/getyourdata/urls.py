@@ -3,6 +3,7 @@ from django.conf.urls import url, include
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.flatpages import views as flatpage_views
 
 from filebrowser.sites import site as filebrowser_site
 from grappelli import urls as grappelli_urls
@@ -25,9 +26,12 @@ urlpatterns = i18n_patterns(
     url(r'^grappelli/', include(grappelli_urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^tinymce/', include(tinymce_urls)),
+    url(r'^(?P<url>.*/)$', flatpage_views.flatpage),
 )
 
-urlpatterns += [url(r'^i18n/', include('django.conf.urls.i18n'))]
+urlpatterns += [
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
