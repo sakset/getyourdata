@@ -276,7 +276,7 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
         self.selenium.find_element_by_id("create_request").click()
 
         self.assertIn(
-            "Please review the following email messages", self.selenium.page_source)
+            "Please review the following message", self.selenium.page_source)
 
         self.selenium.find_element_by_id("create_request").click()
 
@@ -305,6 +305,11 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
 
         field = self.selenium.find_element_by_name("some_number")
         field.send_keys("12345678")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn(
+            "Please review the following message", self.selenium.page_source)
 
         self.selenium.find_element_by_id("create_request").click()
 

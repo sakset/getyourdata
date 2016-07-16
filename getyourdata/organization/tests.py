@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
@@ -510,12 +512,18 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.selenium.find_element_by_id("page-2").click()
+        element = WebDriverWait(self.selenium, 10).until(
+            EC.element_to_be_clickable((By.ID, "page-2"))
+        )
+        element.click()
 
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
-        self.selenium.find_element_by_id("page-1").click()
+        element = WebDriverWait(self.selenium, 10).until(
+            EC.element_to_be_clickable((By.ID, "page-1"))
+        )
+        element.click()
 
         self.assertIn("Organization 0", self.selenium.page_source)
         self.assertNotIn("Organization 15", self.selenium.page_source)
