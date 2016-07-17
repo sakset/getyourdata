@@ -89,13 +89,19 @@ class DataRequest(BaseModel):
         """
         Return data request as the text used in the email request
         """
+        try:
+            person_name = self.auth_contents.get(auth_field__name="name")
+        except:
+            person_name = None
+
         request_content, created = RequestContent.objects.get_or_create(
             title="Default")
 
         return render_to_string(
             "data_request/email/request.html", {
                 "data_request": self,
-                "request_content": request_content
+                "request_content": request_content,
+                "person_name": person_name
             }
         )
 
