@@ -6,11 +6,14 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <div>
+                {% include "processbar.html" with process_step=2 %}
+            </div>
             <div class="page-header">
                 {% if organizations|length == 1 %}
-                <h1>{% trans 'Request your data from' %} {{ organizations.0.name }}</h1>
+                    <h1>{% trans 'Request your data from' %} {{ organizations.0.name }}</h1>
                 {% else %}
-                <h1>{% trans 'Request your data from multiple organizations' %}</h1>
+                    <h1>{% trans 'Request your data from multiple organizations' %}</h1>
                 {% endif %}
             </div>
         </div>

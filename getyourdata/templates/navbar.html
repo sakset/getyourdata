@@ -1,5 +1,7 @@
 {% load i18n %}
 {% load extra_tags %}
+{% load flatpages %}
+
 <div class="navbar navbar-inverse navbar-fixed-top navbar-default" role="navigation">
 	<div class="container">
 	    <div class="navbar-header">
@@ -14,10 +16,22 @@
 	    <div class="collapse navbar-collapse" id="main-navbar">
 	    	<ul class="pull-right nav navbar-nav">
 				{# Translators: Navbar link #}
+
+				{% get_current_language as current_language %}
+
+				{% get_flatpages as flatpages %}
+				
+				{% for page in flatpages %}
+			        <li><a href="/{{ current_language }}{{ page.url }}">{{ page.title }}</a></li>
+			    {% endfor %}
+
 		        <li><a href="{% url 'organization:list_organizations' %}">{% trans "Organizations" %}</a></li>
+
+                <li><a href="{% url 'data_request:faq' %}">{% trans "FAQ" %}</a></li>
+
 		        {# Language selection #}
 		        <li class="dropdown">
-					{% get_current_language as current_language %}
+					
 					{% get_language_info for current_language as current_lang_info %}
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 						{{ current_lang_info.name_translated }} <span class="caret"></span>
