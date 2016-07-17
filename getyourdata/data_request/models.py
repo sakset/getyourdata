@@ -10,20 +10,6 @@ from organization.models import Organization, AuthenticationField
 
 from tinymce import models as tinymce_models
 
-class PdfContents(BaseModel):
-    """
-    The text content of a mail request
-    """
-    title = models.CharField(max_length=255, default="Default", unique=True)
-    header = models.CharField(
-        max_length=255, blank=True, default="Dear recipient,")
-    content1 = models.TextField(blank=True, default="content first")
-    content2 = models.TextField(blank=True, default="content second")
-    footer = models.CharField(max_length=255, blank=True, default="Regards,")
-
-    class Meta:
-        verbose_name_plural = "pdf contents"
-
 
 class RequestContent(BaseModel):
     """
@@ -61,7 +47,8 @@ class DataRequest(BaseModel):
     This is not saved to the database and only exists during the request
     creation process
     """
-    organization = models.ForeignKey(Organization, related_name="data_requests")
+    organization = models.ForeignKey(
+        Organization, related_name="data_requests")
 
     def to_html(self):
         """
