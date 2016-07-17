@@ -14,13 +14,3 @@ class RequestContentAdmin(TranslationAdmin):
 @admin.register(FaqContent)
 class FaqContentAdmin(TranslationAdmin):
     list_display = ['title', 'priority']
-
-
-@admin.register(RequestContent)
-class RequestContentAdmin(admin.ModelAdmin):
-    list_display = ["title"]
-
-
-@admin.register(FaqContent)
-class FaqContentAdmin(TranslationAdmin):
-    list_display = ['title', 'priority']
