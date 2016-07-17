@@ -3,80 +3,67 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-
-                {% if organizations %}
-                    <div>
-                        {% include "processbar.html" with process_step=1 %}
-                    </div>
-                {% endif %}
-
-                <div class="page-header">
-                    {# Translators: On the "list organizations" view #}
-                    <h1>{% trans "Organizations" %}</h1>
-                </div>
-
-
-                {% if organizations %}
-
-                    <div>
-
-                        {% blocktrans trimmed %}
-                            Choose the organizations you want to get your data from and click the Create Request button.
-                        {% endblocktrans %}
-                    </div>
-
-
-                    <div id="organization-list">
-                        <form action="{% url 'organization:list_organizations' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="prev_org_ids" value="{{ org_ids }}"/>
-                            <table class="table table-striped">
-                                <tbody>
-                                {% for organization in organizations %}
-                                    <tr>
-                                        <td>
-                                            <input id="org-{{ organization.id }}"
-                                                   onclick="updateOrganizationCheckboxes()" type="checkbox"
-                                                   name="org_ids" value="{{ organization.id }}"
-                                                   {% if organization.id in org_ids %}checked{% endif %}/>
-                                            <a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
-
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {% if organizations %}
+            <div>
+                {% include "processbar.html" with process_step=1 %}
+            </div>
+            {% endif %}
+            <div class="page-header">
+                {# Translators: On the "list organizations" view #}
+                <h1>{% trans "Organizations" %}</h1>
+            </div>
+            {% if organizations %}
+            <div>
+            {% blocktrans trimmed %}
+                Choose the organizations you want to get your data from and click the Create Request button.
+            {% endblocktrans %}
+            </div>
+            <div id="organization-list">
+                <form action="{% url 'organization:list_organizations' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="prev_org_ids" value="{{ org_ids }}"/>
+                    <table class="table table-striped">
+                        <tbody>
+                            {% for organization in organizations %}
+                            <tr>
+                                <td>
+                                    <input id="org-{{ organization.id }}"
+                                           onclick="updateOrganizationCheckboxes()" type="checkbox"
+                                           name="org_ids" value="{{ organization.id }}"
+                                           {% if organization.id in org_ids %}checked{% endif %}/>
+                                    <a href="{% url 'data_request:request_data' organization.id %}">{{ organization.name }}</a>
                                     <span class="organization-icon-list pull-right">
-											{% if organization.accepts_mail %}
-                                                <span title="{% trans "Accepts postal requests" %}"
-                                                      class="glyphicon glyphicon-envelope"></span> {% endif %}
-                                        {% if organization.accepts_email %}
-                                            <span title="{% trans "Accepts email requests " %}"
-                                                  class="glyphicon glyphicon-cloud"></span>{% endif %}</span>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <div>
-                                <input type="submit" class="btn btn-success" id="create-request" name="create_request"
-                                       value="{% trans "Create request" %}"/>
+                                        {% if organization.accepts_mail %}<span title="{% trans "Accepts postal requests" %}" class="glyphicon glyphicon-envelope"></span> {% endif %}
+                                        {% if organization.accepts_email %}<span title="{% trans "Accepts email requests " %}" class="glyphicon glyphicon-cloud"></span>{% endif %}
+                                        <a class="btn btn-xs btn-primary" href="{% url 'organization:view_organization' organization.id %}">{% trans "View details" %}</a>
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div>
+                        <input type="submit" class="btn btn-success" id="create-request" name="create_request" value="{% trans "Create request with selections" %}" />
                         <span class="pull-right">
                             <a class="pull-right btn btn-primary"
                                href="{% url "organization:new_organization" %}">{% trans "Add organization" %}</a>
                         </span>
-                            </div>
-                        </form>
-                        {% bootstrap_pagination organizations url=pag_url %}
                     </div>
-                {% else %}
-                    <p>{% trans "No organizations yet." %}</p>
-                    <div>
-                        <a class="btn btn-primary"
-                           href="{% url "organization:new_organization" %}">{% trans "Add organization" %}</a>
-                    </div>
-                {% endif %} {% include "organization/list_js.html" %}
-
-
+                </form>
+                {% bootstrap_pagination organizations url=pag_url %}
             </div>
+            {% else %}
+            <p>{% trans "No organizations yet." %}</p>
+            <div>
+                <a class="btn btn-primary"
+                   href="{% url "organization:new_organization" %}">{% trans "Add organization" %}</a>
+            </div>
+            {% endif %}
+            {% include "organization/list_js.html" %}
         </div>
     </div>
+</div>
 {% endblock %}

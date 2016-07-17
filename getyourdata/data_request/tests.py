@@ -225,15 +225,6 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Review request")
         self.assertNotContains(response, "Create request")
 
-    def test_pending_mail_request_doesnt_need_to_be_reviewed(self):
-        mail_organization = create_mail_organization(self)
-
-        response = self.client.get(
-            reverse("data_request:request_data", args=(mail_organization.id,)))
-
-        self.assertContains(response, "Create request")
-        self.assertNotContains(response, "Review request")
-
     def test_pending_email_request_displays_email_body_for_request(self):
         email_organization = create_email_organization(self)
 
@@ -245,11 +236,11 @@ class DataRequestCreationTests(TestCase):
              "action": "review"})
 
         self.assertContains(
-            response, "Please review the following email messages")
+            response, "Please review the following message")
         self.assertContains(
-            response, "Email organization</option>")
+            response, "Email organization")
 
-        self.assertContains(response, "Create request")
+        self.assertContains(response, "Send request")
         self.assertNotContains(response, "Review request")
 
 
@@ -285,7 +276,7 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
         self.selenium.find_element_by_id("create_request").click()
 
         self.assertIn(
-            "Please review the following email messages", self.selenium.page_source)
+            "Please review the following message", self.selenium.page_source)
 
         self.selenium.find_element_by_id("create_request").click()
 
@@ -314,6 +305,11 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
 
         field = self.selenium.find_element_by_name("some_number")
         field.send_keys("12345678")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        self.assertIn(
+            "Please review the following message", self.selenium.page_source)
 
         self.selenium.find_element_by_id("create_request").click()
 

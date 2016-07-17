@@ -14,13 +14,14 @@ REQUEST_DATA_URL = ORIGIN + "{% url 'data_request:request_data' %}";
 
 // Messages
 MESSAGES = {
-    "create_request": "{% trans "Create request" %}",
+    "create_request": "{% trans "Create request with selections" %}",
     "organizations_selected_none": "{% trans "0 organizations selected." %}",
     "organizations_selected_one": "{% trans "1 organization selected." %}",
     "organizations_selected_plural": "{% trans "{0} organizations selected." %}",
     "mail_request_accepted": "{% trans "Accepts postal requests" %}",
     "email_request_accepted": "{% trans "Accepts email requests" %}",
-    "add_organization": "{% trans "Add organization" %}"
+    "add_organization": "{% trans "Add organization" %}",
+    "view_details": "{% trans "View details" %}"
 };
 
 window.addEventListener("load", function(evt) {
@@ -232,11 +233,12 @@ orgList.View = {
         <tr>
             <td>
                 <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
-                <a href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ this.name }}</a>
+                <a href="{{ ../ORIGIN_WITH_LANG_CODE }}request/new/{{ this.id }}">{{ this.name }}</a>
 
                 <span class="organization-icon-list pull-right">
                     {{#if this.accepts_mail}}<a href="#" data-toggle="tooltip" title="{{ ../msg.mail_request_accepted }}"><span class="glyphicon glyphicon-envelope"></span></a> {{/if}}
                     {{#if this.accepts_email}}<a href="#" data-toggle="tooltip" title="{{ ../msg.email_request_accepted }}"><span class="glyphicon glyphicon-cloud"></span></a> {{/if}}
+                    <a class="btn btn-xs btn-primary" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.view_details }}</a>
                 </span>
             </td>
         </tr>

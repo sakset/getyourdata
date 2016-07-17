@@ -79,6 +79,24 @@ class DataRequest(BaseModel):
                                                "pdfcontent": pdfcontent,
                                                "current_datetime": timezone.now()})
 
+    def to_plain_text(self):
+        """
+        Return data request as plain text that would be used in the PDF document
+        """
+        try:
+            person_name = self.auth_contents.get(auth_field__name="name")
+        except:
+            person_name = None
+
+        pdfcontent, created = PdfContents.objects.get_or_create(title="Default")
+        return render_to_string(
+            "data_request/mail_plain/request.html",
+            {"data_request": self,
+             "person_name": person_name,
+             "pdfcontent": pdfcontent,
+             "current_datetime": timezone.now()})
+
+
     def to_email_body(self):
         """
         Return data request as the text used in the email request
@@ -91,6 +109,7 @@ class DataRequest(BaseModel):
                 "email_content": email_content
             }
         )
+
 
     def to_pdf(self):
         """

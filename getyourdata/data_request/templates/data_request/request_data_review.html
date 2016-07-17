@@ -3,87 +3,103 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-
-
-                <div>
-                    {% include "processbar.html" with process_step=3 %}
-                </div>
-
-                <div class="page-header">
-                    <h1>{% trans "Review your request" %}</h1>
-                </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                {% include "processbar.html" with process_step=3 %}
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
-                    <input type="hidden" name="action" value="send"/>
-                    <div class="form-group">
-                        <label class="control-label"
-                               for="select-email">{% trans "Please review the following email messages" %}</label>
-                        <select class="form-control" id="select-email" onchange="displaySelectedText()">
-                            {% for data_request in data_requests %}
-                                <option value="{{ forloop.counter0 }}">{{ data_request.organization.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="alert alert-info">
-                            <strong>{% blocktrans trimmed %}
-                                The displayed email messages will be sent when you click "Create request"
-                            {% endblocktrans %}</strong>
-                        </div>
+            <div class="page-header">
+                <h1>{% trans "Review your request" %}</h1>
+            </div>
+        </div>  
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
+                {% csrf_token %}
+                <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
+                <input type="hidden" name="action" value="send"/>
+                <div class="form-group">
+                    <label class="control-label" for="select-email">
+                        {% blocktrans count counter=data_requests|length trimmed %}
+                        Please review the following message
+                        {% plural %}
+                        Please review the following messages
+                        {% endblocktrans %}
+                    </label>
+                    {% if data_requests|length > 1 %}
+                    <select class="form-control" id="select-email" onchange="displaySelectedText()">
                         {% for data_request in data_requests %}
-                            <div id="email-body-{{ forloop.counter0 }}">
-                                <pre>{{ data_request.to_email_body }}</pre>
-                            </div>
+                        <option value="{{ forloop.counter0 }}">{{ data_request.organization.name }} {% if data_request.organization.accepts_email %}{% trans "(Email)" %}{% else %}{% trans "(Mail)" %}{% endif %}</option>
                         {% endfor %}
-                    </div>
-                    {% bootstrap_form form %}
-                    {% bootstrap_form captcha_form %}
-                    <input class="btn btn-success" id="create_request" type="submit"
-                           value="{% trans 'Create request' %}"/>
-                </form>
-            </div>
-            <div class="col-md-4">
-                <div class="alert alert-info">
-                    {% if email_organizations %}
-                        <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
-                        <ul>
-                            {% for organization in email_organizations %}
-                                <li>{{ organization.name }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if mail_organizations %}
-                        <strong>asdfasdf{% trans "Requests for the following organizations will have to be sent via mail" %}</strong>
-                        <br>
-                        <ul>
-                            {% for organization in mail_organizations %}
-                                <li>{{ organization.name }}</li>
-                            {% endfor %}
-                        </ul>
+                    </select>
                     {% endif %}
                 </div>
+                <div class="form-group">
+                    <div class="alert alert-info">
+                        <strong>{% blocktrans count counter=data_requests|length trimmed %}
+                        The displayed message will be created when you continue
+                        {% plural %}
+                        The displayed messages will be created when you continue
+                        {% endblocktrans %}</strong>
+                    </div>
+                    {% for data_request in data_requests %}
+                    <div id="message-body-{{ forloop.counter0 }}">
+                        <span>{% if data_request.organization.accepts_email %}
+                        <span class="glyphicon glyphicon-cloud"></span> {% blocktrans %}Email request to{% endblocktrans %} <b>{{ data_request.organization.name }}</b></span>
+                        {% else %}
+                        <span class="glyphicon glyphicon-envelope"></span> {% blocktrans %}Mail request to{% endblocktrans %} <b>{{ data_request.organization.name }}</b></span>
+                        {% endif %}
+                        <pre>{% if data_request.organization.accepts_email %}{{ data_request.to_email_body }}{% else %}{{ data_request.to_plain_text }}{% endif %}</pre>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% bootstrap_form form %}
+                {% bootstrap_form captcha_form %}  
+                <input class="btn btn-primary" type="button" onclick="window.history.back()" value="{% trans 'Back' %}">
+                <input class="btn btn-success" id="create_request" type="submit"
+                    value="{% if email_organizations and mail_organizations %}{% trans 'Send and create requests' %}
+                           {% elif email_organizations %}{% trans 'Send requests' %}
+                           {% elif mail_organizations %}{% trans 'Create request PDF' %}{% endif %}"/>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-info">
+                {% if email_organizations %}
+                <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
+                <ul>
+                    {% for organization in email_organizations %}
+                    <li>{{ organization.name }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if mail_organizations %}
+                <strong>{% trans "Requests for the following organizations will have to be sent via mail" %}</strong>
+                <br>
+                <ul>
+                    {% for organization in mail_organizations %}
+                    <li>{{ organization.name }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
         </div>
     </div>
-    <script>
-        window.addEventListener("load", function (evt) {
-            $("[id^=email-body]").hide();
-            $("#email-body-0").show();
-        });
+</div>
+{% endblock %}
 
-        function displaySelectedText() {
-            $("[id^=email-body]").hide();
-            var id = $("#select-email").val();
-            $("#email-body-" + id).show();
-        }
-        ;
-    </script>
+{% block script %}
+<script>
+window.addEventListener("load", function(evt) {
+    $("[id^=message-body]").hide();
+    $("#message-body-0").show();
+});
+
+function displaySelectedText() {
+    $("[id^=message-body]").hide();
+    var id = $("#select-email").val();
+    $("#message-body-" + id).show();
+};
+</script>
 {% endblock %}
