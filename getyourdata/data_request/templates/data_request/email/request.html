@@ -1,17 +1,17 @@
 {% load i18n %}
 {% trans "Data request: " %}{{ data_request.organization.name }}
 
-{{ email_content.header }}
+{{ request_content.header }}
 
-{{ email_content.content1 }}
+{{ request_content.content1 }}
 
-{{ email_content.content2 }}
+{{ request_content.content2 }}
 
 {% for auth_content in data_request.auth_contents.all %}
 {{ auth_content.auth_field }}: {{ auth_content.content }}
 {% endfor %}
 
 {% if person_name %}
-{{ email_content.footer }}
+{{ request_content.footer }}
 {{ person_name.content }}
 {% endif %}

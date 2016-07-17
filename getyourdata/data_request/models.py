@@ -10,24 +10,10 @@ from organization.models import Organization, AuthenticationField
 
 from tinymce import models as tinymce_models
 
-class PdfContents(BaseModel):
-    """
-    The text content of a mail request
-    """
-    title = models.CharField(max_length=255, default="Default", unique=True)
-    header = models.CharField(
-        max_length=255, blank=True, default="Dear recipient,")
-    content1 = models.TextField(blank=True, default="content first")
-    content2 = models.TextField(blank=True, default="content second")
-    footer = models.CharField(max_length=255, blank=True, default="Regards,")
 
-    class Meta:
-        verbose_name_plural = "pdf contents"
-
-
-class EmailContent(BaseModel):
+class RequestContent(BaseModel):
     """
-    The text content of an email request
+    The text content of a request
     """
     title = models.CharField(max_length=255, default="Default", unique=True)
     header = models.TextField(
@@ -61,7 +47,8 @@ class DataRequest(BaseModel):
     This is not saved to the database and only exists during the request
     creation process
     """
-    organization = models.ForeignKey(Organization, related_name="data_requests")
+    organization = models.ForeignKey(
+        Organization, related_name="data_requests")
 
     def to_html(self):
         """
@@ -72,11 +59,12 @@ class DataRequest(BaseModel):
         except:
             person_name = None
 
-        pdfcontent, created = PdfContents.objects.get_or_create(title="Default")
+        request_content, created = RequestContent.objects.get_or_create(
+            title="Default")
         return render_to_string(
             "data_request/mail/request.html", {"data_request": self,
                                                "person_name": person_name,
-                                               "pdfcontent": pdfcontent,
+                                               "request_content": request_content,
                                                "current_datetime": timezone.now()})
 
     def to_plain_text(self):
@@ -88,28 +76,34 @@ class DataRequest(BaseModel):
         except:
             person_name = None
 
-        pdfcontent, created = PdfContents.objects.get_or_create(title="Default")
+        request_content, created = RequestContent.objects.get_or_create(
+            title="Default")
         return render_to_string(
             "data_request/mail_plain/request.html",
             {"data_request": self,
              "person_name": person_name,
-             "pdfcontent": pdfcontent,
+             "request_content": request_content,
              "current_datetime": timezone.now()})
-
 
     def to_email_body(self):
         """
         Return data request as the text used in the email request
         """
-        email_content, created = PdfContents.objects.get_or_create(title="Default")
+        try:
+            person_name = self.auth_contents.get(auth_field__name="name")
+        except:
+            person_name = None
+
+        request_content, created = RequestContent.objects.get_or_create(
+            title="Default")
 
         return render_to_string(
             "data_request/email/request.html", {
                 "data_request": self,
-                "email_content": email_content
+                "request_content": request_content,
+                "person_name": person_name
             }
         )
-
 
     def to_pdf(self):
         """
@@ -123,12 +117,9 @@ class DataRequest(BaseModel):
 
 class FaqContent(BaseModel):
     title = models.CharField(
-    max_length=75,
-    default="",
-    )
+        max_length=75,
+        default="")
 
-    priority = models.IntegerField(
-    default=777,
-    )
+    priority = models.IntegerField(default=777)
 
     content = tinymce_models.HTMLField(blank=True, default='')
