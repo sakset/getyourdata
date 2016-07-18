@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load extra_tags %}
 
 {% block content %}
 <div class="container">
@@ -32,9 +33,11 @@
                 <input type="hidden" name="action" value="review"/>
                 <table class="table">
                 {% bootstrap_form form layout='horizontal' %}
-                </table>
-                <input class="btn btn-primary" type="button" onclick="window.history.back()" value="{% trans 'Back' %}">
-                <input class="btn btn-success" id="create_request" type="submit" value="{% trans 'Review request' %}"/>
+            </table>
+                <input class="btn btn-success" id="create_request" type="submit" name="review" value="{% trans 'Review request' %}"/>
+                <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
+                     Put the "Back" button here as the second button, but move it to the first position using pull-left -->
+                <input class="btn btn-primary first-button" type="submit" name="return" value="{% trans 'Back' %}">
             </form>
         </div>
         <div class="col-md-4">

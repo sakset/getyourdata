@@ -14,6 +14,12 @@ img.center {
     margin-right: auto;
 }
 
+/* Drags a button to the left-most position */
+.first-button {
+    float: left !important;
+    margin-right: 5px;
+}
+
 /* process steps */
 
 .tabs {

@@ -35,113 +35,39 @@ def request_data(request, org_ids=None):
         # or came back to this page after submitting a request
         return render(request, "data_request/expired.html")
 
-    organizations = Organization.objects.filter(
-        id__in=org_ids.split(","))
+    util.set_autocommit_off()
 
-    if request.POST.get("action", None) == "review":
-        # Review the form first
-        return review_request(
-            request, org_ids, organizations)
+    response = None
 
-    # Add organizations into only one of the following lists
-    # email is preferred if organization supports it, otherwise
-    # fallback to normal mail
-    mail_organizations = []
-    email_organizations = []
+    if request.POST.get("send", None):
+        response = send_request(request, org_ids)
+    elif request.POST.get("review", None):
+        response = review_request(request, org_ids)
+    elif request.POST.get("return", None):
+        return redirect(reverse("organization:list_organizations"))
+    else:
+        response = create_request(request, org_ids)
 
-    for organization in organizations:
-        if organization.accepts_email:
-            email_organizations.append(organization)
-        elif organization.accepts_mail:
-            mail_organizations.append(organization)
+    util.rollback()
+    util.set_autocommit_on()
 
-    # Is the user sending the request or reviewing it
-    action = request.POST.get("action", None)
+    return response
+
+
+def create_request(request, org_ids):
+    """
+    FIRST STEP
+    Let user fill any needed authentication fields and other details
+    """
+    (organizations, email_organizations,
+     mail_organizations) = get_organization_tuple(org_ids)
+
+    form = DataRequestForm(
+        request.POST or None, organizations=organizations)
 
     if request.method == 'POST':
-        form = DataRequestForm(
-            request.POST or None, organizations=organizations)
-
-        captcha_form = None
-
-        if len(email_organizations) > 0:
-            captcha_form = CaptchaForm(request.POST or None)
-
-        # To make sure we don't store any data, do everything
-        # inside a transaction which is rolled back instead of being
-        # committed
-        util.set_autocommit_off()
-
-        if captcha_form and not captcha_form.is_valid():
-            # If form validation failed, user didn't fill CAPTCHA correctly
-            # Redirect to review page
-            return review_request(request, org_ids, organizations, False)
-        elif not form.is_valid():
-            return render(request, 'data_request/request_data.html', {
-                'form': form,
-                'organizations': organizations,
-                'mail_organizations': mail_organizations,
-                'email_organizations': email_organizations,
-                'org_ids': org_ids,
-            })
-        elif form.is_valid():
-            if action == "send":
-                pdf_pages = []
-                email_requests = []
-
-                for organization in organizations:
-                    data_request = get_data_request(organization, form)
-
-                    # Generate PDF pages for mail requests
-                    try:
-                        pdf_page = generate_pdf_page(data_request)
-                        if pdf_page:
-                            pdf_pages.append(pdf_page)
-                    except RuntimeError:
-                        messages.error(
-                            request, _("The PDF file couldn't be created! Please try again later."))
-                        return render(request, 'data_request/request_data.html', {
-                            'form': form,
-                            'organizations': organizations,
-                            'mail_organizations': mail_organizations,
-                            'email_organizations': email_organizations,
-                            'org_ids': org_ids,
-                        })
-
-                    # Generate email messages
-                    if organization.accepts_email:
-                        email_requests.append(data_request)
-
-                # Generate PDF pages for any mail-only requests
-                pdf_data = generate_request_pdf(pdf_pages)
-
-                # Send email requests
-                if not send_email_requests(email_requests, form):
-                    messages.error(
-                        request, _("Email requests couldn't be sent! Please try again later."))
-
-                    util.rollback()
-
-                    return render(request, "data_request/request_data.html", {
-                        'form': form,
-                        'organizations': organizations,
-                        'mail_organizations': mail_organizations,
-                        'email_organizations': email_organizations,
-                        'org_ids': org_ids
-                    })
-
-                # Cancel transaction to clear everything from memory
-                util.rollback()
-                util.set_autocommit_on()
-
-                return render(request, 'data_request/sent.html', {
-                    'organizations': organizations,
-                    'mail_organizations': mail_organizations,
-                    'email_organizations': email_organizations,
-                    'pdf_data': pdf_data
-                    })
-    else:
-        form = DataRequestForm(organizations=organizations)
+        if form.is_valid() and request.POST.get("review", None):
+            return review_request(request, org_ids)
 
     return render(request, 'data_request/request_data.html', {
         'form': form,
@@ -152,45 +78,40 @@ def request_data(request, org_ids=None):
     })
 
 
-def review_request(request, org_ids, organizations, ignore_captcha=True):
+def review_request(request, org_ids, ignore_captcha=True, prevent_redirect=False):
     """
+    SECOND STEP
     Let user review his email requests if he's sending any
 
     :request: Current request
     :org_ids: List of organization IDs as a comma separated string
-    :organizations: A list of Organization objects
-    :ignore_captcha: Whether to ignore any errors thrown by CAPTCHA
-                     The first time the user enters the page the user hasn't
-                     filled the captcha; this parameter prevents an
-                     error from showing up
+    :ignore_captcha: Whether to ignore any CAPTCHA errors
+                     The first time user comes to review page he hasn't
+                     filled the CAPTCHA, so we don't want to show an error
+    :prevent_redirect: Prevent user from being redirected to 'send' page even
+                       if the form would be valid
     """
-    # Add organizations into only one of the following lists
-    # email is preferred if organization supports it, otherwise
-    # fallback to normal mail
-    mail_organizations = []
-    email_organizations = []
-
-    for organization in organizations:
-        if organization.accepts_email:
-            email_organizations.append(organization)
-        elif organization.accepts_mail:
-            mail_organizations.append(organization)
+    (organizations, email_organizations,
+     mail_organizations) = get_organization_tuple(org_ids)
 
     if request.method == 'POST':
         form = DataRequestForm(
             request.POST, organizations=organizations, visible=False)
 
-        captcha_form = CaptchaForm(
-            request.POST if not ignore_captcha else None)
-
         data_requests = []
-
-        if not form.is_valid() and ignore_captcha:
-            # Ignore any errors in CAPTCHA while still reviewing
-            del captcha_form._errors["captcha"]
 
         if form.is_valid():
             data_requests = get_data_requests(form, organizations)
+
+            if request.POST.get("send", None) and not prevent_redirect:
+                return send_request(request, org_ids)
+
+    captcha_form = None
+
+    if len(email_organizations) > 0 and not ignore_captcha:
+        captcha_form = CaptchaForm(request.POST or None)
+    elif ignore_captcha:
+        captcha_form = CaptchaForm()
 
     return render(request, "data_request/request_data_review.html", {
         "form": form,
@@ -200,6 +121,74 @@ def review_request(request, org_ids, organizations, ignore_captcha=True):
         "data_requests": data_requests,
         "org_ids": org_ids,
     })
+
+
+def send_request(request, org_ids):
+    """
+    Send any email requests and create a PDF from many mail requests
+
+    :request: Current request
+    :org_ids: List of organization IDs as a comma separated string
+    """
+    (organizations, email_organizations,
+     mail_organizations) = get_organization_tuple(org_ids)
+
+    if request.method == 'POST':
+        form = DataRequestForm(
+            request.POST, organizations=organizations, visible=False)
+
+        captcha_form = None
+
+        if len(email_organizations) > 0:
+            captcha_form = CaptchaForm(request.POST or None)
+
+        if form.is_valid() and (not captcha_form or captcha_form.is_valid()):
+            pdf_pages = []
+            email_requests = []
+
+            for organization in organizations:
+                data_request = get_data_request(organization, form)
+
+                # Generate PDF pages for mail requests
+                try:
+                    pdf_page = generate_pdf_page(data_request)
+                    if pdf_page:
+                        pdf_pages.append(pdf_page)
+                except RuntimeError:
+                    messages.error(
+                        request, _("The PDF file couldn't be created! Please try again later."))
+
+                    return review_request(
+                        request, org_ids, prevent_redirect=True)
+
+                # Generate email messages
+                if organization.accepts_email:
+                    email_requests.append(data_request)
+
+            # Generate PDF pages for any mail-only requests
+            pdf_data = generate_request_pdf(pdf_pages)
+
+            # Send email requests
+            if not send_email_requests(email_requests, form):
+                messages.error(
+                    request, _("Email requests couldn't be sent! Please try again later."))
+
+                return review_request(request, org_ids, prevent_redirect=True)
+
+            # Request was successful!
+            return render(request, "data_request/sent.html", {
+                "organizations": organizations,
+                "mail_organizations": mail_organizations,
+                "email_organizations": email_organizations,
+                "pdf_data": pdf_data
+            })
+        else:
+            return review_request(
+                request, org_ids, False, prevent_redirect=True)
+
+    # Send user back to review page
+    # send POST parameter is removed to prevent redirect loop
+    return review_request(request, org_ids, prevent_redirect=True)
 
 
 def get_data_requests(form, organizations):
@@ -217,6 +206,32 @@ def get_data_requests(form, organizations):
         data_requests.append(data_request)
 
     return data_requests
+
+
+def get_organization_tuple(org_ids):
+    """Return (all_organizations, email_organizations, mail_organizations)
+       tuple
+
+    :org_ids: Organization IDs as a comma-separated list
+    :returns: (all_organizations, email_organizations, mail_organizations)
+              tuple containing organizations
+    """
+    organizations = Organization.objects.filter(
+        id__in=org_ids.split(","))
+
+    # Add organizations into only one of the following lists
+    # email is preferred if organization supports it, otherwise
+    # fallback to normal mail
+    mail_organizations = []
+    email_organizations = []
+
+    for organization in organizations:
+        if organization.accepts_email:
+            email_organizations.append(organization)
+        elif organization.accepts_mail:
+            mail_organizations.append(organization)
+
+    return (organizations, email_organizations, mail_organizations)
 
 
 def generate_pdf_page(data_request):
