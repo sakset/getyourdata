@@ -85,7 +85,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'feedback.context_processors.feedback_form',
 ]
 
 ROOT_URLCONF = 'getyourdata.urls'
@@ -102,6 +101,7 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'feedback.context_processors.feedback_form',
             ],
         },
     },
