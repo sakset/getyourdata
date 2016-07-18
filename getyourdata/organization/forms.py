@@ -111,13 +111,26 @@ class CommentForm(forms.ModelForm):
     """
     Form to submit a public comment
     """
-    rating = forms.IntegerField(error_messages={
-        'required': _('Please leave a rating'),
-        'min_value': _('Please leave a rating')
-    })
-    message = forms.CharField(error_messages={
-        'required': _('Message is required')
-    })
+    rating = forms.IntegerField(
+        error_messages={
+            'required': _('Please leave a rating'),
+            'min_value': _('Please leave a rating')
+        },
+        label=_('Rating'),
+        required=True,
+        min_value=1,
+        max_value=5,
+
+    )
+    message = forms.CharField(
+        error_messages={
+            'required': _('Message is required'),
+            'max_length':_('Maximum allowed length is 2000 characters')
+        },
+        label=_('Message'),
+        max_length=2000,
+        required=True,
+    )
 
     class Meta:
         model = Comment
