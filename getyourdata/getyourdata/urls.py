@@ -18,6 +18,7 @@ urlpatterns = i18n_patterns(
     url(r'^organizations/', include(
         'organization.urls', namespace="organization")),
     url(r'^request/', include('data_request.urls', namespace="data_request")),
+    url(r'^feedback/', include('feedback.urls', namespace="feedback")),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls', namespace="api")),
     url(r'^request/', include(
