@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'home',
     'organization',
     'data_request',
+    'feedback',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -84,6 +85,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'feedback.context_processors.feedback_form',
 ]
 
 ROOT_URLCONF = 'getyourdata.urls'
@@ -234,7 +236,7 @@ MEDIA_ROOT = secrets.get("MEDIA_ROOT", '%s/media' % os.getcwd())
 
 # Session
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
