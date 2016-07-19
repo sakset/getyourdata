@@ -250,20 +250,25 @@ GRAPPELLI_ADMIN_TITLE = 'GetYourData admin'
 
 TINYMCE_DEFAULT_CONFIG = {
     'valid_elements': (
-        "a[href|target=_blank],strong/b,em,span[*],"
-        "address,pre,br,#p[*],ul,ol,li,table[*],tbody[*],tr[*],td[*],"
-        "th[*],h1,h2,h3,h4,h5,h6,img[*],iframe[*],video[*],audio[*],"
-        "object[*],param[*],div[*]"
+        "a[*],strong/b[*],em[*],span[*],"
+        "address[*],pre[*],br[*],p[*],ul[*],ol[*],li[*],table[*],tbody[*],tr[*],td[*],"
+        "th[*],h1[*],h2[*],h3[*],h4[*],h5[*],h6[*],img[*],iframe[*],video[*],audio[*],"
+        "object[*],param[*],div[*],small[*],hr[*],style[*],script[*],link[*],strong[*],"
     ),
+    'content_css':  "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css,"
+                    "/static/css/getyourdata.css,"
+                    "/static/css/chosen.min.css,"
+                    "/static/css/bootstrap-overrides.css,",
     'plugins': (
         "style,media,table,spellchecker,paste,"
         "searchreplace,preview,inlinepopups,advlink"
     ),
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
-    'plugin_preview_width': 607,
-    'width': 1000,
-    'height': 800,
+    'plugin_preview_width': 1200,
+    'plugin_preview_height': 1000,
+    'width': 1200,
+    'height': 1000,
     'theme': "advanced",
     'toolbar_location': "top",
     'theme_advanced_buttons1': (
@@ -272,6 +277,7 @@ TINYMCE_DEFAULT_CONFIG = {
         "separator,link,image,media,code,preview"
     ),
     'theme_advanced_buttons2': "table,tablecontrols",
+    'convert_urls': False,
 }
 
 TINYMCE_COMPRESSOR = False
