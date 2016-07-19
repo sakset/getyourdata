@@ -16,7 +16,6 @@ cd getyourdata;
 
 echo "Installing dependencies and running migrations...";
 pip install -r requirements.txt;
-python manage.py makemigrations flatpages --noinput;
 python manage.py migrate --noinput;
 python manage.py collectstatic --noinput;
 python manage.py update_translation_fields;
