@@ -1,14 +1,15 @@
-from django.shortcuts import render
-from django.core.cache import cache
+from django.http import HttpResponse
+from django.template import Template, RequestContext
 
 from home.models import HomePage
 
 
 def home(request):
     """
-    Simply displays the front page
+    Displays the default front page
     """
     page, created = HomePage.objects.get_or_create(admin_name='default')
-    return render(request, 'home/home.html', {
-        'content': page.content,
-    })
+    return HttpResponse(Template(page.content).render(RequestContext(request, {
+            "my_name": "Adrian",
+        })
+    ))

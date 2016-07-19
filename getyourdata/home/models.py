@@ -1,19 +1,23 @@
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.db import models
 from django.template.loader import render_to_string
 
-from tinymce import models as tinymce_models
-
 from getyourdata.models import BaseModel
+
+import os
 
 
 def get_default_content():
-    return render_to_string('home/default.html', {})
+    with open(os.path.join(
+        settings.BASE_DIR,
+        'home/templates/home/default_home_template.html'), 'r') as f:
+        return f.read()
 
 class HomePage(BaseModel):
     admin_name = models.CharField(max_length=30, default='default', unique=True)
-    content = tinymce_models.HTMLField(blank=True, default=get_default_content)
+    content = models.TextField(blank=True, default=get_default_content)
 
     class Meta:
         verbose_name = 'Home page'
