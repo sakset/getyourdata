@@ -12,7 +12,7 @@ def send_feedback(request):
         form_valid = form.is_valid()
 
         if form_valid:
-            form.save()
+            feedback = form.save()
             messages.success(request, _('Thank you for your feedback!'))
         else:
             request.session['feedback_content'] = request.POST.get('content')
