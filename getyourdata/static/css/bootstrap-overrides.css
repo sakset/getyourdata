@@ -76,7 +76,6 @@
 
 #organization-list td > a {
     margin-top: 1em;
-    background: #f5f6f6;
     color: #959595;
 }
 
@@ -99,4 +98,3 @@
 #bootstrap-overrides h4.panel-title {
     font-weight: bold;
 }
-

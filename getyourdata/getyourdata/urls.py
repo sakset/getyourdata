@@ -19,12 +19,13 @@ urlpatterns = i18n_patterns(
     url(r'^grappelli/', include(grappelli_urls)),
     url(r'^tinymce/', include(tinymce_urls)),
 
+    url(r'^api/', include('api.urls', namespace="api")),
+
     url(r'^$', home_views.home, name="home"),
     url(r'^organizations/', include(
         'organization.urls', namespace="organization")),
     url(r'^request/', include('data_request.urls', namespace="data_request")),
     url(r'^feedback/', include('feedback.urls', namespace="feedback")),
-    url(r'^api/', include('api.urls', namespace="api")),
     url(r'^request/', include(
         'data_request.urls', namespace="data_request")),
     url(r'^faq/', data_request_views.faq, name='faq'),
@@ -37,8 +38,10 @@ urlpatterns += [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += url(r'^rosetta/', include('rosetta.urls')),

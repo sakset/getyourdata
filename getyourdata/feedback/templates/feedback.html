@@ -3,10 +3,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <br>
             <div class="panel panel-warning">
                 <div class="panel-body">
                     <p>
-                        {% blocktrans trimmed %} Feedback regarding this service? {% endblocktrans %}
+                        {% blocktrans %}Feedback regarding this service?{% endblocktrans %}
                     </p>
                     <form role="form" action="{% url 'feedback:send_feedback' %}" method="post">
                         {% csrf_token %}

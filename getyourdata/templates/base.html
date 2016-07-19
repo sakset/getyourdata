@@ -30,13 +30,12 @@
         {% block content %}
         {% endblock content %}
 
+        {% include 'feedback.html' %}
+
         {% include "footer.html" %}
 
         {# SCRIPTS #}
         {% bootstrap_javascript %}
-
-        {% include 'feedback.html' %}
-
         <script src="{% static 'js/chosen.jquery.min.js' %}" type="text/javascript"></script>
         <script>
             // Make multiple choice fields fancy using Chosen
