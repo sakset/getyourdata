@@ -1,59 +1,10 @@
 {% load i18n %}
 
-<div class="container">
-
-    <div class="row bs-wizard" style="border-bottom:0;">
-
-        <!-- disabled, active, complete -->
-
-        <!-- choose_organizations -->
-
-        <div class="col-xs-3 bs-wizard-step {% if process_step == 1 %}active{% elif process_step > 1 %}complete{% else %}disabled{% endif %}">
-            <div class="text-center bs-wizard-stepnum">{% trans "Choose organization(s)" %}</div>
-            <div class="progress">
-                <div class="progress-bar"></div>
-            </div>
-            <a href="#" class="bs-wizard-dot"></a>
-            <div class="bs-wizard-info text-center">{% trans "Choose the organization(s) for the data request" %}</div>
-        </div>
-
-        <!-- provide_info -->
-
-        <div class="col-xs-3 bs-wizard-step {% if process_step == 2 %}active{% elif process_step > 2 %}complete{% else %}disabled{% endif %}">
-            <div class="text-center bs-wizard-stepnum">{% trans "Fill your personal information" %}</div>
-            <div class="progress">
-                <div class="progress-bar"></div>
-            </div>
-            <a href="#" class="bs-wizard-dot"></a>
-            <div class="bs-wizard-info text-center">{% trans "Fill in your personal details that help the organization(s) to identify you" %}</div>
-        </div>
-
-
-        <!-- send_requests -->
-
-        <div class="col-xs-3 bs-wizard-step {% if process_step == 3 %}active{% elif process_step > 3 %}complete{% else %}disabled{% endif %}">
-            <div class="text-center bs-wizard-stepnum">{% trans "Send the request(s)" %}</div>
-            <div class="progress">
-                <div class="progress-bar"></div>
-            </div>
-            <a href="#" class="bs-wizard-dot"></a>
-            <div class="bs-wizard-info text-center">{% trans "Preview and send the request(s) by e-mail or by post" %}</div>
-        </div>
-
-        <!-- give_feedback -->
-
-        <div class="col-xs-3 bs-wizard-step {% if process_step == 4 %}active{% elif process_step > 4 %}complete{% else %}disabled{% endif %}">
-            <div class="text-center bs-wizard-stepnum">{% trans "Give feedback" %}</div>
-            <div class="progress">
-                <div class="progress-bar"></div>
-            </div>
-            <a href="#" class="bs-wizard-dot"></a>
-            <div class="bs-wizard-info text-center">{% trans "Give feedback on how the organizations responded in order to help other users." %}</div>
-        </div>
-    </div>
-
-
-</div>
-
+    <ul class="tabs">
+        <li class="{% if process_step == 1 %}active{% endif %}"><span class="glyphicon glyphicon-envelope"></span>{% trans "Choose organizations" %}</li>
+        <li class="{% if process_step == 2 %}active{% endif %}"><span class="glyphicon glyphicon-user"></span>{% trans "Fill in your details" %}</li>
+        <li class="{% if process_step == 3 %}active{% endif %}"><span class="glyphicon glyphicon-list-alt"></span>{% trans "Review and send requests" %}</li>
+        <li class="{% if process_step == 4 %}active{% endif %}"><span class="glyphicon glyphicon-comment"></span>{% trans "Give feedback" %}</li>
+    </ul>
 
 <!-- end progress bar -->

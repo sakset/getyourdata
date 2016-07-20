@@ -16,25 +16,96 @@ img.center {
 
 /* process steps */
 
-.bs-wizard {margin-top: 40px;}
+.tabs {
+    list-style: none;
+    padding: 0;
+}
 
-/*Form Wizard*/
-.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
-.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
-.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
-.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
-.bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
-.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #fbe8aa; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;}
-.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #fbbd19; border-radius: 50px; position: absolute; top: 8px; left: 8px; }
-.bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 20px 0;}
-.bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #fbe8aa;}
-.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
-.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {width:50%;}
-.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {width:0%;}
-.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {width: 100%;}
-.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {background-color: #f5f5f5;}
-.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after {opacity: 0;}
-.bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
-.bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
-.bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
-/*END Form Wizard*/
+@media all and (min-width: 48em) {
+    .tabs {
+        margin: 1em 0;
+        display: table;
+        width: 100%;
+        height: 40px;
+    }
+}
+
+.tabs li {
+    text-align: center;
+    width: 100%;
+    border-top: 1px solid white;
+    margin: 0;
+    position: relative;
+    padding: 1em 0;
+    box-sizing: border-box;
+}
+
+.tabs li:first-child {
+    border-top: 0;
+}
+
+.tabs li .glyphicon {
+    padding-right: 0.5em;
+    font-size: 1.5em;
+}
+@media all {
+    .tabs li {
+        display: table-cell;
+        width: auto;
+        vertical-align: middle;
+        padding: 0 0 0 15px;
+        margin: 0;
+        border: none;
+        background-color: #f5f5f5;
+    }
+
+    .tabs li:before {
+        content: "";
+        position: absolute;
+        left: 100%;
+        top: -1px;
+        width: 0;
+        height: 0;
+        border-top: 21px solid transparent;
+        border-left: 15px solid white;
+        border-bottom: 21px solid transparent;
+        z-index: 10;
+
+    }
+
+    .tabs li:after {
+        content: "";
+        position: absolute;
+        left: 99%;
+        /* IE8 and Android don't do calc so well */
+        left: calc(100% - 1px);
+        top: 0;
+        width: 0;
+        height: 0;
+        border-top: 20px solid transparent;
+        border-left: 14px solid #f5f5f5;
+        border-bottom: 20px solid transparent;
+        z-index: 11;
+
+    }
+
+    .tabs li:last-child:before, .tabs li:last-child:after {
+        border: none;
+    }
+}
+
+.tabs li.active {
+    color: white;
+    background-color: #fbbd19;
+
+}
+
+.tabs li.active:after {
+    border-left: 14px solid #fbbd19;
+}
+
+.tabs li.active a {
+    color: white;
+}
+
+
