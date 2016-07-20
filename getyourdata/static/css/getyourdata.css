@@ -21,7 +21,7 @@ img.center {
     padding: 0;
 }
 
-@media all and (min-width: 48em) {
+@media all {
     .tabs {
         margin: 1em 0;
         display: table;
@@ -38,6 +38,7 @@ img.center {
     position: relative;
     padding: 1em 0;
     box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .tabs li:first-child {
@@ -57,6 +58,10 @@ img.center {
         margin: 0;
         border: none;
         background-color: #f5f5f5;
+    }
+
+    .tabs li .glyphicon {
+        vertical-align: bottom;
     }
 
     .tabs li:before {
