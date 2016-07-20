@@ -4,16 +4,15 @@
 
 {% block content %}
 <div class="container">
+
     <div class="row">
         <div class="col-md-12">
             <div>
                 {% include "processbar.html" with process_step=3 %}
             </div>
-            <div class="page-header">
-                <h1>{% trans "Review your request" %}</h1>
-            </div>
-        </div>  
+        </div>
     </div>
+
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
