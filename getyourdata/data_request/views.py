@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.mail import EmailMessage
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
@@ -13,6 +15,7 @@ from getyourdata.forms import CaptchaForm
 
 from data_request.services import concatenate_pdf_pages
 from data_request.services import send_data_requests_by_email
+from data_request.services import send_mail_request_pdf
 
 import base64
 
@@ -105,6 +108,8 @@ def review_request(request, org_ids, ignore_captcha=True, prevent_redirect=False
 
             if request.POST.get("send", None) and not prevent_redirect:
                 return send_request(request, org_ids)
+        else:
+            return create_request(request, org_ids)
 
     captcha_form = None
 
@@ -133,6 +138,9 @@ def send_request(request, org_ids):
     (organizations, email_organizations,
      mail_organizations) = get_organization_tuple(org_ids)
 
+    # Was a copy of the mail requests sent to an email address
+    mail_request_copy_sent = False
+
     if request.method == 'POST':
         form = DataRequestForm(
             request.POST, organizations=organizations, visible=False)
@@ -143,6 +151,8 @@ def send_request(request, org_ids):
             captcha_form = CaptchaForm(request.POST or None)
 
         if form.is_valid() and (not captcha_form or captcha_form.is_valid()):
+            cleaned_data = form.cleaned_data
+
             pdf_pages = []
             email_requests = []
 
@@ -175,12 +185,31 @@ def send_request(request, org_ids):
 
                 return review_request(request, org_ids, prevent_redirect=True)
 
+            if cleaned_data.get("send_mail_request_copy", None) and \
+                cleaned_data.get("user_email_address", None):
+                # User wants a copy of mail requests, send them
+                if not send_mail_request_pdf(
+                     cleaned_data.get("user_email_address"),
+                     mail_organizations, pdf_data):
+                    messages.error(
+                        request,
+                        _("A copy of the mail requests couldn't be sent!"))
+                else:
+                    mail_request_copy_sent = True
+
+
+            if pdf_data:
+                # Encode the PDF data as base64 to be rendered in the view
+                pdf_data = base64.b64encode(pdf_data)
+
             # Request was successful!
             return render(request, "data_request/sent.html", {
                 "organizations": organizations,
                 "mail_organizations": mail_organizations,
                 "email_organizations": email_organizations,
-                "pdf_data": pdf_data
+                "pdf_data": pdf_data,
+                "org_ids": org_ids,
+                "mail_request_copy_sent": mail_request_copy_sent
             })
         else:
             return review_request(

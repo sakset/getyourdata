@@ -49,6 +49,10 @@
                         <a class="btn btn-xl btn-success" href="data:application/pdf;base64,{{ pdf_data }}"
                            target="_blank" download="request.pdf"><span
                                 class="glyphicon glyphicon-download-alt"></span> {% trans "Download PDF" %}</a>
+                        <br>
+                        {% if mail_request_copy_sent %}
+                        <p>{% trans "A copy of the PDF has been sent to your email address." %}</p>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}

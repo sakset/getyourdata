@@ -71,3 +71,37 @@ def send_data_requests_by_email(data_requests, email_address):
 
     # If all messages were sent, return True
     return result == len(email_messages)
+
+
+def send_mail_request_pdf(email_address, mail_organizations, pdf_data):
+    """Send a copy of mail request(s) as a PDF to a given email address
+
+    :email_address: Email address to send to
+    :mail_organizations: A list of organizations included in the PDF
+    :pdf_data: PDF data to send
+
+    """
+    from data_request.models import RequestCopyContent
+
+    request_copy_content = RequestCopyContent.objects.get_or_create(
+        title="Default")
+    email_body = render_to_string(
+        "data_request/email/mail_request_copy.html", {
+            "request_copy_content": request_copy_content,
+            "mail_organizations": mail_organizations
+        })
+
+    email = EmailMessage(
+        subject=_("Copy of mail requests"),
+        body=email_body,
+        to=(email_address,),
+        from_email="noreply@getyourdata.org"
+    )
+
+    email.attach("mail_requests.pdf", pdf_data, "application/pdf")
+
+    try:
+        email.send()
+        return True
+    except:
+        return False
