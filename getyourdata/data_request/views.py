@@ -113,7 +113,7 @@ def review_request(request, org_ids, ignore_captcha=True, prevent_redirect=False
 
     captcha_form = None
 
-    if len(email_organizations) > 0 and not ignore_captcha:
+    if not ignore_captcha:
         captcha_form = CaptchaForm(request.POST or None)
     elif ignore_captcha:
         captcha_form = CaptchaForm()
@@ -145,12 +145,9 @@ def send_request(request, org_ids):
         form = DataRequestForm(
             request.POST, organizations=organizations, visible=False)
 
-        captcha_form = None
+        captcha_form = CaptchaForm(request.POST or None)
 
-        if len(email_organizations) > 0:
-            captcha_form = CaptchaForm(request.POST or None)
-
-        if form.is_valid() and (not captcha_form or captcha_form.is_valid()):
+        if form.is_valid() and captcha_form.is_valid():
             cleaned_data = form.cleaned_data
 
             pdf_pages = []

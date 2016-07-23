@@ -83,7 +83,7 @@ def send_mail_request_pdf(email_address, mail_organizations, pdf_data):
     """
     from data_request.models import RequestCopyContent
 
-    request_copy_content = RequestCopyContent.objects.get_or_create(
+    request_copy_content, created = RequestCopyContent.objects.get_or_create(
         title="Default")
     email_body = render_to_string(
         "data_request/email/mail_request_copy.html", {

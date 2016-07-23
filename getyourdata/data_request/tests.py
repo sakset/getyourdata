@@ -175,12 +175,46 @@ class DataRequestCreationTests(TestCase):
         response = self.client.post(
             reverse("data_request:request_data", args=(mail_organization.id,)),
             {"some_number": "1234567",
-             "send": "true"},
+             "send": "true",
+             "g-recaptcha-response": "PASSED"},
             follow=True
             )
 
         self.assertContains(response, "Further action required")
         self.assertContains(response, "Download PDF")
+        self.assertNotContains(response, "A copy of the PDF")
+
+    def test_mail_request_copy_can_be_sent_successfully(self):
+        mail_organization = create_mail_organization(self)
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(mail_organization.id,)),
+            {"some_number": "1234567",
+             "user_email_address": "test@test.com",
+             "send_mail_request_copy": True,
+             "send": "true",
+             "g-recaptcha-response": "PASSED"},
+            follow=True
+            )
+
+        self.assertContains(response, "A copy of the PDF")
+
+    def test_mail_request_copy_can_be_sent_successfully_with_email_requests(self):
+        mail_organization = create_mail_organization(self)
+        email_organization = create_email_organization(self)
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(
+                "%s,%s" % (mail_organization.id, email_organization.id),)),
+            {"some_number": "1234567",
+             "user_email_address": "test@test.com",
+             "send_mail_request_copy": True,
+             "send": "true",
+             "g-recaptcha-response": "PASSED"},
+            follow=True
+            )
+
+        self.assertContains(response, "A copy of the PDF")
 
     def test_pending_email_request_displayed_correctly(self):
         email_organization = Organization.objects.create(
@@ -242,6 +276,21 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, "Send request")
         self.assertNotContains(response, "Review request")
+
+    def test_feedback_is_displayed_correctly(self):
+        email_organization = create_email_organization(self)
+        mail_organization = create_mail_organization(self)
+
+        response = self.client.get(
+            reverse("data_request:give_feedback", args=(
+                "%s,%s" % (mail_organization.id, email_organization.id),)))
+
+        self.assertContains(response, email_organization.name)
+        self.assertContains(response, mail_organization.name)
+
+        # Two "Give feedback" buttons for organizations and one
+        # site-wide "Give feedback" button
+        self.assertContains(response, "Give feedback", count=3)
 
 
 @isSeleniumTest()

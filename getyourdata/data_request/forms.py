@@ -105,8 +105,11 @@ class DataRequestForm(forms.Form):
         """
         cleaned_data = super(DataRequestForm, self).clean()
 
-        if cleaned_data.get("send_mail_request_copy", False) and \
-           not cleaned_data.get("user_email_address", None):
-            self.add_error(
-                "send_mail_request_copy",
-                _("You must enter a receiving email address if you want a copy of your mail requests as an email message."))
+        # If user is creating only mail requests and wants a copy of his requests
+        # to his email address, require that email address is provided
+        if self.contains_mail_requests and not self.contains_email_requests:
+            if not cleaned_data.get("send_mail_request_copy", False) and \
+               cleaned_data.get("user_email_address", None):
+                self.add_error(
+                    "send_mail_request_copy",
+                    _("You must enter a receiving email address if you want a copy of your mail requests as an email message."))
