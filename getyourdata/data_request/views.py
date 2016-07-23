@@ -191,6 +191,24 @@ def send_request(request, org_ids):
     return review_request(request, org_ids, prevent_redirect=True)
 
 
+def give_feedback(request, org_ids):
+    """
+    Requests have been finished, just show user a link of organization profiles
+    to give feedback
+
+    :request: Current request
+    :org_ids: A list of Organization objects
+
+    """
+    organizations = Organization.objects.filter(
+        id__in=org_ids.split(","))
+
+    return render(request, "data_request/request_data_feedback.html", {
+        "org_ids": org_ids,
+        "organizations": organizations,
+    })
+
+
 def get_data_requests(form, organizations):
     """
     Get a list of every data request
@@ -309,6 +327,7 @@ def get_data_request(organization, form):
     AuthenticationContent.objects.bulk_create(auth_contents)
 
     return data_request
+
 
 def faq(request):
     faqs = FaqContent.objects.order_by("priority")

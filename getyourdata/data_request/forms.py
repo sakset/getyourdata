@@ -35,6 +35,8 @@ class DataRequestForm(forms.Form):
         self.visible = kwargs.pop('visible', True)
 
         self.contains_email_requests = False
+        self.contains_mail_requests = False
+
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
         if not self.organizations:
@@ -43,6 +45,8 @@ class DataRequestForm(forms.Form):
         for organization in self.organizations:
             if organization.accepts_email:
                 self.contains_email_requests = True
+            if organization.accepts_mail and not organization.accepts_email:
+                self.contains_mail_requests = True
 
             for auth_field in organization.authentication_fields.all():
                 # Only add each authentication field once
@@ -63,13 +67,21 @@ class DataRequestForm(forms.Form):
                     validators=validators,
                     required=True)
 
-        # If user is making at least one email request, we'll need his email address
-        # as well
+        self.fields["user_email_address"] = forms.EmailField(
+            label=_("Receiving email address"),
+            help_text=_("A copy of your mail requests can be sent to this email address if filled"),
+            required=False)
+
         if self.contains_email_requests:
-            self.fields["user_email_address"] = forms.EmailField(
-                label=_("Receiving email address"),
-                help_text=_("Your data and further enquiries by organizations will be sent to this address"),
-                required=True)
+            self.fields["user_email_address"].help_text = _(
+                "Your data and further enquiries by organizations will be sent to this address")
+            self.fields["user_email_address"].required = True
+
+            if self.contains_mail_requests:
+                self.fields["send_mail_request_copy"] = forms.BooleanField(
+                    label=_("Send a copy of mail requests"),
+                    help_text=_("If checked, a copy of your mail requests will be sent to the receiving email address"),
+                    required=False)
 
         # Make the fields invisible if needed
         if not self.visible:
