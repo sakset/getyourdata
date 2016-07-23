@@ -72,6 +72,15 @@ class DataRequestForm(forms.Form):
             help_text=_("A copy of your mail requests can be sent to this email address if filled"),
             required=False)
 
+        # If user is creating only mail requests, we don't need a
+        # checkbox when user wants a copy of his PDF; just entering
+        # the email address is enough
+        if self.contains_mail_requests:
+            self.fields["send_mail_request_copy"] = forms.BooleanField(
+                required=False,
+                initial=True,
+                widget=forms.HiddenInput())
+
         if self.contains_email_requests:
             self.fields["user_email_address"].help_text = _(
                 "Your data and further enquiries by organizations will be sent to this address")
@@ -80,6 +89,7 @@ class DataRequestForm(forms.Form):
             if self.contains_mail_requests:
                 self.fields["send_mail_request_copy"] = forms.BooleanField(
                     label=_("Send a copy of mail requests"),
+                    initial=False,
                     help_text=_("If checked, a copy of your mail requests will be sent to the receiving email address"),
                     required=False)
 
@@ -87,3 +97,16 @@ class DataRequestForm(forms.Form):
         if not self.visible:
             for name, field in self.fields.iteritems():
                 self.fields[name].widget = forms.HiddenInput()
+
+    def clean(self):
+        """
+        If user has checked 'send mail request copy to email' but hasn't entered
+        an email address, throw an error
+        """
+        cleaned_data = super(DataRequestForm, self).clean()
+
+        if cleaned_data.get("send_mail_request_copy", False) and \
+           not cleaned_data.get("user_email_address", None):
+            self.add_error(
+                "send_mail_request_copy",
+                _("You must enter a receiving email address if you want a copy of your mail requests as an email message."))
