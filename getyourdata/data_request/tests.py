@@ -108,7 +108,7 @@ class DataRequestCreationTests(TestCase):
             {"some_number": "1234567",
              "other_thing": "Some text here",
              "user_email_address": "test@test.com",
-             "action": "send",
+             "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
             )
@@ -128,7 +128,7 @@ class DataRequestCreationTests(TestCase):
              "other_thing": "Some text here",
              "oddest_thing": "blehbleh",
              "user_email_address": "test@test.com",
-             "action": "send",
+             "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True)
 
@@ -146,7 +146,7 @@ class DataRequestCreationTests(TestCase):
             {"some_number": "1234567",
              "other_thing": "Some text here",
              "user_email_address": "test@test.com",
-             "action": "send",
+             "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
             )
@@ -175,7 +175,7 @@ class DataRequestCreationTests(TestCase):
         response = self.client.post(
             reverse("data_request:request_data", args=(mail_organization.id,)),
             {"some_number": "1234567",
-             "action": "send"},
+             "send": "true"},
             follow=True
             )
 
@@ -233,7 +233,7 @@ class DataRequestCreationTests(TestCase):
                     args=(email_organization.id,)),
             {"some_number": "1234567",
              "user_email_address": "test@test.com",
-             "action": "review"})
+             "review": "true"})
 
         self.assertContains(
             response, "Please review the following message")
@@ -377,29 +377,30 @@ class AuthenticationAttributeValidationTests(TestCase):
 
         self.assertNotContains(response, "This is a phone number")
 
+
 @isSeleniumTest()
 class FaqsValidationTests(LiveServerTestCase):
     def setUp(self):
-            self.data_requests = FaqContent.objects.create(
+        self.data_requests = FaqContent.objects.create(
             title='testtitle',
             content='testcontent',
             priority='1',
-            )
-            self.data_requests = FaqContent.objects.create(
+        )
+        self.data_requests = FaqContent.objects.create(
             title='othertitle',
             content='longer content with spaces',
             priority='10',
-            )
+        )
 
-            self.data_requests = FaqContent.objects.create(
+        self.data_requests = FaqContent.objects.create(
             title='somethingelse',
             content='last, but not least',
             priority='5',
-            )
+        )
 
     def test_selenium_faqs_can_be_seen_in_faq_view(self):
         self.selenium.get("%s%s" % (self.live_server_url,
-                  reverse("data_request:faq")))
+            reverse("faq")))
 
         self.assertIn("testtitle", self.selenium.page_source)
         self.assertIn("testcontent", self.selenium.page_source)
@@ -410,10 +411,11 @@ class FaqsValidationTests(LiveServerTestCase):
 
     def test_selenium_faqs_order_can_be_prioritized(self):
         self.selenium.get("%s%s" % (self.live_server_url,
-                reverse("data_request:faq")))
+            reverse("faq")))
 
         accordion = self.selenium.find_element_by_id("accordion")
         faqs = accordion.find_elements_by_class_name("panel-title")
+
         self.assertIn("testtitle", faqs[0].text)
         self.assertIn("othertitle", faqs[2].text)
         self.assertIn("somethingelse", faqs[1].text)

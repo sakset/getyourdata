@@ -1,40 +1,31 @@
 {% load i18n %}
 {% load bootstrap3 %}
-
 <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-
-<div class="panel panel-warning">
-    <!-- <div class="panel-heading"><span class="glyphicon glyphicon-comment"></span> {% trans "Feedback" %}</div> -->
-        
-    <!-- <div class="page-header">
-            <h2>{% trans 'Send feedback' %}</h2>
-    </div> -->
-    <div class="panel-body">
-        <p>
-        {% blocktrans trimmed %}
-        Feedback regarding this service?
-        {% endblocktrans %}
-        </p>
-        <form role="form" action="{% url 'feedback:send_feedback' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                {% if feedback_form.content.errors %}
-                <ul>
-                    {% for error in feedback_form.content.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                <textarea style="resize:none" class="form-control" cols="40" rows="5" id="id_content" name="content" placeholder="{{ feedback_form.content.label }}" required="required" rows="10" title>{% if feedback_form.content.value %}{{ feedback_form.content.value }}{% endif %}</textarea>
-            </div>
-            {# {% bootstrap_form captcha_form %} #}
-            <input class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}"/>
-        </form>
-    </div>
-</div>
-
-  </div>
+    <div class="row">
+        <div class="col-md-12">
+            <br>
+            <div class="panel panel-warning">
+                <div class="panel-body">
+                    <p>
+                        {% blocktrans %}Feedback regarding this service?{% endblocktrans %}
+                    </p>
+                    <form role="form" action="{% url 'feedback:send_feedback' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {% if feedback_form.content.errors %}
+                            <ul>
+                                {% for error in feedback_form.content.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <textarea style="resize:none" class="form-control" cols="40" rows="5" id="id_content" name="content" placeholder="{{ feedback_form.content.label }}" required="required" rows="10" title>{% if feedback_form.content.value %}{{ feedback_form.content.value }}{% endif %}</textarea>
+                        </div>
+                        {# {% bootstrap_form captcha_form %} #}
+                        <input class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}" />
+                    </form>
+                </div>
             </div>
         </div>
+    </div>
+</div>

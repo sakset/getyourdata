@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from feedback.models import ServiceFeedback
 
+
 class NewFeedbackForm(forms.ModelForm):
     content = forms.CharField(
         error_messages={
@@ -17,4 +18,3 @@ class NewFeedbackForm(forms.ModelForm):
     class Meta:
         model = ServiceFeedback
         fields = ["content"]
-

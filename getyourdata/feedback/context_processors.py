@@ -1,7 +1,7 @@
-
 from feedback.forms import NewFeedbackForm
 #from getyourdata.forms import CaptchaForm
 from feedback.models import ServiceFeedback
+
 
 def feedback_form(request):
     feedback_form = NewFeedbackForm()
@@ -15,4 +15,3 @@ def feedback_form(request):
         'feedback_form': feedback_form,
         #'captcha_form': captcha_form,
     }
-

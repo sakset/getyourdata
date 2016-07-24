@@ -18,7 +18,6 @@
             <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
                 {% csrf_token %}
                 <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
-                <input type="hidden" name="action" value="send"/>
                 <div class="form-group">
                     <label class="control-label" for="select-email">
                         {% blocktrans count counter=data_requests|length trimmed %}
@@ -55,12 +54,14 @@
                     {% endfor %}
                 </div>
                 {% bootstrap_form form %}
-                {% bootstrap_form captcha_form %}  
-                <input class="btn btn-primary" type="button" onclick="window.history.back()" value="{% trans 'Back' %}">
-                <input class="btn btn-success" id="create_request" type="submit"
+                {% if captcha_form %}{% bootstrap_form captcha_form %}{% endif %}
+                <input class="btn btn-success" id="create_request" name="send" type="submit"
                     value="{% if email_organizations and mail_organizations %}{% trans 'Send and create requests' %}
                            {% elif email_organizations %}{% trans 'Send requests' %}
                            {% elif mail_organizations %}{% trans 'Create request PDF' %}{% endif %}"/>
+                   <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
+                        Put the "Back" button here as the second button, but move it to the first position using pull-left -->
+                   <input class="btn btn-primary first-button" type="submit" name="create" value="{% trans 'Back' %}">
             </form>
         </div>
         <div class="col-md-4">
