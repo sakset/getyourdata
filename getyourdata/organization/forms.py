@@ -41,17 +41,46 @@ class NewOrganizationForm(forms.ModelForm):
         """
         Form must contain email address or postal information
         """
-        if self.cleaned_data.get("email_address"):
-            return self.cleaned_data
+        fields = ["address_line_one", "postal_code", "country"]
 
-        if self.cleaned_data.get("address_line_one") and \
-           self.cleaned_data.get("postal_code") and \
-           self.cleaned_data.get("country"):
+        if formHasFields(self.cleaned_data, ["email_address"]) or \
+            formHasFields(self.cleaned_data, fields):
             return self.cleaned_data
-
-        raise forms.ValidationError(
+        else:
+            raise forms.ValidationError(
             _("Organization profile must contain either a valid email address or postal information"))
 
+
+"""
+Checks if form has certain fields
+"""
+def formHasFields(form, fields):
+    for field in fields:
+        if not form.get(field):
+            return False
+    return True
+
+"""
+Checks if Authentication fields have been changed
+"""
+def authenticationFieldsHasChanges(cleaned_list, original_list):
+    if len(cleaned_list) != len(original_list):
+       return True
+
+    for membersValue in cleaned_list:
+        member = AuthenticationField.objects.get(id = int(membersValue))
+        if member not in original_list:
+            return True
+    return False
+
+"""
+Checks if certain form's fields have been changed
+"""
+def formHasChanges(changedOrganization, organization, fields):
+    for field in fields:
+        if (changedOrganization.get(field) != getattr(organization,field)):
+            return True
+    return False
 
 class EditOrganizationForm(forms.ModelForm):
     """
@@ -90,21 +119,23 @@ class EditOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
-
     def clean(self):
         """
-        Form must contain email address or postal information
+        Form must contain email address or postal information and have some changes
         """
-        if self.cleaned_data.get("email_address"):
-            return self.cleaned_data
+        authenticationFieldsAfter = self.cleaned_data.get("authentication_fields")
+        authenticationFieldsBefore = self.organization.authentication_fields.all()
+        fields = ["name", "email_address", "address_line_one", "address_line_two", "postal_code", "country"]
+        postalAddressRequirements = ["address_line_one", "postal_code", "country"]
 
-        if self.cleaned_data.get("address_line_one") and \
-           self.cleaned_data.get("postal_code") and \
-           self.cleaned_data.get("country"):
-            return self.cleaned_data
+        if not (formHasFields(self.cleaned_data, ["email_address"]) or formHasFields(self.cleaned_data, postalAddressRequirements)):
+            raise forms.ValidationError(_("Organization profile must contain either a valid email address or postal information"))
 
-        raise forms.ValidationError(
-            _("Organization profile must contain either a valid email address or postal information"))
+        if  authenticationFieldsHasChanges(authenticationFieldsAfter, authenticationFieldsBefore) or \
+            formHasChanges(self.cleaned_data, self.organization, fields):
+            return self.cleaned_data
+        else:
+            raise forms.ValidationError(_("Update form needs some changes for it to be sent!"))
 
 
 class CommentForm(forms.ModelForm):
