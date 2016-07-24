@@ -19,7 +19,6 @@ class AuthenticationAttributeField(forms.CharField):
         try:
             super(AuthenticationAttributeField, self).clean(value)
         except ValidationError:
-            self.help_text = ""
             raise ValidationError(_("The value for this field was not valid"))
 
         return value
@@ -69,7 +68,9 @@ class DataRequestForm(forms.Form):
 
         self.fields["user_email_address"] = forms.EmailField(
             label=_("Receiving email address"),
-            help_text=_("A copy of your mail requests can be sent to this email address if filled"),
+            help_text=_(
+                "Optional - A copy of your mail requests can be sent to"
+                "this email address if filled"),
             required=False)
 
         # If user is creating only mail requests, we don't need a
@@ -77,21 +78,17 @@ class DataRequestForm(forms.Form):
         # the email address is enough
         if self.contains_mail_requests:
             self.fields["send_mail_request_copy"] = forms.BooleanField(
-                required=False,
-                initial=True,
-                widget=forms.HiddenInput())
+                label=_("Send a copy of mail requests"),
+                initial=False,
+                help_text=_(
+                    "If checked, a copy of your mail requests will be"
+                    "sent to the receiving email address"),
+                required=False)
 
         if self.contains_email_requests:
             self.fields["user_email_address"].help_text = _(
                 "Your data and further enquiries by organizations will be sent to this address")
             self.fields["user_email_address"].required = True
-
-            if self.contains_mail_requests:
-                self.fields["send_mail_request_copy"] = forms.BooleanField(
-                    label=_("Send a copy of mail requests"),
-                    initial=False,
-                    help_text=_("If checked, a copy of your mail requests will be sent to the receiving email address"),
-                    required=False)
 
         # Make the fields invisible if needed
         if not self.visible:
@@ -107,9 +104,9 @@ class DataRequestForm(forms.Form):
 
         # If user is creating only mail requests and wants a copy of his requests
         # to his email address, require that email address is provided
-        if self.contains_mail_requests and not self.contains_email_requests:
-            if not cleaned_data.get("send_mail_request_copy", False) and \
-               cleaned_data.get("user_email_address", None):
-                self.add_error(
-                    "send_mail_request_copy",
-                    _("You must enter a receiving email address if you want a copy of your mail requests as an email message."))
+        if self.contains_mail_requests:
+            if cleaned_data.get("send_mail_request_copy", False) and \
+               not cleaned_data.get("user_email_address", None):
+                self.add_error("user_email_address", "\n%s" % _(
+                    "You must enter a receiving email address if you want a "
+                    "copy of your mail requests as an email message."))

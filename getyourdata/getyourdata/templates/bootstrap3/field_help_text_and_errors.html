@@ -1,0 +1,6 @@
+{% for text in help_text_and_errors reversed %}
+    {{ text }}
+    {% if not forloop.last %}
+        <br><br>
+    {% endif %}
+{% endfor %}

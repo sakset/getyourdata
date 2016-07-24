@@ -424,7 +424,8 @@ class AuthenticationAttributeValidationTests(TestCase):
             follow=True
             )
 
-        self.assertNotContains(response, "This is a phone number")
+        self.assertContains(response, "This is a phone number")
+        self.assertContains(response, "The value for this field was not valid")
 
 
 @isSeleniumTest()

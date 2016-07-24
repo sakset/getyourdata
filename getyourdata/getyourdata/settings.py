@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'bootstrap3',
     'tinymce',
     'rosetta',
     'rest_framework',
@@ -73,6 +72,10 @@ INSTALLED_APPS = [
     'organization',
     'data_request',
     'feedback',
+
+    # We're overriding bootstrap3's default templates, which is why it's loaded
+    # last
+    'bootstrap3',
 ]
 
 MIDDLEWARE_CLASSES = [
