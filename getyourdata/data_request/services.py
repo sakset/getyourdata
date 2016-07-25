@@ -43,12 +43,12 @@ def concatenate_pdf_pages(pdf_pages):
         return False
 
 
-def send_data_requests_by_email(data_requests, email_address):
+def send_data_requests_by_email(email_address, data_requests):
     """
     Send provided data requests as email messages
 
-    :data_requests: A QuerySet of data requests to send an email to
     :email_address: Email address of the person creating the data request
+    :data_requests: A QuerySet of data requests to send an email to
     :returns: True if all data requests could be sent, False if not
 
     """
@@ -99,6 +99,37 @@ def send_mail_request_pdf(email_address, mail_organizations, pdf_data):
     )
 
     email.attach("mail_requests.pdf", pdf_data, "application/pdf")
+
+    try:
+        email.send()
+        return True
+    except:
+        return False
+
+
+def send_feedback_message_by_email(email_address, request, organizations):
+    """Send a message detailing organizations the user created a data request for
+
+    :email_address: Email address to send to
+    :request: Current request
+    :organizations: A list of organizations to be included in the message
+
+    """
+    org_ids = [str(organization.id) for organization in organizations]
+    org_ids = ",".join(org_ids)
+
+    email_body = render_to_string(
+        "data_request/email/thanks.html", {
+            "organizations": organizations,
+            "org_ids": org_ids,
+            "request": request,
+        })
+
+    email = EmailMessage(
+        subject=_("Thank you for using GetYourData"),
+        body=email_body,
+        to=(email_address,),
+        from_email="noreply@getyourdata.org")
 
     try:
         email.send()

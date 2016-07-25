@@ -16,6 +16,7 @@ from getyourdata.forms import CaptchaForm
 from data_request.services import concatenate_pdf_pages
 from data_request.services import send_data_requests_by_email
 from data_request.services import send_mail_request_pdf
+from data_request.services import send_feedback_message_by_email
 
 import base64
 
@@ -194,13 +195,21 @@ def send_request(request, org_ids):
                 else:
                     mail_request_copy_sent = True
 
+            if cleaned_data.get("user_email_address", None):
+                if not send_feedback_message_by_email(
+                     cleaned_data.get("user_email_address"),
+                     request,
+                     organizations):
+                    messages.error(
+                        request,
+                        _("A feedback message couldn't be sent!"))
 
             if pdf_data:
                 # Encode the PDF data as base64 to be rendered in the view
                 pdf_data = base64.b64encode(pdf_data)
 
             # Request was successful!
-            return render(request, "data_request/sent.html", {
+            return render(request, "data_request/request_data_sent.html", {
                 "organizations": organizations,
                 "mail_organizations": mail_organizations,
                 "email_organizations": email_organizations,
@@ -306,7 +315,6 @@ def generate_request_pdf(pdf_pages):
     """
     if len(pdf_pages) > 0:
         pdf_data = concatenate_pdf_pages(pdf_pages)
-        pdf_data = base64.b64encode(pdf_data)
     else:
         pdf_data = None
 

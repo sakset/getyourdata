@@ -23,20 +23,21 @@
                     {% plural %}
                     You have successfully finished creating and sending your data requests!
                     {% endblocktrans %}</p>
-                    <p>{% blocktrans %}
+                    <p>{% blocktrans count counter=organizations|length trimmed %}
                     When you have received a reply to your data request, please review your process with the organization below. Your feedback will help the other users!
+                    {% plural %}
+                    When you have received a reply to your data request, please review your process with the organizations below. Your feedback will help the other users!
                     {% endblocktrans %}</p>
+                    <hr>
+                    <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
+                    You can add this page into your bookmarks.
+                    {% endblocktrans %}</b></p>
                 </div>
                 <table class="table table-striped">
                     <tbody>
                         {% for organization in organizations %}
                             <tr>
-                                <td>{{ organization.name }}</td>
-                                <td>
-                                    <a href="{% url "organization:view_organization" organization.id %}" class="btn btn-primary">
-                                        {% trans "Give feedback" %}
-                                    </a>
-                                </td>
+                                <td><a href="{% url "organization:view_organization" organization.id %}"><span class="glyphicon glyphicon-star"></span> {{ organization.name }}</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
