@@ -159,7 +159,8 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, "Organization")
 
-        self.assertEquals(len(mail.outbox), 1)
+        # User gets a copy of his request + a feedback message
+        self.assertEquals(len(mail.outbox), 2)
 
         self.assertIn("Organization", mail.outbox[0].body)
 
@@ -198,6 +199,9 @@ class DataRequestCreationTests(TestCase):
             )
 
         self.assertContains(response, "A copy of the PDF")
+
+        # User receives a copy of the PDF and a feedback message
+        self.assertEquals(len(mail.outbox), 2)
 
     def test_mail_request_copy_can_be_sent_successfully_with_email_requests(self):
         mail_organization = create_mail_organization(self)
@@ -287,10 +291,6 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, email_organization.name)
         self.assertContains(response, mail_organization.name)
-
-        # Two "Give feedback" buttons for organizations and one
-        # site-wide "Give feedback" button
-        self.assertContains(response, "Give feedback", count=3)
 
 
 @isSeleniumTest()
