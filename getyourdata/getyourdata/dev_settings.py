@@ -25,3 +25,5 @@ if TESTING:
 os.environ["RECAPTCHA_TESTING"] = 'True'
 
 PIPELINE['PIPELINE_ENABLED'] = False
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
