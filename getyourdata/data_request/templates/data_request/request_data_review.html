@@ -35,20 +35,10 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    <div class="alert alert-info">
-                        <strong>{% blocktrans count counter=data_requests|length trimmed %}
-                        The displayed message will be created when you continue
-                        {% plural %}
-                        The displayed messages will be created when you continue
-                        {% endblocktrans %}</strong>
-                    </div>
+
                     {% for data_request in data_requests %}
                     <div id="message-body-{{ forloop.counter0 }}">
-                        <span>{% if data_request.organization.accepts_email %}
-                        <span class="glyphicon glyphicon-cloud"></span> {% blocktrans %}Email request to{% endblocktrans %} <b>{{ data_request.organization.name }}</b></span>
-                        {% else %}
-                        <span class="glyphicon glyphicon-envelope"></span> {% blocktrans %}Mail request to{% endblocktrans %} <b>{{ data_request.organization.name }}</b></span>
-                        {% endif %}
+
                         <pre>{% if data_request.organization.accepts_email %}{{ data_request.to_email_body }}{% else %}{{ data_request.to_plain_text }}{% endif %}</pre>
                     </div>
                     {% endfor %}
