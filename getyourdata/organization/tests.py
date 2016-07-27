@@ -557,6 +557,7 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             By.XPATH, "(//input[@type='checkbox'])[2]").click()
         self.assertIn("6 organizations selected", self.selenium.page_source)
 
+    '''
     def test_selenium_icon_displayed_next_to_organization_that_accepts_email(self):
         Organization.objects.all().update(email_address="")
         organization = Organization.objects.all()[0]
@@ -572,6 +573,7 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             self.assertTrue(element)
         except NoSuchElementException:
             self.fail("'Accepts email requests' element not found")
+    '''
 
     def test_selenium_icon_displayed_next_to_organization_that_accepts_mail(self):
         Organization.objects.all().update(
