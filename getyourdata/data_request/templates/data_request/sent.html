@@ -29,8 +29,8 @@
         <div class="row">
             {% if mail_organizations %}
                 <div class="col-md-6">
-                    <h3 class="text-danger"><span
-                            class="glyphicon glyphicon-alert"></span> {% trans "Print mail requests" %}</h3>
+                    <h3><span
+                            class="glyphicon glyphicon-info-sign"></span> {% trans "Print mail requests" %}</h3>
                     <div class="alert alert-warning">
                         <strong>
                             {% blocktrans count counter=mail_organizations|length trimmed %}
@@ -72,15 +72,7 @@
                 </div>
             {% endif %}
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-warning">
-                    <p>{% blocktrans trimmed %}
-                        Note that since we don't store user information, the information on this page will become
-                        unavailable when changing the page.
-                    {% endblocktrans %}</p>
-                </div>
-            </div>
-        </div>
+
+
     </div>
 {% endblock %}
