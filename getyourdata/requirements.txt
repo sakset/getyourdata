@@ -1,10 +1,10 @@
 backports.shutil-get-terminal-size==1.0.0
 codeclimate-test-reporter==0.1.2
-coverage==4.1
+coverage==4.2
 decorator==4.0.10
 Django==1.9.8
 django-bootstrap3==7.0.1
-django-debug-toolbar==1.4
+django-debug-toolbar==1.5
 django-extensions==1.6.7
 django-filebrowser==3.7.1
 django-filter==0.13.0
@@ -24,7 +24,6 @@ pathlib2==2.1.0
 pexpect==4.2.0
 pickleshare==0.7.3
 Pillow==3.3.0
-pkg-resources==0.0.0
 polib==1.0.7
 prompt-toolkit==1.0.3
 psycopg2==2.6.2
@@ -39,7 +38,7 @@ sauceclient==0.2.1
 selenium==2.53.6
 simplegeneric==0.8.1
 six==1.10.0
-sqlparse==0.1.19
+sqlparse==0.2.0
 traitlets==4.2.2
 wcwidth==0.1.7
 webencodings==0.5
