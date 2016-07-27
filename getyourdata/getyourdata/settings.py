@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_extensions',
     'captcha',
+    'pipeline',
 
     'getyourdata',
     'home',
@@ -85,6 +86,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pipeline.middleware.MinifyHTMLMiddleware',
 ]
 
 ROOT_URLCONF = 'getyourdata.urls'
@@ -217,7 +219,6 @@ NOCAPTCHA = secrets.get("NOCAPTCHA", True)
 RECAPTCHA_USE_SSL = secrets.get("RECAPTCHA_USE_SSL", True)
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
 
@@ -230,7 +231,50 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.FileSystemFinder',
+    'pipeline.finders.AppDirectoriesFinder',
+    'pipeline.finders.CachedFileFinder',
+    'pipeline.finders.PipelineFinder',
 )
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'CSS_COMPRESSOR': 'pipeline.compressors.yuglify.YuglifyCompressor',
+    'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
+    'STYLESHEETS': {
+        'base_style': {
+            'source_filenames': (
+                'css/bootstrap-overrides.css',
+                'css/getyourdata.css',
+                'css/chosen.min.css',
+            ),
+            'output_filename': 'css/base_style.css',
+        },
+        'star_rating': {
+            'source_filenames': (
+                'css/star-rating.min.css',
+            ),
+            'output_filename': 'css/star_rating.css',
+        },
+    },
+    'JAVASCRIPT': {
+        'base_script': {
+            'source_filenames': (
+                'js/chosen.jquery.min.js',
+                'js/handlebars.min.js',
+            ),
+            'output_filename': 'js/base_script.js',
+        },
+        'star_rating': {
+            'source_filenames': (
+                'js/star-rating.min.js',
+            ),
+            'output_filename': 'js/star_rating.js',
+        },
+    }
+}
 
 # Media
 

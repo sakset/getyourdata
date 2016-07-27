@@ -1,6 +1,8 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
 {% load i18n %}
+{% load pipeline %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,9 +14,7 @@
 
         {% bootstrap_css %}
 
-        <link rel="stylesheet" href="{% static 'css/getyourdata.css' %}">
-        <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/bootstrap-overrides.css' %}">
+        {% stylesheet 'base_style' %}
 
         <title>{% block title %}GetYourData.org{% endblock %}</title>
         {% block extrahead %}
@@ -36,7 +36,7 @@
 
         {# SCRIPTS #}
         {% bootstrap_javascript %}
-        <script src="{% static 'js/chosen.jquery.min.js' %}" type="text/javascript"></script>
+        {% javascript 'base_script' %}
         <script>
             // Make multiple choice fields fancy using Chosen
             $("select[multiple='multiple']").chosen({
