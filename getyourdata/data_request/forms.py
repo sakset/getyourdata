@@ -64,14 +64,16 @@ class DataRequestForm(forms.Form):
                     help_text=auth_field.help_text,
                     max_length=255,
                     validators=validators,
-                    required=True)
+                    required=True,
+                    widget=forms.TextInput(attrs={"placeholder": ""}))
 
         self.fields["user_email_address"] = forms.EmailField(
             label=_("Receiving email address"),
             help_text=_(
                 "Optional - A copy of your mail requests can be sent to"
                 "this email address if filled"),
-            required=False)
+            required=False,
+            widget=forms.TextInput(attrs={"placeholder": ""}))
 
         # If user is creating only mail requests, we don't need a
         # checkbox when user wants a copy of his PDF; just entering
