@@ -70,7 +70,7 @@ class DataRequestForm(forms.Form):
         self.fields["user_email_address"] = forms.EmailField(
             label=_("Receiving email address"),
             help_text=_(
-                "Optional - A copy of your mail requests can be sent to"
+                "Optional - A copy of your mail requests can be sent to "
                 "this email address if filled"),
             required=False,
             widget=forms.TextInput(attrs={"placeholder": ""}))
@@ -83,7 +83,7 @@ class DataRequestForm(forms.Form):
                 label=_("Send a copy of mail requests"),
                 initial=False,
                 help_text=_(
-                    "If checked, a copy of your mail requests will be"
+                    "If checked, a copy of your mail requests will be "
                     "sent to the receiving email address"),
                 required=False)
 
