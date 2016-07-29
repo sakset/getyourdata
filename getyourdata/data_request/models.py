@@ -20,6 +20,19 @@ class RequestContent(BaseModel):
         blank=True, default="Dear recipient,")
     content1 = models.TextField(blank=True, default="content first")
     content2 = models.TextField(blank=True, default="content second")
+    footer = models.TextField(blank=True, default="Footer here")
+
+
+class RequestCopyContent(BaseModel):
+    """
+    The text content of an email message sent when user requests
+    a PDF copy of his mail requests to his email address
+    """
+    title = models.TextField(default="Default", unique=True)
+    header = models.TextField(
+        blank=True, default="Copy of mail requests")
+    content1 = models.TextField(blank=True, default="content first")
+    content2 = models.TextField(blank=True, default="content second")
     footer = models.TextField(blank=True, default="Regards,")
 
 
