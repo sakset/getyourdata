@@ -209,6 +209,8 @@ EMAIL_PORT = secrets.get("EMAIL_PORT", 25)
 EMAIL_USE_TLS = secrets.get("EMAIL_USE_TLS", False)
 EMAIL_USE_SSL = secrets.get("EMAIL_USE_SSL", False)
 
+NOREPLY_EMAIL_ADDRESS = "noreply@getyourdata.org"
+
 # reCAPTCHA settings
 
 RECAPTCHA_PUBLIC_KEY = secrets.get(

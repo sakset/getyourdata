@@ -3,6 +3,7 @@ from django.core.mail import EmailMessage, get_connection
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 from django.utils import timezone
+from django.conf import settings
 
 from xhtml2pdf import pisa
 from PyPDF2 import PdfFileMerger
@@ -61,7 +62,7 @@ def send_data_requests_by_email(email_address, data_requests):
             body=email_body,
             to=(data_request.organization.email_address,),
             cc=(email_address,),
-            from_email="noreply@getyourdata.org",
+            from_email=settings.NOREPLY_EMAIL_ADDRESS,
             reply_to=(email_address,)
         )
         email_messages.append(email)
@@ -95,8 +96,7 @@ def send_mail_request_pdf(email_address, mail_organizations, pdf_data):
         subject=_("Copy of mail requests"),
         body=email_body,
         to=(email_address,),
-        from_email="noreply@getyourdata.org"
-    )
+        from_email=settings.NOREPLY_EMAIL_ADDRESS)
 
     email.attach("mail_requests.pdf", pdf_data, "application/pdf")
 
@@ -129,7 +129,7 @@ def send_feedback_message_by_email(email_address, request, organizations):
         subject=_("Thank you for using GetYourData"),
         body=email_body,
         to=(email_address,),
-        from_email="noreply@getyourdata.org")
+        from_email=settings.NOREPLY_EMAIL_ADDRESS)
 
     try:
         email.send()
