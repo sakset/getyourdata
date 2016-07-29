@@ -1,0 +1,13 @@
+{% load i18n %}
+
+{{ request_copy_content.header }}
+
+{{ request_copy_content.content1 }}
+
+{{ request_copy_content.content2 }}
+
+{% for organization in mail_organizations %}
+{{ organization.name }}
+{% endfor %}
+
+{{ request_copy_content.footer }}

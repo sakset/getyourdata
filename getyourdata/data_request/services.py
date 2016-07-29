@@ -3,6 +3,7 @@ from django.core.mail import EmailMessage, get_connection
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 from django.utils import timezone
+from django.conf import settings
 
 from xhtml2pdf import pisa
 from PyPDF2 import PdfFileMerger
@@ -43,12 +44,12 @@ def concatenate_pdf_pages(pdf_pages):
         return False
 
 
-def send_data_requests_by_email(data_requests, email_address):
+def send_data_requests_by_email(email_address, data_requests):
     """
     Send provided data requests as email messages
 
-    :data_requests: A QuerySet of data requests to send an email to
     :email_address: Email address of the person creating the data request
+    :data_requests: A QuerySet of data requests to send an email to
     :returns: True if all data requests could be sent, False if not
 
     """
@@ -61,7 +62,7 @@ def send_data_requests_by_email(data_requests, email_address):
             body=email_body,
             to=(data_request.organization.email_address,),
             cc=(email_address,),
-            from_email="noreply@getyourdata.org",
+            from_email=settings.NOREPLY_EMAIL_ADDRESS,
             reply_to=(email_address,)
         )
         email_messages.append(email)
@@ -71,3 +72,67 @@ def send_data_requests_by_email(data_requests, email_address):
 
     # If all messages were sent, return True
     return result == len(email_messages)
+
+
+def send_mail_request_pdf(email_address, mail_organizations, pdf_data):
+    """Send a copy of mail request(s) as a PDF to a given email address
+
+    :email_address: Email address to send to
+    :mail_organizations: A list of organizations included in the PDF
+    :pdf_data: PDF data to send
+
+    """
+    from data_request.models import RequestCopyContent
+
+    request_copy_content, created = RequestCopyContent.objects.get_or_create(
+        title="Default")
+    email_body = render_to_string(
+        "data_request/email/mail_request_copy.html", {
+            "request_copy_content": request_copy_content,
+            "mail_organizations": mail_organizations
+        })
+
+    email = EmailMessage(
+        subject=_("Copy of mail requests"),
+        body=email_body,
+        to=(email_address,),
+        from_email=settings.NOREPLY_EMAIL_ADDRESS)
+
+    email.attach("mail_requests.pdf", pdf_data, "application/pdf")
+
+    try:
+        email.send()
+        return True
+    except:
+        return False
+
+
+def send_feedback_message_by_email(email_address, request, organizations):
+    """Send a message detailing organizations the user created a data request for
+
+    :email_address: Email address to send to
+    :request: Current request
+    :organizations: A list of organizations to be included in the message
+
+    """
+    org_ids = [str(organization.id) for organization in organizations]
+    org_ids = ",".join(org_ids)
+
+    email_body = render_to_string(
+        "data_request/email/thanks.html", {
+            "organizations": organizations,
+            "org_ids": org_ids,
+            "request": request,
+        })
+
+    email = EmailMessage(
+        subject=_("Thank you for using GetYourData"),
+        body=email_body,
+        to=(email_address,),
+        from_email=settings.NOREPLY_EMAIL_ADDRESS)
+
+    try:
+        email.send()
+        return True
+    except:
+        return False

@@ -19,7 +19,6 @@ class AuthenticationAttributeField(forms.CharField):
         try:
             super(AuthenticationAttributeField, self).clean(value)
         except ValidationError:
-            self.help_text = ""
             raise ValidationError(_("The value for this field was not valid"))
 
         return value
@@ -35,6 +34,8 @@ class DataRequestForm(forms.Form):
         self.visible = kwargs.pop('visible', True)
 
         self.contains_email_requests = False
+        self.contains_mail_requests = False
+
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
         if not self.organizations:
@@ -43,6 +44,8 @@ class DataRequestForm(forms.Form):
         for organization in self.organizations:
             if organization.accepts_email:
                 self.contains_email_requests = True
+            if organization.accepts_mail and not organization.accepts_email:
+                self.contains_mail_requests = True
 
             for auth_field in organization.authentication_fields.all():
                 # Only add each authentication field once
@@ -61,17 +64,51 @@ class DataRequestForm(forms.Form):
                     help_text=auth_field.help_text,
                     max_length=255,
                     validators=validators,
-                    required=True)
+                    required=True,
+                    widget=forms.TextInput(attrs={"placeholder": ""}))
 
-        # If user is making at least one email request, we'll need his email address
-        # as well
+        self.fields["user_email_address"] = forms.EmailField(
+            label=_("Receiving email address"),
+            help_text=_(
+                "Optional - A copy of your mail requests can be sent to"
+                "this email address if filled"),
+            required=False,
+            widget=forms.TextInput(attrs={"placeholder": ""}))
+
+        # If user is creating only mail requests, we don't need a
+        # checkbox when user wants a copy of his PDF; just entering
+        # the email address is enough
+        if self.contains_mail_requests:
+            self.fields["send_mail_request_copy"] = forms.BooleanField(
+                label=_("Send a copy of mail requests"),
+                initial=False,
+                help_text=_(
+                    "If checked, a copy of your mail requests will be"
+                    "sent to the receiving email address"),
+                required=False)
+
         if self.contains_email_requests:
-            self.fields["user_email_address"] = forms.EmailField(
-                label=_("Receiving email address"),
-                help_text=_("Your data and further enquiries by organizations will be sent to this address"),
-                required=True)
+            self.fields["user_email_address"].help_text = _(
+                "Your data and further enquiries by organizations will be sent to this address")
+            self.fields["user_email_address"].required = True
 
         # Make the fields invisible if needed
         if not self.visible:
             for name, field in self.fields.iteritems():
                 self.fields[name].widget = forms.HiddenInput()
+
+    def clean(self):
+        """
+        If user has checked 'send mail request copy to email' but hasn't entered
+        an email address, throw an error
+        """
+        cleaned_data = super(DataRequestForm, self).clean()
+
+        # If user is creating only mail requests and wants a copy of his requests
+        # to his email address, require that email address is provided
+        if self.contains_mail_requests:
+            if cleaned_data.get("send_mail_request_copy", False) and \
+               not cleaned_data.get("user_email_address", None):
+                self.add_error("user_email_address", "\n%s" % _(
+                    "You must enter a receiving email address if you want a "
+                    "copy of your mail requests as an email message."))
