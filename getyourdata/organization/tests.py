@@ -179,38 +179,6 @@ class OrganizationListingTests(TestCase):
 
         self.assertContains(response, "The Organization", 10)
 
-    def test_icon_displayed_next_to_organization_that_accepts_email(self):
-        for i in range(0, 5):
-            create_organization(self)
-
-        Organization.objects.all().update(email_address="")
-        organization = Organization.objects.all()[0]
-        organization.email_address = "fake@address.com"
-        organization.verified = True
-        organization.save()
-
-        response = self.client.get(reverse("organization:list_organizations"))
-
-        self.assertContains(response, "title=\"Accepts email requests", 1)
-
-    def test_icon_displayed_next_to_organization_that_accepts_mail(self):
-        for i in range(0, 5):
-            create_organization(self)
-
-        Organization.objects.all().update(
-            address_line_one="",
-            postal_code="",
-            country="")
-        organization = Organization.objects.all()[0]
-        organization.address_line_one = "Fake Street"
-        organization.postal_code = "012345"
-        organization.country = "Finland"
-        organization.verified = True
-        organization.save()
-
-        response = self.client.get(reverse("organization:list_organizations"))
-
-        self.assertContains(response, "title=\"Accepts postal requests", 1)
 
 
 @isDjangoTest()
