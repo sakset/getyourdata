@@ -2,52 +2,10 @@
 {% load staticfiles %}
 
 {% language lang_code %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="page-header">
-                <h1>Get a copy of your own data</h1>
-            </div>
-            You have a right to get copy of the data companies and public sector has about you. GetYourData helps you with making the enquiries.
-            <br/>
-            <br/>
-            <p>
-                <a href="{% url 'organization:list_organizations' %}" class="btn btn-primary btn-lg">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    Make a request
-                </a>
-            </p>
-        </div>
-        <div class="col-md-6">
-            <br/>
-            <img class="center" src="{% static 'img/home/frontpage-icons.jpg' %}" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <br/>
-            <div class="well">
-                <h3>How do I make a request?</h3>
-                <hr>
-                <div class="col-md-3">
-                    <img class="thumbnail center" src="{% static 'img/home/step1-envelope-icon.png' %}">
-                    <h3>1 <small>Choose organization from the list</small></h3>
-                </div>
-                <div class="col-md-3">
-                    <img class="thumbnail center" src="{% static 'img/home/step2-person-icon.png' %}">
-                    <h3>2 <small>Fill your personal information for the authentication</small></h3>
-                </div>
-                <div class="col-md-3">
-                    <img class="thumbnail center" src="{% static 'img/home/step3-data-icon.png' %}">
-                    <h3>3 <small>Send request to organization using email or a letter</small></h3>
-                </div>
-                <div class="col-md-3">
-                    <img class="thumbnail center" src="http://placekitten.com/200/200">
-                    <h3>4 <small>Tell us how your request went to help other users</small></h3>
-                </div>
-                <hr>More information about <a href="{% url 'faq' %}">how to request your data</a>
-            </div>
-        </div>
-    </div>
-</div>
+
+    {% comment %}
+        this template is basically obsolete as the front page content management is done with
+        admin tool.
+    {% endcomment %}
+
 {% endlanguage %}
