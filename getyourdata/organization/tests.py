@@ -503,6 +503,12 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                 "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
         ).click()
 
+        WebDriverWait(self.selenium, 10).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and @href='#'])"))
+        )
+
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
@@ -511,6 +517,12 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                 By.XPATH,
                 "(//a[@id='page-1' and contains(@onclick, 'orgList')])"))
         ).click()
+
+        WebDriverWait(self.selenium, 10).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-1' and @href='#'])"))
+        )
 
         self.assertIn("Organization 0", self.selenium.page_source)
         self.assertNotIn("Organization 15", self.selenium.page_source)
