@@ -456,7 +456,9 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
         self.assertIn("1 organization selected", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.ID, "create-request"))
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//button[@id='create-request' and contains(@onclick, 'orgList')])"))
         ).click()
 
         self.assertIn(
@@ -481,7 +483,9 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.ID, "create-request"))
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//button[@id='create-request' and contains(@onclick, 'orgList')])"))
         ).click()
 
         self.assertIn(
@@ -494,14 +498,18 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                       reverse("organization:list_organizations")))
 
         WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.ID, "page-2"))
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
         ).click()
 
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.ID, "page-1"))
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-1' and contains(@onclick, 'orgList')])"))
         ).click()
 
         self.assertIn("Organization 0", self.selenium.page_source)
@@ -526,7 +534,9 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
 
 
         WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.ID, "page-2"))
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
         ).click()
 
         WebDriverWait(self.selenium, 10).until(
@@ -542,7 +552,9 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
         self.assertIn("4 organizations selected", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.ID, "page-3"))
+            EC.visibility_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-3' and contains(@onclick, 'orgList')])"))
         ).click()
 
         WebDriverWait(self.selenium, 10).until(
