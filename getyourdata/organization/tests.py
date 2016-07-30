@@ -550,6 +550,11 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                 By.XPATH,
                 "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
         ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and @onclick='' and text()='2'])"))
+        )
 
         WebDriverWait(self.selenium, 10).until(
             EC.presence_of_element_located((
@@ -568,6 +573,11 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                 By.XPATH,
                 "(//a[@id='page-3' and contains(@onclick, 'orgList')])"))
         ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-3' and @onclick='' and text()='3'])"))
+        )
 
         WebDriverWait(self.selenium, 10).until(
             EC.presence_of_element_located((
