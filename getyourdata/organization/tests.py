@@ -449,13 +449,13 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                       reverse("organization:list_organizations")))
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[1]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[1]"))
         ).click()
 
         self.assertIn("1 organization selected", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "create-request"))
+            EC.visibility_of_element_located((By.ID, "create-request"))
         ).click()
 
         self.assertIn(
@@ -467,15 +467,17 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                       reverse("organization:list_organizations")))
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[1]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[1]"))
         ).click()
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[2]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[2]"))
         ).click()
 
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
-        self.selenium.find_element_by_id("create-request").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.visibility_of_element_located((By.ID, "create-request"))
+        ).click()
 
         self.assertIn(
             "Request your data from multiple organizations",
@@ -487,14 +489,14 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                       reverse("organization:list_organizations")))
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "page-2"))
+            EC.visibility_of_element_located((By.ID, "page-2"))
         ).click()
 
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "page-1"))
+            EC.visibility_of_element_located((By.ID, "page-1"))
         ).click()
 
         self.assertIn("Organization 0", self.selenium.page_source)
@@ -506,35 +508,35 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                       reverse("organization:list_organizations")))
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[1]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[1]"))
         ).click()
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[2]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[2]"))
         ).click()
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "page-2"))
+            EC.visibility_of_element_located((By.ID, "page-2"))
         ).click()
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[1]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[1]"))
         ).click()
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[2]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[2]"))
         ).click()
         self.assertIn("4 organizations selected", self.selenium.page_source)
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "page-3"))
+            EC.visibility_of_element_located((By.ID, "page-3"))
         ).click()
 
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[1]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[1]"))
         ).click()
         WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//input[@type='checkbox'])[2]"))
+            EC.visibility_of_element_located((By.XPATH, "(//input[@type='checkbox'])[2]"))
         ).click()
         self.assertIn("6 organizations selected", self.selenium.page_source)
 

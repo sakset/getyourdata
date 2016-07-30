@@ -11,7 +11,6 @@ before_install:
 - sleep 3 # give xvfb some time to start
 install:
 - pip install -r requirements.txt
-- python dev_manage.py makemigrations flatpages
 - python dev_manage.py migrate
 - python dev_manage.py update_translation_fields
 script:
