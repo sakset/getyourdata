@@ -12,6 +12,8 @@
 #bootstrap-overrides .navbar-inverse {
     background-color: #ee766c;
     border-color: #fff;
+
+
 }
 
 #bootstrap-overrides .navbar-brand {
@@ -22,6 +24,9 @@
     color: #fff;
 }
 
+#bootstrap-overrides .container.content-area {
+    margin-top: 2em;
+}
 
 #bootstrap-overrides .btn {
     color: #fff;
