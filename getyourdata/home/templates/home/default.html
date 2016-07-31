@@ -3,24 +3,22 @@
 
 {% language lang_code %}
 
+{% comment %}
 
-    {% comment %}
+NOTE:
 
-    NOTE:
+This template is only used when initializing the database during set-up of a new site.
+All modifications to the content from that point onwards shall be done using the CMS
+tool found in admin/ section of the site.
 
-    This template is only used when initializing the database during set-up of a new site.
-    All modifications to the content from that point onwards shall be done using the CMS
-    tool found in admin/ section of the site.
-
-    {% endcomment %}
-
+{% endcomment %}
 
 <div class="container content-area">
 
 	<div class="row">
 
 		<div class="col-md-5">
-			<img class="center" src="/static/img/home/frontpage-icons.jpg" />
+			<img class="center" src="{% static 'img/home/frontpage-icons.jpg' %}" />
 		</div>
 
 		<div class="col-md-7">
@@ -36,18 +34,14 @@
 				</div>
 
 				<div class="row">
-
-
                     <div class="col-md-4">
-                        <a href="organizations/"><img class="thumbnail left" src="/static/img/home/step1-envelope-icon.png" /></a>
+                        <a href="{% url 'organization:list_organizations' %}"><img class="thumbnail left" src="{% static 'img/home/step1-envelope-icon.png' %}" /></a>
 						<h3>1 <small>Choose organization from the list</small></h3>
 					</div>
-
-
-					<div class="col-md-4"><img class="thumbnail left" src="/static/img/home/step2-person-icon.png" />
+					<div class="col-md-4"><img class="thumbnail left" src="{% static 'img/home/step2-person-icon.png' %}" />
 						<h3>2 <small>Fill your personal information for the authentication</small></h3>
 					</div>
-					<div class="col-md-4"><img class="thumbnail left" src="/static/img/home/step3-data-icon.png" />
+					<div class="col-md-4"><img class="thumbnail left" src="{% static 'img/home/step3-data-icon.png' %}" />
 						<h3>3 <small>Send request to organization using email or a letter</small></h3>
 					</div>
 				</div>
