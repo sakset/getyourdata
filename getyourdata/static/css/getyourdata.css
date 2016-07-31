@@ -119,4 +119,6 @@ img.center {
     color: white;
 }
 
-
+.feedback-textarea {
+    width: 250px;
+}
