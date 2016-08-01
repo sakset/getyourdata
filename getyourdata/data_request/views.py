@@ -267,6 +267,7 @@ def give_feedback(request, org_ids):
 
     return render(request, "data_request/request_data_feedback.html", {
         "org_ids": org_ids,
+        "email_organizations": email_organizations,
         "organizations": organizations,
         "pdf_data": pdf_data,
     })
