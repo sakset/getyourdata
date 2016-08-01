@@ -32,6 +32,12 @@
                     <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
                     You can add this page into your bookmarks for later use.
                     {% endblocktrans %}</b></p>
+                    {% if pdf_data %}
+                    <p>
+                        <a class="btn btn-primary btn-sm" href="data:application/pdf;base64,{{ pdf_data }}"
+                           target="_blank" download="request.pdf">{% trans "Redownload PDF" %}</a>
+                    </p>
+                    {% endif %}
                 </div>
                 <table class="table table-striped">
                     <tbody>

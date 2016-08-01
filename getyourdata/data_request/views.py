@@ -209,14 +209,18 @@ def send_request(request, org_ids):
                 pdf_data = base64.b64encode(pdf_data)
 
             # Request was successful!
-            return render(request, "data_request/request_data_sent.html", {
-                "organizations": organizations,
-                "mail_organizations": mail_organizations,
-                "email_organizations": email_organizations,
-                "pdf_data": pdf_data,
-                "org_ids": org_ids,
-                "mail_request_copy_sent": mail_request_copy_sent
-            })
+            if len(mail_organizations) > 0:
+                return render(request, "data_request/request_data_sent.html", {
+                    "form": form,
+                    "organizations": organizations,
+                    "mail_organizations": mail_organizations,
+                    "email_organizations": email_organizations,
+                    "pdf_data": pdf_data,
+                    "org_ids": org_ids,
+                    "mail_request_copy_sent": mail_request_copy_sent
+                })
+            else:
+                return give_feedback(request, org_ids)
         else:
             return review_request(
                 request, org_ids, False, prevent_redirect=True)
@@ -235,12 +239,36 @@ def give_feedback(request, org_ids):
     :org_ids: A list of Organization objects
 
     """
-    organizations = Organization.objects.filter(
-        id__in=org_ids.split(","))
+    pdf_data = None
+
+    (organizations, email_organizations,
+     mail_organizations) = get_organization_tuple(org_ids)
+
+    form = DataRequestForm(
+        request.POST or None, organizations=organizations, visible=False)
+
+    if form.is_valid() and len(mail_organizations) > 0:
+        # Let user redownload the PDF file in case he accidentally cancelled
+        # the download during the last step
+        pdf_pages = []
+
+        for organization in mail_organizations:
+            data_request = get_data_request(organization, form)
+
+            pdf_page = generate_pdf_page(data_request)
+            pdf_pages.append(pdf_page)
+
+        # Generate PDF pages for any mail-only requests
+        pdf_data = generate_request_pdf(pdf_pages)
+
+        if pdf_data:
+            # Encode the PDF data as base64 to be rendered in the view
+            pdf_data = base64.b64encode(pdf_data)
 
     return render(request, "data_request/request_data_feedback.html", {
         "org_ids": org_ids,
         "organizations": organizations,
+        "pdf_data": pdf_data,
     })
 
 
