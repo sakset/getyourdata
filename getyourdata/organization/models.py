@@ -27,8 +27,8 @@ class AuthenticationField(BaseModel):
     def __unicode__(self):
         return self.title
 
-    def required_by(self):
-       return Organization.objects.filter(authentication_fields=self)
+    def required_by(self, organizations):
+       return Organization.objects.filter(authentication_fields=self, id__in=organizations.values_list('id'))
 
 class OrganizationDetails(BaseModel):
     """

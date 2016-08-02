@@ -119,4 +119,7 @@ img.center {
     color: white;
 }
 
+.required-by {
+    display: block;
 
+}
