@@ -32,7 +32,7 @@
                 <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
                 <input type="hidden" name="action" value="review"/>
                 <table class="table">
-                {% bootstrap_form form layout='horizontal' %}
+                {% bootstrap_field form layout='horizontal' %}
             </table>
                 <input class="btn btn-success" id="create_request" type="submit" name="review" value="{% trans 'Review request' %}"/>
                 <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form

@@ -28,6 +28,8 @@ class AuthenticationField(BaseModel):
     def __unicode__(self):
         return self.title
 
+    def required_by(self):
+        return Organization.objects.filter(authentication_fields=self)
 
 def form_has_fields(form, fields):
     """
@@ -37,7 +39,6 @@ def form_has_fields(form, fields):
         if not getattr(form, field):
             return False
     return True
-
 
 class OrganizationDetails(BaseModel):
     """

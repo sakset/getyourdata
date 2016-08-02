@@ -12,7 +12,8 @@ class AuthenticationAttributeField(forms.CharField):
     """
     A helper field to be used for authentication fields in DataRequestForm
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, required_by=None, *args, **kwargs):
+        self.required_by = required_by
         super(AuthenticationAttributeField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
@@ -25,6 +26,7 @@ class AuthenticationAttributeField(forms.CharField):
 
 
 class DataRequestForm(forms.Form):
+
     """
     Data request form filled with required authentication fields in order
     to send a data request to each selected organization
@@ -48,6 +50,8 @@ class DataRequestForm(forms.Form):
                 self.contains_mail_requests = True
 
             for auth_field in organization.authentication_fields.all():
+
+                lista = auth_field.required_by()
                 # Only add each authentication field once
                 if auth_field.name in self.fields:
                     continue
@@ -62,6 +66,7 @@ class DataRequestForm(forms.Form):
                 self.fields[auth_field.name] = AuthenticationAttributeField(
                     label=auth_field.title,
                     help_text=auth_field.help_text,
+                    required_by='testitesti',
                     max_length=255,
                     validators=validators,
                     required=True,
@@ -112,3 +117,4 @@ class DataRequestForm(forms.Form):
                 self.add_error("user_email_address", "\n%s" % _(
                     "You must enter a receiving email address if you want a "
                     "copy of your mail requests as an email message."))
+
