@@ -1,7 +1,7 @@
 /* front page:
 */
 
-#bootstrap-overrides .body, body{
+#bootstrap-overrides .body, body {
     color: #a2a7ad;
 }
 
@@ -22,6 +22,9 @@
     color: #fff;
 }
 
+#bootstrap-overrides .container.content-area {
+    margin-top: 2em;
+}
 
 #bootstrap-overrides .btn {
     color: #fff;
@@ -43,7 +46,6 @@
 
 #bootstrap-overrides .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     color: #a2a7ad;
-
 }
 
 #bootstrap-overrides .h1 .small, .h1 small, .h2 .small, .h2 small, .h3 .small, .h3 small, .h4 .small, .h4 small, .h5 .small, .h5 small, .h6 .small, .h6 small, h1 .small, h1 small, h2 .small, h2 small, h3 .small, h3 small, h4 .small, h4 small, h5 .small, h5 small, h6 .small, h6 small {
