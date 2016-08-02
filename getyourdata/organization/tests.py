@@ -448,11 +448,18 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[1]").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH, "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
+        ).click()
+
         self.assertIn("1 organization selected", self.selenium.page_source)
 
-        self.selenium.find_element_by_id("create-request").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//button[@id='create-request' and contains(@onclick, 'orgList')])"))
+        ).click()
 
         self.assertIn(
             "Request your data from Organization 0", self.selenium.page_source)
@@ -462,13 +469,24 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[1]").click()
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
+        ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
+        ).click()
+
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
-        self.selenium.find_element_by_id("create-request").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//button[@id='create-request' and contains(@onclick, 'orgList')])"))
+        ).click()
 
         self.assertIn(
             "Request your data from multiple organizations",
@@ -479,18 +497,32 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        element = WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "page-2"))
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
+        ).click()
+
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and @onclick='' and text()='2'])"))
         )
-        element.click()
 
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
-        element = WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, "page-1"))
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-1' and contains(@onclick, 'orgList')])"))
+        ).click()
+
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-1' and @onclick='' and text()='1'])"))
         )
-        element.click()
 
         self.assertIn("Organization 0", self.selenium.page_source)
         self.assertNotIn("Organization 15", self.selenium.page_source)
@@ -500,26 +532,61 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[1]").click()
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
+        ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
+        ).click()
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
-        self.selenium.find_element_by_id("page-2").click()
 
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[1]").click()
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
+        ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-2' and @onclick='' and text()='2'])"))
+        )
+
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
+        ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
+        ).click()
         self.assertIn("4 organizations selected", self.selenium.page_source)
 
-        self.selenium.find_element_by_id("page-3").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-3' and contains(@onclick, 'orgList')])"))
+        ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                "(//a[@id='page-3' and @onclick='' and text()='3'])"))
+        )
 
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[1]").click()
-        self.selenium.find_element(
-            By.XPATH, "(//input[@type='checkbox'])[2]").click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH, "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
+        ).click()
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH, "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
+        ).click()
         self.assertIn("6 organizations selected", self.selenium.page_source)
 
 
