@@ -19,8 +19,6 @@ class AuthenticationAttributeField(forms.CharField):
         self.required_by = required_by
 
     def clean(self, value):
-        print "......................."
-        print self.required_by
         try:
             super(AuthenticationAttributeField, self).clean(value)
         except ValidationError:
