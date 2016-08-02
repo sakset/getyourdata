@@ -27,6 +27,9 @@ class AuthenticationField(BaseModel):
     def __unicode__(self):
         return self.title
 
+    def required_by(self):
+       return Organization.objects.filter(authentication_fields=self)
+
 class OrganizationDetails(BaseModel):
     """
     Base organization details each organization has, whether the model

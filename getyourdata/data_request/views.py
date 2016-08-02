@@ -77,6 +77,7 @@ def create_request(request, org_ids):
         'form': form,
         'organizations': organizations,
         'mail_organizations': mail_organizations,
+        'mail_organizations': mail_organizations,
         'email_organizations': email_organizations,
         'org_ids': org_ids,
     })
