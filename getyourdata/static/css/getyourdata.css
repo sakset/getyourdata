@@ -128,3 +128,7 @@ img.center {
 .comment-message {
     word-break: break-all;
 }
+
+.required-by {
+    display: block;
+}

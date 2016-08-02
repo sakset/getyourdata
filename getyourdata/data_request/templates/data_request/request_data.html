@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load bootstrap3 %}
 {% load extra_tags %}
+{% load staticfiles %}
 
 {% block content %}
 <div class="container">
@@ -32,7 +33,7 @@
                 <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
                 <input type="hidden" name="action" value="review"/>
                 <table class="table">
-                {% bootstrap_field form layout='horizontal' %}
+                {% bootstrap_form form layout='horizontal' %}
             </table>
                 <input class="btn btn-success" id="create_request" type="submit" name="review" value="{% trans 'Review request' %}"/>
                 <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
@@ -63,3 +64,16 @@
     </div>
 </div>
 {% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/jquery.shorten.min.js' %}" type="text/javascript"></script>
+    <script>
+        $(".required-by").shorten({
+            ellipsesText:'',
+            moreText:'[...]',
+            lessText:''
+        });
+        $($(".required-by").find(".shortcontent")).css("display","inline");
+    </script>
+
+{% endblock script %}
