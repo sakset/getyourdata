@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load bootstrap3 %}
+
+<ul class="tabs">
+
+    <li class="{% if process_step >= 1 %}active{% endif %}">
+        <a href="{% url 'organization:list_organizations' %}">
+            <span class="glyphicon glyphicon-envelope"></span>{% trans "Choose organizations" %}
+        </a>
+    </li>
+
+            {% if process_step > 2 %}
+            <form name="back-button-form" class="form-horizontal" method="post"
+                  action="{% url 'data_request:request_data' %}">
+
+                {% csrf_token %}
+                <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
+                {% bootstrap_form form %}
+
+                <button type="submit">
+        {% endif %}
+
+    <li class="{% if process_step >= 2 %}active{% endif %}">
+        <span class="glyphicon glyphicon-user"></span>{% trans "Fill in your details" %}
+    </li>
+
+        {% if process_step > 2 %}
+                </button>
+            </form>
+        {% endif %}
+
+
+
+    <li class="{% if process_step >= 3 %}active{% endif %}">
+        <span class="glyphicon glyphicon-list-alt"></span>{% trans "Review and send requests" %}
+    </li>
+
+</ul>
+
+<!-- end progress bar -->

@@ -20,7 +20,9 @@ img.center {
     margin-right: 5px;
 }
 
+
 /* process steps */
+
 
 .tabs {
     list-style: none;
@@ -55,6 +57,16 @@ img.center {
     padding-right: 0.5em;
     font-size: 1.5em;
 }
+
+.tabs li.active {
+    color: white;
+    background-color: #fbbd19;
+}
+
+.tabs li.active:after {
+    border-left: 14px solid #fbbd19;
+}
+
 @media all {
     .tabs li {
         display: table-cell;
@@ -104,19 +116,3 @@ img.center {
         border: none;
     }
 }
-
-.tabs li.active {
-    color: white;
-    background-color: #fbbd19;
-
-}
-
-.tabs li.active:after {
-    border-left: 14px solid #fbbd19;
-}
-
-.tabs li.active a {
-    color: white;
-}
-
-
