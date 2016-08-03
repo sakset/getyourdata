@@ -115,7 +115,9 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    {% bootstrap_pagination comments url=pag_url %}
+                    {% if show_Pagination%}
+                        {% bootstrap_pagination comments url=pag_url %}
+                    {% endif %}
                     {% else %}
                     <p>{% trans 'No feedback yet.' %}</p>
                     {% endif %}

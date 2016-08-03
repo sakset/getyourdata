@@ -21,12 +21,14 @@ def list_organizations(request):
     View to select organizations for a data request
     """
     page = request.GET.get("page", 1)
-
+    show_Pagination = True
+    orgs = Organization.objects.filter(verified=True)
+    orgs_per_page = settings.ORGANIZATIONS_PER_PAGE
     org_ids = request.POST.getlist("org_ids")
 
     p = Paginator(
-        Organization.objects.filter(verified=True),
-        settings.ORGANIZATIONS_PER_PAGE)
+        orgs,
+        orgs_per_page)
 
     try:
         organizations = p.page(page)
@@ -40,11 +42,16 @@ def list_organizations(request):
         return redirect(
             reverse("data_request:request_data", args=(",".join(org_ids),)))
 
+    if orgs_per_page > len(orgs):
+        show_Pagination = False
+
     return render(
         request, 'organization/list.html',
         {'organizations': organizations,
+         'show_Pagination': show_Pagination,
          'org_ids': org_ids,
-         'pag_url': reverse("organization:list_organizations")})
+         'pag_url': reverse("organization:list_organizations"),
+         })
 
 
 def view_organization(request, org_id):
@@ -53,6 +60,7 @@ def view_organization(request, org_id):
     some stats later
     """
     organization = cache.get("organization-%s" % org_id)
+    show_Pagination = True
 
     if not organization and organization is not None:
         raise Http404()
@@ -68,9 +76,11 @@ def view_organization(request, org_id):
         cache.set("organization-%s" % org_id, organization, 60)
 
     page = request.GET.get("page", 1)
+    org_comments = organization.comments(manager='objects').all()
+    comments_per_page = settings.COMMENTS_PER_PAGE
     p = Paginator(
-        organization.comments(manager='objects').all(),
-        settings.COMMENTS_PER_PAGE
+        org_comments,
+        comments_per_page
     )
     try:
         comments = p.page(page)
@@ -82,6 +92,9 @@ def view_organization(request, org_id):
     form = CommentForm(request.POST or None)
     captcha_form = CaptchaForm(request.POST or None)
 
+    if comments_per_page > len(org_comments):
+        show_Pagination = False
+
     if request.method == 'POST':
         if form.is_valid() and captcha_form.is_valid():
             comment = form.save(commit=False)
@@ -89,13 +102,14 @@ def view_organization(request, org_id):
             comment.save()
             messages.success(request, _('Thank you for your feedback!'))
             return redirect(reverse('organization:view_organization', args=(organization.id,)))
-            
+
     return render(request, 'organization/view.html', {
         'organization': organization,
         'comments': comments,
         'form': form,
         'captcha_form': captcha_form,
         'pag_url': reverse("organization:view_organization", args=(org_id,)),
+        'show_Pagination': show_Pagination,
     })
 
 

@@ -112,6 +112,11 @@ orgList.Model = {
         context.organizationCount = data.count;
         context.organizations = data.results;
         context.pages = [];
+        if (context.pageCount > 1) {
+            context.pagination = true;
+        } else {
+            context.pagination = false;
+        }
 
         this.updatePages();
         orgList.View.update();
@@ -253,12 +258,14 @@ orgList.View = {
         <a class="pull-right btn btn-primary" href="{{ ORIGIN_WITH_LANG_CODE }}organizations/new/">{{msg.add_organization}}</a>
     </span>
 </div>
-<ul class="pagination">
-    {{#each pages}}
-    <li class="{{#if this.prev}}prev{{/if}} {{# if this.active }}active{{/if}}">
-        <a id="page-{{ this.page }}" href="#" onclick="{{#unless this.disabled}}orgList.Controller.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
-    </li>
-    {{/each}}
-</ul>
+{{#if pagination}}
+    <ul class="pagination">
+        {{#each pages}}
+        <li class="{{#if this.prev}}prev{{/if}} {{# if this.active }}active{{/if}}">
+            <a id="page-{{ this.page }}" href="#" onclick="{{#unless this.disabled}}orgList.Controller.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
+        </li>
+        {{/each}}
+    </ul>
+{{/if}}
 </script>
 {% endverbatim %}
