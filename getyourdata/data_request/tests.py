@@ -498,7 +498,7 @@ class ProcessBarNavigationTests(LiveServerTestCase):
 
         self.selenium.find_element_by_id("back-to-organization-list").click()
 
-        self.assertIn("Choose the organizations", self.selenium.page_source)
+        self.assertIn("Add organization", self.selenium.page_source)
 
     def test_selenium_back_to_authentication_fields_input_works(self):
         self.selenium.get(
