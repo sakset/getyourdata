@@ -547,7 +547,7 @@ class ProcessBarNavigationTests(LiveServerTestCase):
         # in other words the elements with respective id's are not found.
 
         element_lookup = self.selenium.find_elements_by_id("back-to-organization-list")
-        self.assertFalse(element_lookup > 0)
+        self.assertFalse(len(element_lookup) > 0)
 
         element_lookup = self.selenium.find_elements_by_id("back-to-input-details")
-        self.assertFalse(element_lookup > 0)
+        self.assertFalse(len(element_lookup) > 0)
