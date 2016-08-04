@@ -46,9 +46,18 @@
                 {% bootstrap_form form %}
                 {% if captcha_form %}{% bootstrap_form captcha_form %}{% endif %}
                 <input class="btn btn-success" id="create_request" name="send" type="submit"
-                    value="{% if email_organizations and mail_organizations %}{% trans 'Send and create requests' %}
-                           {% elif email_organizations %}{% trans 'Send requests' %}
-                           {% elif mail_organizations %}{% trans 'Create request PDF' %}{% endif %}"/>
+                    value="{% if email_organizations and mail_organizations %}
+                            {% trans 'Send and create requests' %}
+                           {% elif email_organizations %}
+                            {% blocktrans count counter=data_requests|length trimmed %}
+                            Send request
+                            {% plural %}
+                            Send requests
+                            {% endblocktrans %}
+                           {% elif mail_organizations %}
+                            {% trans 'Create request PDF' %}
+                           {% endif %}"/>
+
                    <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
                         Put the "Back" button here as the second button, but move it to the first position using pull-left -->
                    <input class="btn btn-primary first-button" type="submit" name="create" value="{% trans 'Back' %}">

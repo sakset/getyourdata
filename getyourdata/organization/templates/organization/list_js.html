@@ -164,7 +164,8 @@ orgList.Model = {
             context.pages.push({
                 "page": page,
                 "label": page,
-                "active": context.currentPage === page ? true : false
+                "active": context.currentPage === page ? true : false,
+                "disabled": context.currentPage == page ? true : false
             });
         }
 
@@ -172,7 +173,7 @@ orgList.Model = {
             "page": context.pageCount,
             "last": true,
             "label": "&raquo;",
-            "disabled": context.currentPage === context.pageCount ? true : false
+            "disabled": context.currentPage == context.pageCount ? true : false
         });
     },
 
@@ -239,7 +240,7 @@ orgList.View = {
                 <span class="organization-icon-list pull-right">
                     <a class="btn btn-xs btn-primary" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.view_details }}</a>
                 </span>
-                
+
             </td>
         </tr>
         {{/each}}
@@ -254,7 +255,7 @@ orgList.View = {
 </div>
 <ul class="pagination">
     {{#each pages}}
-    <li class="{{#if this.prev}}prev{{/if}} {{#if this.disabled }}disabled{{/if}} {{# if this.active }}active{{/if}}">
+    <li class="{{#if this.prev}}prev{{/if}} {{# if this.active }}active{{/if}}">
         <a id="page-{{ this.page }}" href="#" onclick="{{#unless this.disabled}}orgList.Controller.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
     </li>
     {{/each}}
