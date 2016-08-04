@@ -1,15 +1,24 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+<!-- begin process step indicator bar -->
 <ul class="tabs">
-
     <li class="{% if process_step >= 1 %}active{% endif %}">
-        <a href="{% url 'organization:list_organizations' %}">
-            <span class="glyphicon glyphicon-envelope"></span>{% trans "Choose organizations" %}
-        </a>
-    </li>
 
-            {% if process_step > 2 %}
+        {% if process_step <= 3 %}
+            <a href="{% url 'organization:list_organizations' %}" id="back-to-organization-list">
+        {% endif %}
+
+        <span class="glyphicon glyphicon-envelope"></span>{% trans "Choose organizations" %}
+
+        {% if process_step <= 3 %}
+            </a>
+        {% endif %}
+
+    </li>
+    <li class="{% if process_step >= 2 %}active{% endif %}">
+
+        {% if process_step == 3 %}
             <form name="back-button-form" class="form-horizontal" method="post"
                   action="{% url 'data_request:request_data' %}">
 
@@ -17,24 +26,19 @@
                 <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
                 {% bootstrap_form form %}
 
-                <button type="submit">
+                <button type="submit" class="btn btn-link" id="back-to-input-details">
         {% endif %}
 
-    <li class="{% if process_step >= 2 %}active{% endif %}">
         <span class="glyphicon glyphicon-user"></span>{% trans "Fill in your details" %}
-    </li>
 
-        {% if process_step > 2 %}
+        {% if process_step == 3 %}
                 </button>
             </form>
         {% endif %}
 
-
-
+    </li>
     <li class="{% if process_step >= 3 %}active{% endif %}">
         <span class="glyphicon glyphicon-list-alt"></span>{% trans "Review and send requests" %}
     </li>
-
 </ul>
-
-<!-- end progress bar -->
+<!-- end process step indicator bar -->

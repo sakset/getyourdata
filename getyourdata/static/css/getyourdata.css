@@ -68,7 +68,7 @@ img.center {
 }
 
 @media all {
-    .tabs li {
+    .tabs li, button {
         display: table-cell;
         width: auto;
         vertical-align: middle;
