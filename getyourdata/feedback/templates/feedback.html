@@ -1,10 +1,11 @@
 {% load i18n %}
 {% load bootstrap3 %}
+{% load staticfiles %}
 <div class="container-fluid">
     <p>
         {% blocktrans %}Feedback regarding this service?{% endblocktrans %}
     </p>
-    <form role="form" action="{% url 'feedback:send_feedback' %}" method="post">
+    <form id="send_feedback_form" role="form" action="{% url 'feedback:send_feedback' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
             {% if feedback_form.content.errors %}
@@ -17,6 +18,10 @@
             <textarea class="form-control feedback-textarea" id="id_content" name="content" placeholder="{{ feedback_form.content.label }}" required="required" cols="100"  rows="7" title>{% if feedback_form.content.value %}{{ feedback_form.content.value }}{% endif %}</textarea>
         </div>
         {# {% bootstrap_form captcha_form %} #}
-        <input class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}" />
+        <input id="send_feedback" class="btn btn-default" type="submit" value="{% trans 'Leave feedback' %}" />
     </form>
+    <script>
+    var SEND_FEEDBACK_URL = "{% url "feedback:send_feedback_json" %}";
+    </script>
+    <script src="{% static "js/getyourdata-feedback.js" %}"></script>
 </div>
