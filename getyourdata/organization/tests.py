@@ -268,7 +268,7 @@ class OrganizationUpdateTests(TestCase):
                     self.auth_field3.id, self.auth_field1.id],
                  "g-recaptcha-response": "PASSED"})
 
-        self.assertContains(response, "Updated organization profile sent")
+        self.assertRedirects(response, "/en/organizations/view/%s/" %self.organization.id, status_code=302)
 
         self.assertEquals(
             self.organization.authentication_fields.all().count(), 0)
@@ -288,7 +288,7 @@ class OrganizationUpdateTests(TestCase):
                  "country": "Finland",
                  "authentication_fields": []})
 
-        self.assertNotContains(response, "Updated organization profile sent")
+        self.assertContains(response, "Organization profile must contain either a valid email address or postal information")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 

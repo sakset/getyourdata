@@ -126,9 +126,9 @@ class EditOrganizationForm(forms.ModelForm):
         authenticationFieldsAfter = self.cleaned_data.get("authentication_fields")
         authenticationFieldsBefore = self.organization.authentication_fields.all()
         fields = ["name", "email_address", "address_line_one", "address_line_two", "postal_code", "country"]
-        postalAddressRequirements = ["address_line_one", "postal_code", "country"]
+        postalAddressRequirements = ["address_line_one", "postal_code", "country","authentication_fields"]
 
-        if not (formHasFields(self.cleaned_data, ["email_address"]) or formHasFields(self.cleaned_data, postalAddressRequirements)):
+        if not (formHasFields(self.cleaned_data, ["email_address", "authentication_fields"]) or formHasFields(self.cleaned_data, postalAddressRequirements)):
             raise forms.ValidationError(_("Organization profile must contain either a valid email address or postal information"))
 
         if  authenticationFieldsHasChanges(authenticationFieldsAfter, authenticationFieldsBefore) or \
