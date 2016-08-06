@@ -247,6 +247,8 @@ class OrganizationUpdateTests(TestCase):
             name="some_string",
             title='Some string')
 
+        self.organization.authentication_fields.add(AuthenticationField.objects.get(id=self.auth_field1.id))
+
     def test_user_can_create_organization_draft(self):
         response = self.client.get(
             reverse(
@@ -271,12 +273,29 @@ class OrganizationUpdateTests(TestCase):
         self.assertRedirects(response, "/en/organizations/view/%s/" %self.organization.id, status_code=302)
 
         self.assertEquals(
-            self.organization.authentication_fields.all().count(), 0)
+            self.organization.authentication_fields.all().count(), 1)
 
         organization_draft = OrganizationDraft.objects.all()[0]
 
         self.assertEquals(
             organization_draft.authentication_fields.all().count(), 2)
+
+    def test_user_can_create_organization_draft_with_email_address(self):
+        response = self.client.post(
+            reverse(
+                "organization:edit_organization", args=(self.organization.id,)),
+                {"name": "Da Organization",
+                 "email_address": "some.email@random.com",
+                 "address_line_one": "",
+                 "postal_code": "",
+                 "country": "",
+                 "authentication_fields": [self.auth_field1.id],
+                 "g-recaptcha-response": "PASSED"})
+
+        self.assertRedirects(response, "/en/organizations/view/%s/" %self.organization.id, status_code=302)
+
+        self.assertEquals(OrganizationDraft.objects.all().count(), 1)
+
 
     def test_user_cant_create_organization_without_authentication_fields(self):
         response = self.client.post(
@@ -292,6 +311,35 @@ class OrganizationUpdateTests(TestCase):
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 
+    def test_user_cant_create_organization_draft_without_valid_email_or_postal_address(self):
+        response = self.client.post(
+            reverse(
+                "organization:edit_organization", args=(self.organization.id,)),
+                {"name": "Da Organization",
+                 "address_line_one": "",
+                 "postal_code": "00234",
+                 "country": "Finland",
+                 "authentication_fields": [self.auth_field1.id],
+                 "g-recaptcha-response": "PASSED"})
+
+        self.assertContains(response, "Organization profile must contain either a valid email address or postal information")
+
+        self.assertEquals(OrganizationDraft.objects.all().count(), 0)
+
+    def test_user_cant_create_organization_draft_without_any_changes(self):
+        response = self.client.post(
+            reverse(
+                "organization:edit_organization", args=(self.organization.id,)),
+                {"name": "The Organization",
+                 "address_line_one": "Fake Street 4",
+                 "postal_code": "00234",
+                 "country": "Finland",
+                 "authentication_fields": [self.auth_field1.id],
+              "g-recaptcha-response": "PASSED"})
+
+        self.assertContains(response, "Update form needs some changes for it to be sent!")
+
+        self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 
 @isDjangoTest()
 class OrganizationUpdateAdminTests(TestCase):
@@ -645,3 +693,120 @@ class CommentCreationTests(TestCase):
         )
 
         self.assertEquals(self.organization.average_rating, '1.7')
+
+"""
+Tries to find element that has class "pagination" if found returns True.
+"""
+def paginationCanBeSeen(self):
+        if self.selenium.find_elements_by_class_name("pagination"):
+            return True
+        else:
+            return False
+
+@isSeleniumTest()
+class OrganizationListPaginationShownTests(LiveServerTestCase):
+    def setUp(self):
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+    def test_Pagination_isnt_shown_when_there_are_no_organization(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.assertEquals(paginationCanBeSeen(self), False)
+
+    def test_Pagination_isnt_shown_when_there_are_only_few_organization(self):
+        for i in range(1, 7):
+            self.organization = Organization.objects.create(
+                name='Organization %d' % i,
+                email_address='fake@address.com',
+                address_line_one='Address one',
+                address_line_two='Address two',
+                postal_code='00000',
+                country='Finland',
+                verified=True
+                )
+
+            self.organization.authentication_fields.add(self.auth_field1)
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.assertEquals(paginationCanBeSeen(self), False)
+
+    def test_Pagination_is_shown_when_there_are_many_organization(self):
+        for i in range(1, 45):
+            self.organization = Organization.objects.create(
+                name='Organization %d' % i,
+                email_address='fake@address.com',
+                address_line_one='Address one',
+                address_line_two='Address two',
+                postal_code='00000',
+                country='Finland',
+                verified=True
+                )
+
+            self.organization.authentication_fields.add(self.auth_field1)
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:list_organizations")))
+
+        self.assertEquals(paginationCanBeSeen(self), True)
+
+@isSeleniumTest()
+class OrganizationViewPaginationShownTests(LiveServerTestCase):
+    def setUp(self):
+        self.organization = Organization.objects.create(
+            name='Organization',
+            email_address='fake@address.com',
+            address_line_one='Address one',
+            address_line_two='Address two',
+            postal_code='00000',
+            country='Finland',
+            verified=True
+            )
+
+        self.auth_field1 = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field1)
+
+    def test_Pagination_isnt_shown_when_there_are_no_comments(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:view_organization", args=(self.organization.id,))))
+
+        self.assertEquals(paginationCanBeSeen(self), False)
+
+    def test_Pagination_isnt_shown_when_there_are_only_few_comments(self):
+        for i in range(1, 7):
+            Comment.objects.create(
+                organization=self.organization,
+                message='Test message',
+                rating=1
+            )
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:view_organization", args=(self.organization.id,))))
+
+        self.assertEquals(paginationCanBeSeen(self), False)
+
+    def test_Pagination_is_shown_when_there_are_many_comments(self):
+        for i in range(1, 20):
+            Comment.objects.create(
+                organization=self.organization,
+                message='Test message',
+                rating=1
+            )
+
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("organization:view_organization", args=(self.organization.id,))))
+
+        self.assertEquals(paginationCanBeSeen(self), True)
