@@ -22,7 +22,8 @@
                     You have successfully finished creating and sending a data request!
                     {% plural %}
                     You have successfully finished creating and sending your data requests!
-                    {% endblocktrans %}</p>
+                    {% endblocktrans %}
+                    {% if email_organizations|length > 0 %}{% trans "You should receive a copy of your email requests to your email address shortly." %}{% endif %}</p>
                     <p>{% blocktrans count counter=organizations|length trimmed %}
                     When you have received a reply to your data request, please review your process with the organization below. Your feedback will help the other users!
                     {% plural %}
@@ -32,6 +33,12 @@
                     <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
                     You can add this page into your bookmarks for later use.
                     {% endblocktrans %}</b></p>
+                    {% if pdf_data %}
+                    <p>
+                        <a class="btn btn-primary btn-sm" href="data:application/pdf;base64,{{ pdf_data }}"
+                           target="_blank" download="request.pdf">{% trans "Redownload PDF" %}</a>
+                    </p>
+                    {% endif %}
                 </div>
                 <table class="table table-striped">
                     <tbody>

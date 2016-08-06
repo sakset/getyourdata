@@ -152,10 +152,7 @@ class DataRequestCreationTests(TestCase):
             )
 
         # All requests were email requests
-        self.assertContains(response, "All done!")
-
-        self.assertContains(
-            response, "Requests were sent to the following organizations")
+        self.assertContains(response, "You have successfully finished")
 
         self.assertContains(response, "Organization")
 
@@ -329,8 +326,8 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
 
         self.selenium.find_element_by_id("create_request").click()
 
-        self.assertIn("All done!", self.selenium.page_source)
-        self.assertIn("Email requests sent!", self.selenium.page_source)
+        self.assertIn("You have successfully finished", self.selenium.page_source)
+        self.assertIn("You should receive a copy of your email requests", self.selenium.page_source)
 
     def test_selenium_mail_request_can_be_created_successfully(self):
         self.organization = Organization.objects.create(
