@@ -182,7 +182,7 @@ def edit_organization(request, org_id=None):
         organization_draft.save()
 
         messages.success(request,
-            _("Organization contact information was updated succesfully. An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff."))
+            _("An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff."))
         return redirect(reverse('organization:view_organization', args=(organization.id,)))
 
     return render(

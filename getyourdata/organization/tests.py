@@ -307,7 +307,7 @@ class OrganizationUpdateTests(TestCase):
                  "authentication_fields": []})
 
         self.assertContains(response,
-            "Organization profile must contain either a valid email address or postal information")
+            "Authentication Fields are required")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 

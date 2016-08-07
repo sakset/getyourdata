@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-
+from django.forms.models import model_to_dict
 from organization.models import Organization, AuthenticationField, Comment
 
 from captcha.fields import ReCaptchaField
@@ -37,52 +37,29 @@ class NewOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
-    def clean(self):
-        """
-        Form must contain email address or postal information
-        """
-        fields = ["address_line_one", "postal_code", "country"]
 
-        if form_has_fields(self.cleaned_data, ["email_address"]) or \
-            form_has_fields(self.cleaned_data, fields):
-            return self.cleaned_data
-        else:
-            raise forms.ValidationError(
-                _("Organization profile must contain either a valid email address or postal information"))
-
-
-def form_has_fields(form, fields):
-    """
-    Checks if form has certain fields
-    """
-    for field in fields:
-        if not form.get(field):
-            return False
-    return True
-
-
-def authentication_fields_has_changes(cleaned_list, original_list):
-    """
-    Checks if Authentication fields have been changed
-    """
-    if len(cleaned_list) != len(original_list):
-       return True
-
-    for members_value in cleaned_list:
-        member = AuthenticationField.objects.get(id=int(members_value))
-        if member not in original_list:
-            return True
-    return False
-
-
-def form_has_changes(changed_organization, organization, fields):
+def form_has_changes(new_organization_raw, organization, new_authentication_fields):
     """
     Checks if certain form's fields have been changed
     """
-    for field in fields:
-        if (changed_organization.get(field) != getattr(organization, field)):
-            return True
-    return False
+    if not new_organization_raw.get("authentication_fields"):
+        raise forms.ValidationError("Authentication Fields are required")
+    del new_organization_raw["authentication_fields"]
+    new_organization = Organization(**new_organization_raw)
+    new_authentication_fields = [int(field) for field in new_authentication_fields]
+    new_authentication_fields.sort()
+
+    new_organization = model_to_dict(new_organization)
+    organization = model_to_dict(organization)
+
+    del new_organization["id"]
+    del organization["id"]
+    del new_organization["verified"]
+    del organization["verified"]
+
+    new_organization["authentication_fields"] = new_authentication_fields
+
+    return new_organization != organization
 
 
 class EditOrganizationForm(forms.ModelForm):
@@ -123,24 +100,13 @@ class EditOrganizationForm(forms.ModelForm):
             help_text=_("What authentication fields this organizations requires"))
 
     def clean(self):
-        """
-        Form must contain email address or postal information and have some changes
-        """
-        authentication_fields_after = self.cleaned_data.get("authentication_fields")
-        authentication_fields_before = self.organization.authentication_fields.all()
-        fields = ["name", "email_address", "address_line_one", "address_line_two", "postal_code", "country"]
-        postal_address_requirements = ["address_line_one", "postal_code", "country", "authentication_fields"]
-
-        if not (form_has_fields(self.cleaned_data, ["email_address", "authentication_fields"]) or form_has_fields(self.cleaned_data, postal_address_requirements)):
-            raise forms.ValidationError(
-                _("Organization profile must contain either a valid email address or postal information"))
-
-        if authentication_fields_has_changes(authentication_fields_after, authentication_fields_before) or \
-            form_has_changes(self.cleaned_data, self.organization, fields):
+        new_authentication_fields = self.cleaned_data.get("authentication_fields")
+        if form_has_changes(self.cleaned_data, self.organization, new_authentication_fields):
+            self.cleaned_data["authentication_fields"] = new_authentication_fields
             return self.cleaned_data
         else:
             raise forms.ValidationError(
-                _("Update form needs some changes for it to be sent!"))
+                "Update form needs some changes for it to be sent!")
 
 
 class CommentForm(forms.ModelForm):
