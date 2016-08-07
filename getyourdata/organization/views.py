@@ -136,7 +136,7 @@ def new_organization(request):
 
         messages.success(request,
             _("Organization profile created! Note that the organization profile won't be made visible until it has been verified by the site staff."))
-        return redirect(reverse('organization:list_organizations'))
+        return redirect(reverse('organization:view_organization', args=(organization.id,)))
     else:
         return render(
             request, "organization/new_organization/new.html",
