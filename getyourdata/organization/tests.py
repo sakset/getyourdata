@@ -697,7 +697,7 @@ class CommentCreationTests(TestCase):
 """
 Tries to find element that has class "pagination" if found returns True.
 """
-def paginationCanBeSeen(self):
+def pagination_can_be_seen(self):
         if self.selenium.find_elements_by_class_name("pagination"):
             return True
         else:
@@ -710,14 +710,14 @@ class OrganizationListPaginationShownTests(LiveServerTestCase):
             name="some_number",
             title='Some number')
 
-    def test_Pagination_isnt_shown_when_there_are_no_organization(self):
+    def test_pagination_isnt_shown_when_there_are_no_organization(self):
         self.selenium.get(
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.assertEquals(paginationCanBeSeen(self), False)
+        self.assertEquals(pagination_can_be_seen(self), False)
 
-    def test_Pagination_isnt_shown_when_there_are_only_few_organization(self):
+    def test_pagination_isnt_shown_when_there_are_only_few_organization(self):
         for i in range(1, 7):
             self.organization = Organization.objects.create(
                 name='Organization %d' % i,
@@ -735,9 +735,9 @@ class OrganizationListPaginationShownTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.assertEquals(paginationCanBeSeen(self), False)
+        self.assertEquals(pagination_can_be_seen(self), False)
 
-    def test_Pagination_is_shown_when_there_are_many_organization(self):
+    def test_pagination_is_shown_when_there_are_many_organization(self):
         for i in range(1, 45):
             self.organization = Organization.objects.create(
                 name='Organization %d' % i,
@@ -755,7 +755,7 @@ class OrganizationListPaginationShownTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
-        self.assertEquals(paginationCanBeSeen(self), True)
+        self.assertEquals(pagination_can_be_seen(self), True)
 
 @isSeleniumTest()
 class OrganizationViewPaginationShownTests(LiveServerTestCase):
@@ -776,14 +776,14 @@ class OrganizationViewPaginationShownTests(LiveServerTestCase):
 
         self.organization.authentication_fields.add(self.auth_field1)
 
-    def test_Pagination_isnt_shown_when_there_are_no_comments(self):
+    def test_pagination_isnt_shown_when_there_are_no_comments(self):
         self.selenium.get(
             "%s%s" % (self.live_server_url,
                       reverse("organization:view_organization", args=(self.organization.id,))))
 
-        self.assertEquals(paginationCanBeSeen(self), False)
+        self.assertEquals(pagination_can_be_seen(self), False)
 
-    def test_Pagination_isnt_shown_when_there_are_only_few_comments(self):
+    def test_pagination_isnt_shown_when_there_are_only_few_comments(self):
         for i in range(1, 7):
             Comment.objects.create(
                 organization=self.organization,
@@ -795,9 +795,9 @@ class OrganizationViewPaginationShownTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:view_organization", args=(self.organization.id,))))
 
-        self.assertEquals(paginationCanBeSeen(self), False)
+        self.assertEquals(pagination_can_be_seen(self), False)
 
-    def test_Pagination_is_shown_when_there_are_many_comments(self):
+    def test_pagination_is_shown_when_there_are_many_comments(self):
         for i in range(1, 20):
             Comment.objects.create(
                 organization=self.organization,
@@ -809,4 +809,4 @@ class OrganizationViewPaginationShownTests(LiveServerTestCase):
             "%s%s" % (self.live_server_url,
                       reverse("organization:view_organization", args=(self.organization.id,))))
 
-        self.assertEquals(paginationCanBeSeen(self), True)
+        self.assertEquals(pagination_can_be_seen(self), True)

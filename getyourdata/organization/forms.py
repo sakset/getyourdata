@@ -43,8 +43,8 @@ class NewOrganizationForm(forms.ModelForm):
         """
         fields = ["address_line_one", "postal_code", "country"]
 
-        if formHasFields(self.cleaned_data, ["email_address"]) or \
-            formHasFields(self.cleaned_data, fields):
+        if form_has_fields(self.cleaned_data, ["email_address"]) or \
+            form_has_fields(self.cleaned_data, fields):
             return self.cleaned_data
         else:
             raise forms.ValidationError(
@@ -54,7 +54,7 @@ class NewOrganizationForm(forms.ModelForm):
 """
 Checks if form has certain fields
 """
-def formHasFields(form, fields):
+def form_has_fields(form, fields):
     for field in fields:
         if not form.get(field):
             return False
@@ -63,12 +63,12 @@ def formHasFields(form, fields):
 """
 Checks if Authentication fields have been changed
 """
-def authenticationFieldsHasChanges(cleaned_list, original_list):
+def authentication_fields_has_changes(cleaned_list, original_list):
     if len(cleaned_list) != len(original_list):
        return True
 
-    for membersValue in cleaned_list:
-        member = AuthenticationField.objects.get(id = int(membersValue))
+    for members_value in cleaned_list:
+        member = AuthenticationField.objects.get(id = int(members_value))
         if member not in original_list:
             return True
     return False
@@ -76,9 +76,9 @@ def authenticationFieldsHasChanges(cleaned_list, original_list):
 """
 Checks if certain form's fields have been changed
 """
-def formHasChanges(changedOrganization, organization, fields):
+def form_has_changes(changed_organization, organization, fields):
     for field in fields:
-        if (changedOrganization.get(field) != getattr(organization,field)):
+        if (changed_organization.get(field) != getattr(organization,field)):
             return True
     return False
 
@@ -123,16 +123,16 @@ class EditOrganizationForm(forms.ModelForm):
         """
         Form must contain email address or postal information and have some changes
         """
-        authenticationFieldsAfter = self.cleaned_data.get("authentication_fields")
-        authenticationFieldsBefore = self.organization.authentication_fields.all()
+        authentication_fields_after = self.cleaned_data.get("authentication_fields")
+        authentication_fields_before = self.organization.authentication_fields.all()
         fields = ["name", "email_address", "address_line_one", "address_line_two", "postal_code", "country"]
-        postalAddressRequirements = ["address_line_one", "postal_code", "country","authentication_fields"]
+        postal_address_requirements = ["address_line_one", "postal_code", "country","authentication_fields"]
 
-        if not (formHasFields(self.cleaned_data, ["email_address", "authentication_fields"]) or formHasFields(self.cleaned_data, postalAddressRequirements)):
+        if not (form_has_fields(self.cleaned_data, ["email_address", "authentication_fields"]) or form_has_fields(self.cleaned_data, postal_address_requirements)):
             raise forms.ValidationError(_("Organization profile must contain either a valid email address or postal information"))
 
-        if  authenticationFieldsHasChanges(authenticationFieldsAfter, authenticationFieldsBefore) or \
-            formHasChanges(self.cleaned_data, self.organization, fields):
+        if  authentication_fields_has_changes(authentication_fields_after, authentication_fields_before) or \
+            form_has_changes(self.cleaned_data, self.organization, fields):
             return self.cleaned_data
         else:
             raise forms.ValidationError(_("Update form needs some changes for it to be sent!"))
