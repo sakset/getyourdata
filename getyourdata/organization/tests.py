@@ -270,7 +270,7 @@ class OrganizationUpdateTests(TestCase):
                     self.auth_field3.id, self.auth_field1.id],
                  "g-recaptcha-response": "PASSED"})
 
-        self.assertRedirects(response, "/en/organizations/view/%s/" %self.organization.id, status_code=302)
+        self.assertRedirects(response, "/en/organizations/view/%s/" % self.organization.id, status_code=302)
 
         self.assertEquals(
             self.organization.authentication_fields.all().count(), 1)
@@ -296,7 +296,6 @@ class OrganizationUpdateTests(TestCase):
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 1)
 
-
     def test_user_cant_create_organization_without_authentication_fields(self):
         response = self.client.post(
             reverse(
@@ -307,7 +306,8 @@ class OrganizationUpdateTests(TestCase):
                  "country": "Finland",
                  "authentication_fields": []})
 
-        self.assertContains(response, "Organization profile must contain either a valid email address or postal information")
+        self.assertContains(response,
+            "Organization profile must contain either a valid email address or postal information")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 
@@ -322,7 +322,8 @@ class OrganizationUpdateTests(TestCase):
                  "authentication_fields": [self.auth_field1.id],
                  "g-recaptcha-response": "PASSED"})
 
-        self.assertContains(response, "Organization profile must contain either a valid email address or postal information")
+        self.assertContains(response,
+         "Organization profile must contain either a valid email address or postal information")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 
@@ -340,6 +341,7 @@ class OrganizationUpdateTests(TestCase):
         self.assertContains(response, "Update form needs some changes for it to be sent!")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
+
 
 @isDjangoTest()
 class OrganizationUpdateAdminTests(TestCase):
@@ -694,14 +696,16 @@ class CommentCreationTests(TestCase):
 
         self.assertEquals(self.organization.average_rating, '1.7')
 
-"""
-Tries to find element that has class "pagination" if found returns True.
-"""
+
 def pagination_can_be_seen(self):
-        if self.selenium.find_elements_by_class_name("pagination"):
-            return True
-        else:
-            return False
+    """
+    Tries to find element that has class "pagination" if found returns True.
+    """
+    if self.selenium.find_elements_by_class_name("pagination"):
+        return True
+    else:
+        return False
+
 
 @isSeleniumTest()
 class OrganizationListPaginationShownTests(LiveServerTestCase):
@@ -756,6 +760,7 @@ class OrganizationListPaginationShownTests(LiveServerTestCase):
                       reverse("organization:list_organizations")))
 
         self.assertEquals(pagination_can_be_seen(self), True)
+
 
 @isSeleniumTest()
 class OrganizationViewPaginationShownTests(LiveServerTestCase):

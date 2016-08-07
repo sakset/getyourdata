@@ -134,8 +134,9 @@ def new_organization(request):
         organization.authentication_fields.add(*authentication_fields)
         organization.save()
 
-        messages.success(request, _("Organization profile created! Note that the organization profile won't be made visible until it has been verified by the site staff."))
-        return redirect(reverse ('organization:list_organizations'))
+        messages.success(request,
+            _("Organization profile created! Note that the organization profile won't be made visible until it has been verified by the site staff."))
+        return redirect(reverse('organization:list_organizations'))
     else:
         return render(
             request, "organization/new_organization/new.html",
@@ -180,7 +181,8 @@ def edit_organization(request, org_id=None):
         organization_draft.authentication_fields.add(*authentication_fields)
         organization_draft.save()
 
-        messages.success(request, _("Organization contact information was updated succesfully. An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff."))
+        messages.success(request,
+            _("Organization contact information was updated succesfully. An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff."))
         return redirect(reverse('organization:view_organization', args=(organization.id,)))
 
     return render(
