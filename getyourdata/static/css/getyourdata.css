@@ -20,7 +20,9 @@ img.center {
     margin-right: 5px;
 }
 
+
 /* process steps */
+
 
 .tabs {
     list-style: none;
@@ -55,8 +57,22 @@ img.center {
     padding-right: 0.5em;
     font-size: 1.5em;
 }
+
+.tabs li.active {
+    color: white;
+    background-color: #fbbd19;
+}
+
+.tabs li.active:after {
+    border-left: 14px solid #fbbd19;
+}
+
+.tabs li.active a {
+    color: white;
+}
+
 @media all {
-    .tabs li {
+    .tabs li, button {
         display: table-cell;
         width: auto;
         vertical-align: middle;
@@ -103,20 +119,6 @@ img.center {
     .tabs li:last-child:before, .tabs li:last-child:after {
         border: none;
     }
-}
-
-.tabs li.active {
-    color: white;
-    background-color: #fbbd19;
-
-}
-
-.tabs li.active:after {
-    border-left: 14px solid #fbbd19;
-}
-
-.tabs li.active a {
-    color: white;
 }
 
 .feedback-textarea {

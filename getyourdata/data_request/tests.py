@@ -466,3 +466,85 @@ class FaqsValidationTests(LiveServerTestCase):
         self.assertIn("testtitle", faqs[0].text)
         self.assertIn("othertitle", faqs[2].text)
         self.assertIn("somethingelse", faqs[1].text)
+
+@isSeleniumTest()
+class ProcessBarNavigationTests(LiveServerTestCase):
+
+    def setUp(self):
+        self.organization = Organization.objects.create(
+            name='Organization Two',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+            )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field)
+
+
+    def test_selenium_back_to_organization_list_works(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        self.selenium.find_element_by_id("back-to-organization-list").click()
+
+        self.assertIn("Add organization", self.selenium.page_source)
+
+    def test_selenium_back_to_authentication_fields_input_works(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        field = self.selenium.find_element_by_name("user_email_address")
+        field.send_keys("test@test.com")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        # now we go back to previous step, the input values should still be there.
+
+        self.selenium.find_element_by_id("back-to-input-details").click()
+
+        self.assertIn("12345678", self.selenium.page_source)
+        self.assertIn("test@test.com", self.selenium.page_source)
+
+    def test_selenium_back_to_previous_steps_when_all_done_not_allowed(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        field = self.selenium.find_element_by_name("user_email_address")
+        field.send_keys("test@test.com")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        # here we are at the review message step. let's move on.
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        # we check that we're finished.
+
+        self.assertIn("All done!", self.selenium.page_source)
+
+        # if we are, we make sure that the process bar navigation buttons are no longer functional
+        # in other words the elements with respective id's are not found.
+
+        element_lookup = self.selenium.find_elements_by_id("back-to-organization-list")
+        self.assertFalse(len(element_lookup) > 0)
+
+        element_lookup = self.selenium.find_elements_by_id("back-to-input-details")
+        self.assertFalse(len(element_lookup) > 0)

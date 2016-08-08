@@ -100,3 +100,10 @@
 #bootstrap-overrides h4.panel-title {
     font-weight: bold;
 }
+
+/* process steps */
+
+
+#bootstrap-overrides .tabs li.active a {
+    color: white;
+}
