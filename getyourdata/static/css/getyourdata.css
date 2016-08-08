@@ -124,3 +124,7 @@ img.center {
 .feedback-textarea {
     width: 250px;
 }
+
+.comment-message {
+    word-break: break-all;
+}

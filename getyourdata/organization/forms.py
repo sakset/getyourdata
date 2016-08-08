@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-
+from django.forms.models import model_to_dict
 from organization.models import Organization, AuthenticationField, Comment
 
 from captcha.fields import ReCaptchaField
@@ -37,20 +37,29 @@ class NewOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
-    def clean(self):
-        """
-        Form must contain email address or postal information
-        """
-        if self.cleaned_data.get("email_address"):
-            return self.cleaned_data
 
-        if self.cleaned_data.get("address_line_one") and \
-           self.cleaned_data.get("postal_code") and \
-           self.cleaned_data.get("country"):
-            return self.cleaned_data
+def form_has_changes(new_organization_raw, organization, new_authentication_fields):
+    """
+    Checks if certain form's fields have been changed
+    """
+    if not new_organization_raw.get("authentication_fields"):
+        raise forms.ValidationError("Authentication Fields are required")
+    del new_organization_raw["authentication_fields"]
+    new_organization = Organization(**new_organization_raw)
+    new_authentication_fields = [int(field) for field in new_authentication_fields]
+    new_authentication_fields.sort()
 
-        raise forms.ValidationError(
-            _("Organization profile must contain either a valid email address or postal information"))
+    new_organization = model_to_dict(new_organization)
+    organization = model_to_dict(organization)
+
+    del new_organization["id"]
+    del organization["id"]
+    del new_organization["verified"]
+    del organization["verified"]
+
+    new_organization["authentication_fields"] = new_authentication_fields
+
+    return new_organization != organization
 
 
 class EditOrganizationForm(forms.ModelForm):
@@ -90,21 +99,14 @@ class EditOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
-
     def clean(self):
-        """
-        Form must contain email address or postal information
-        """
-        if self.cleaned_data.get("email_address"):
+        new_authentication_fields = self.cleaned_data.get("authentication_fields")
+        if form_has_changes(self.cleaned_data, self.organization, new_authentication_fields):
+            self.cleaned_data["authentication_fields"] = new_authentication_fields
             return self.cleaned_data
-
-        if self.cleaned_data.get("address_line_one") and \
-           self.cleaned_data.get("postal_code") and \
-           self.cleaned_data.get("country"):
-            return self.cleaned_data
-
-        raise forms.ValidationError(
-            _("Organization profile must contain either a valid email address or postal information"))
+        else:
+            raise forms.ValidationError(
+                "Update form needs some changes for it to be sent!")
 
 
 class CommentForm(forms.ModelForm):
@@ -125,7 +127,7 @@ class CommentForm(forms.ModelForm):
     message = forms.CharField(
         error_messages={
             'required': _('Message is required'),
-            'max_length':_('Maximum allowed length is 2000 characters')
+            'max_length': _('Maximum allowed length is 2000 characters')
         },
         label=_('Message'),
         max_length=2000,

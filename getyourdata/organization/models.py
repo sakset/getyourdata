@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Avg
@@ -26,6 +27,17 @@ class AuthenticationField(BaseModel):
 
     def __unicode__(self):
         return self.title
+
+
+def form_has_fields(form, fields):
+    """
+    Checks if form has certain fields
+    """
+    for field in fields:
+        if not getattr(form, field):
+            return False
+    return True
+
 
 class OrganizationDetails(BaseModel):
     """
@@ -67,6 +79,12 @@ class OrganizationDetails(BaseModel):
     class Meta:
         abstract = True
 
+    def clean(self):
+        postal_address_requirements = ["address_line_one", "postal_code", "country"]
+        if not (form_has_fields(self, ["email_address"]) or form_has_fields(self, postal_address_requirements)):
+            raise ValidationError(
+                _("Organization profile must contain either a valid email address or postal information"))
+        return self
 
 class Organization(OrganizationDetails):
     """
@@ -101,7 +119,7 @@ class Organization(OrganizationDetails):
         if rating:
             return format(float(rating), '.1f')
         return '0'
-        
+
 
     def __unicode__(self):
         return self.name

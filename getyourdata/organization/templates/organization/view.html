@@ -106,7 +106,7 @@
                         <tbody>
                         {% for comment in comments %}
                             <tr>
-                                <td class="col-md-9">{{ comment.message }}</td>
+                                <td class="col-md-9 comment-message">{{ comment.message }}</td>
                                 <td class="text-right col-md-3">
                                     <span class="small">{{ comment.created_on|date:"j.n.Y H:i" }}</span>
                                     <input id="id_rating" type="number" name="rating" class="rating" showCaption="false" min=0 max=5 step=1 data-size="xs" value="{{ comment.rating }}" data-show-caption="false" data-show-clear="false" data-disabled="true">
@@ -115,7 +115,9 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    {% bootstrap_pagination comments url=pag_url %}
+                    {% if show_pagination%}
+                        {% bootstrap_pagination comments url=pag_url %}
+                    {% endif %}
                     {% else %}
                     <p>{% trans 'No feedback yet.' %}</p>
                     {% endif %}
