@@ -536,10 +536,6 @@ class ProcessBarNavigationTests(LiveServerTestCase):
 
         self.selenium.find_element_by_id("create_request").click()
 
-        # we check that we're finished.
-
-        self.assertIn("All done!", self.selenium.page_source)
-
         # if we are, we make sure that the process bar navigation buttons are no longer functional
         # in other words the elements with respective id's are not found.
 
