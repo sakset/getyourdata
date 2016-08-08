@@ -98,7 +98,6 @@
 			{% endblocktrans %}</p>
 			{% endif %}
             <hr>
-
             <div class="panel panel-default">
                 <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> {% trans "Received feedback" %}{% if comments %}<span class="pull-right">{% trans 'Average rating' %} {{ organization.average_rating }}/5</span>{% endif %}</div>
                 <div class="panel-body">
@@ -107,7 +106,6 @@
                         <tbody>
                         {% for comment in comments %}
                             <tr>
-
                                 <td class="col-md-9">{{ comment.message }}</td>
                                 <td class="text-right col-md-3">
                                     <span class="small">{{ comment.created_on|date:"j.n.Y H:i" }}</span>

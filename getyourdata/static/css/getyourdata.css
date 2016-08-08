@@ -67,6 +67,10 @@ img.center {
     border-left: 14px solid #fbbd19;
 }
 
+.tabs li.active a {
+    color: white;
+}
+
 @media all {
     .tabs li, button {
         display: table-cell;
@@ -115,4 +119,8 @@ img.center {
     .tabs li:last-child:before, .tabs li:last-child:after {
         border: none;
     }
+}
+
+.feedback-textarea {
+    width: 250px;
 }
