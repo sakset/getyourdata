@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -14,6 +13,7 @@ from organization.models import Organization, OrganizationDraft
 from organization.models import AuthenticationField
 from organization.forms import NewOrganizationForm, EditOrganizationForm
 from organization.forms import CommentForm
+from organization.utils import get_objects_paginator
 
 
 def list_organizations(request):
@@ -25,16 +25,7 @@ def list_organizations(request):
     orgs_per_page = settings.ORGANIZATIONS_PER_PAGE
     org_ids = request.POST.getlist("org_ids")
 
-    p = Paginator(
-        orgs,
-        orgs_per_page)
-
-    try:
-        organizations = p.page(page)
-    except PageNotAnInteger:
-        organizations = p.page(1)
-    except EmptyPage:  # Reached an empty page: redirect to last page
-        organizations = p.page(p.num_pages)
+    organizations = get_objects_paginator(page, orgs, orgs_per_page)
 
     if request.POST.get("create_request", None) and len(org_ids) > 0:
         # User wants to create a request with selected organizations
@@ -75,16 +66,7 @@ def view_organization(request, org_id):
     page = request.GET.get("page", 1)
     org_comments = organization.comments(manager='objects').all()
     comments_per_page = settings.COMMENTS_PER_PAGE
-    p = Paginator(
-        org_comments,
-        comments_per_page
-    )
-    try:
-        comments = p.page(page)
-    except PageNotAnInteger:
-        comments = p.page(1)
-    except EmptyPage:
-        comments = p.page(p.num_pages)
+    comments = get_objects_paginator(page, org_comments, comments_per_page)
 
     form = CommentForm(request.POST or None)
     captcha_form = CaptchaForm(request.POST or None)
