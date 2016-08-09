@@ -21,7 +21,6 @@ def list_organizations(request):
     View to select organizations for a data request
     """
     page = request.GET.get("page", 1)
-    show_pagination = True
     orgs = Organization.objects.filter(verified=True)
     orgs_per_page = settings.ORGANIZATIONS_PER_PAGE
     org_ids = request.POST.getlist("org_ids")
@@ -42,8 +41,7 @@ def list_organizations(request):
         return redirect(
             reverse("data_request:request_data", args=(",".join(org_ids),)))
 
-    if orgs_per_page > len(orgs):
-        show_pagination = False
+    show_pagination = orgs_per_page < len(orgs)
 
     return render(
         request, 'organization/list.html',
@@ -60,7 +58,6 @@ def view_organization(request, org_id):
     some stats later
     """
     organization = cache.get("organization-%s" % org_id)
-    show_pagination = True
 
     if not organization and organization is not None:
         raise Http404()
@@ -92,8 +89,7 @@ def view_organization(request, org_id):
     form = CommentForm(request.POST or None)
     captcha_form = CaptchaForm(request.POST or None)
 
-    if comments_per_page > len(org_comments):
-        show_pagination = False
+    show_pagination = comments_per_page < len(org_comments)
 
     if request.method == 'POST':
         if form.is_valid() and captcha_form.is_valid():
