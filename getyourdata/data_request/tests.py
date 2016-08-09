@@ -152,14 +152,12 @@ class DataRequestCreationTests(TestCase):
             )
 
         # All requests were email requests
-        self.assertContains(response, "All done!")
-
-        self.assertContains(
-            response, "Requests were sent to the following organizations")
+        self.assertContains(response, "You have successfully finished")
 
         self.assertContains(response, "Organization")
 
-        self.assertEquals(len(mail.outbox), 1)
+        # User gets a copy of his request + a feedback message
+        self.assertEquals(len(mail.outbox), 2)
 
         self.assertIn("Organization", mail.outbox[0].body)
 
@@ -175,12 +173,49 @@ class DataRequestCreationTests(TestCase):
         response = self.client.post(
             reverse("data_request:request_data", args=(mail_organization.id,)),
             {"some_number": "1234567",
-             "send": "true"},
+             "send": "true",
+             "g-recaptcha-response": "PASSED"},
             follow=True
             )
 
         self.assertContains(response, "Further action required")
         self.assertContains(response, "Download PDF")
+        self.assertNotContains(response, "A copy of the PDF")
+
+    def test_mail_request_copy_can_be_sent_successfully(self):
+        mail_organization = create_mail_organization(self)
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(mail_organization.id,)),
+            {"some_number": "1234567",
+             "user_email_address": "test@test.com",
+             "send_mail_request_copy": True,
+             "send": "true",
+             "g-recaptcha-response": "PASSED"},
+            follow=True
+            )
+
+        self.assertContains(response, "A copy of the PDF")
+
+        # User receives a copy of the PDF and a feedback message
+        self.assertEquals(len(mail.outbox), 2)
+
+    def test_mail_request_copy_can_be_sent_successfully_with_email_requests(self):
+        mail_organization = create_mail_organization(self)
+        email_organization = create_email_organization(self)
+
+        response = self.client.post(
+            reverse("data_request:request_data", args=(
+                "%s,%s" % (mail_organization.id, email_organization.id),)),
+            {"some_number": "1234567",
+             "user_email_address": "test@test.com",
+             "send_mail_request_copy": True,
+             "send": "true",
+             "g-recaptcha-response": "PASSED"},
+            follow=True
+            )
+
+        self.assertContains(response, "A copy of the PDF")
 
     def test_pending_email_request_displayed_correctly(self):
         email_organization = Organization.objects.create(
@@ -243,6 +278,17 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Send request")
         self.assertNotContains(response, "Review request")
 
+    def test_feedback_is_displayed_correctly(self):
+        email_organization = create_email_organization(self)
+        mail_organization = create_mail_organization(self)
+
+        response = self.client.get(
+            reverse("data_request:give_feedback", args=(
+                "%s,%s" % (mail_organization.id, email_organization.id),)))
+
+        self.assertContains(response, email_organization.name)
+        self.assertContains(response, mail_organization.name)
+
 
 @isSeleniumTest()
 class LiveDataRequestCreationTests(LiveServerTestCase):
@@ -280,8 +326,8 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
 
         self.selenium.find_element_by_id("create_request").click()
 
-        self.assertIn("All done!", self.selenium.page_source)
-        self.assertIn("Email requests sent!", self.selenium.page_source)
+        self.assertIn("You have successfully finished", self.selenium.page_source)
+        self.assertIn("You should receive a copy of your email requests", self.selenium.page_source)
 
     def test_selenium_mail_request_can_be_created_successfully(self):
         self.organization = Organization.objects.create(
@@ -375,7 +421,8 @@ class AuthenticationAttributeValidationTests(TestCase):
             follow=True
             )
 
-        self.assertNotContains(response, "This is a phone number")
+        self.assertContains(response, "This is a phone number")
+        self.assertContains(response, "The value for this field was not valid")
 
 
 @isSeleniumTest()
@@ -419,3 +466,81 @@ class FaqsValidationTests(LiveServerTestCase):
         self.assertIn("testtitle", faqs[0].text)
         self.assertIn("othertitle", faqs[2].text)
         self.assertIn("somethingelse", faqs[1].text)
+
+@isSeleniumTest()
+class ProcessBarNavigationTests(LiveServerTestCase):
+
+    def setUp(self):
+        self.organization = Organization.objects.create(
+            name='Organization Two',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+            )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization.authentication_fields.add(self.auth_field)
+
+
+    def test_selenium_back_to_organization_list_works(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        self.selenium.find_element_by_id("back-to-organization-list").click()
+
+        self.assertIn("Add organization", self.selenium.page_source)
+
+    def test_selenium_back_to_authentication_fields_input_works(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        field = self.selenium.find_element_by_name("user_email_address")
+        field.send_keys("test@test.com")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        # now we go back to previous step, the input values should still be there.
+
+        self.selenium.find_element_by_id("back-to-input-details").click()
+
+        self.assertIn("12345678", self.selenium.page_source)
+        self.assertIn("test@test.com", self.selenium.page_source)
+
+    def test_selenium_back_to_previous_steps_when_all_done_not_allowed(self):
+        self.selenium.get(
+            "%s%s" % (self.live_server_url,
+                      reverse("data_request:request_data",
+                              args=(self.organization.id,))))
+
+        field = self.selenium.find_element_by_name("some_number")
+        field.send_keys("12345678")
+
+        field = self.selenium.find_element_by_name("user_email_address")
+        field.send_keys("test@test.com")
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        # here we are at the review message step. let's move on.
+
+        self.selenium.find_element_by_id("create_request").click()
+
+        # if we are, we make sure that the process bar navigation buttons are no longer functional
+        # in other words the elements with respective id's are not found.
+
+        element_lookup = self.selenium.find_elements_by_id("back-to-organization-list")
+        self.assertFalse(len(element_lookup) > 0)
+
+        element_lookup = self.selenium.find_elements_by_id("back-to-input-details")
+        self.assertFalse(len(element_lookup) > 0)

@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.mail import EmailMessage
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
@@ -13,6 +15,8 @@ from getyourdata.forms import CaptchaForm
 
 from data_request.services import concatenate_pdf_pages
 from data_request.services import send_data_requests_by_email
+from data_request.services import send_mail_request_pdf
+from data_request.services import send_feedback_message_by_email
 
 import base64
 
@@ -105,10 +109,12 @@ def review_request(request, org_ids, ignore_captcha=True, prevent_redirect=False
 
             if request.POST.get("send", None) and not prevent_redirect:
                 return send_request(request, org_ids)
+        else:
+            return create_request(request, org_ids)
 
     captcha_form = None
 
-    if len(email_organizations) > 0 and not ignore_captcha:
+    if not ignore_captcha:
         captcha_form = CaptchaForm(request.POST or None)
     elif ignore_captcha:
         captcha_form = CaptchaForm()
@@ -133,16 +139,18 @@ def send_request(request, org_ids):
     (organizations, email_organizations,
      mail_organizations) = get_organization_tuple(org_ids)
 
+    # Was a copy of the mail requests sent to an email address
+    mail_request_copy_sent = False
+
     if request.method == 'POST':
         form = DataRequestForm(
             request.POST, organizations=organizations, visible=False)
 
-        captcha_form = None
+        captcha_form = CaptchaForm(request.POST or None)
 
-        if len(email_organizations) > 0:
-            captcha_form = CaptchaForm(request.POST or None)
+        if form.is_valid() and captcha_form.is_valid():
+            cleaned_data = form.cleaned_data
 
-        if form.is_valid() and (not captcha_form or captcha_form.is_valid()):
             pdf_pages = []
             email_requests = []
 
@@ -175,13 +183,44 @@ def send_request(request, org_ids):
 
                 return review_request(request, org_ids, prevent_redirect=True)
 
+            if cleaned_data.get("send_mail_request_copy", None) and \
+                cleaned_data.get("user_email_address", None):
+                # User wants a copy of mail requests, send them
+                if not send_mail_request_pdf(
+                     cleaned_data.get("user_email_address"),
+                     mail_organizations, pdf_data):
+                    messages.error(
+                        request,
+                        _("A copy of the mail requests couldn't be sent!"))
+                else:
+                    mail_request_copy_sent = True
+
+            if cleaned_data.get("user_email_address", None):
+                if not send_feedback_message_by_email(
+                     cleaned_data.get("user_email_address"),
+                     request,
+                     organizations):
+                    messages.error(
+                        request,
+                        _("A feedback message couldn't be sent!"))
+
+            if pdf_data:
+                # Encode the PDF data as base64 to be rendered in the view
+                pdf_data = base64.b64encode(pdf_data)
+
             # Request was successful!
-            return render(request, "data_request/sent.html", {
-                "organizations": organizations,
-                "mail_organizations": mail_organizations,
-                "email_organizations": email_organizations,
-                "pdf_data": pdf_data
-            })
+            if len(mail_organizations) > 0:
+                return render(request, "data_request/request_data_sent.html", {
+                    "form": form,
+                    "organizations": organizations,
+                    "mail_organizations": mail_organizations,
+                    "email_organizations": email_organizations,
+                    "pdf_data": pdf_data,
+                    "org_ids": org_ids,
+                    "mail_request_copy_sent": mail_request_copy_sent
+                })
+            else:
+                return give_feedback(request, org_ids)
         else:
             return review_request(
                 request, org_ids, False, prevent_redirect=True)
@@ -189,6 +228,49 @@ def send_request(request, org_ids):
     # Send user back to review page
     # send POST parameter is removed to prevent redirect loop
     return review_request(request, org_ids, prevent_redirect=True)
+
+
+def give_feedback(request, org_ids):
+    """
+    Requests have been finished, just show user a link of organization profiles
+    to give feedback
+
+    :request: Current request
+    :org_ids: A list of Organization objects
+
+    """
+    pdf_data = None
+
+    (organizations, email_organizations,
+     mail_organizations) = get_organization_tuple(org_ids)
+
+    form = DataRequestForm(
+        request.POST or None, organizations=organizations, visible=False)
+
+    if form.is_valid() and len(mail_organizations) > 0:
+        # Let user redownload the PDF file in case he accidentally cancelled
+        # the download during the last step
+        pdf_pages = []
+
+        for organization in mail_organizations:
+            data_request = get_data_request(organization, form)
+
+            pdf_page = generate_pdf_page(data_request)
+            pdf_pages.append(pdf_page)
+
+        # Generate PDF pages for any mail-only requests
+        pdf_data = generate_request_pdf(pdf_pages)
+
+        if pdf_data:
+            # Encode the PDF data as base64 to be rendered in the view
+            pdf_data = base64.b64encode(pdf_data)
+
+    return render(request, "data_request/request_data_feedback.html", {
+        "org_ids": org_ids,
+        "email_organizations": email_organizations,
+        "organizations": organizations,
+        "pdf_data": pdf_data,
+    })
 
 
 def get_data_requests(form, organizations):
@@ -262,7 +344,6 @@ def generate_request_pdf(pdf_pages):
     """
     if len(pdf_pages) > 0:
         pdf_data = concatenate_pdf_pages(pdf_pages)
-        pdf_data = base64.b64encode(pdf_data)
     else:
         pdf_data = None
 
@@ -309,6 +390,7 @@ def get_data_request(organization, form):
     AuthenticationContent.objects.bulk_create(auth_contents)
 
     return data_request
+
 
 def faq(request):
     faqs = FaqContent.objects.order_by("priority")

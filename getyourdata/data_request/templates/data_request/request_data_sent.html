@@ -1,18 +1,15 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load extra_tags %}
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-
-
                 <div>
-                    {% include "processbar.html" with process_step=3 %}
+                    {% include "process_bar.html" with process_step=4 %}
                 </div>
-
-
                 <div class="page-header">
                     <h1>
                         {% if email_organizations and not mail_organizations %}
@@ -29,8 +26,7 @@
         <div class="row">
             {% if mail_organizations %}
                 <div class="col-md-6">
-                    <h3><span
-                            class="glyphicon glyphicon-info-sign"></span> {% trans "Print mail requests" %}</h3>
+                    <h3><span class="glyphicon glyphicon-info-sign"></span> {% trans "Print mail requests" %}</h3>
                     <div class="alert alert-warning">
                         <strong>
                             {% blocktrans count counter=mail_organizations|length trimmed %}
@@ -38,7 +34,8 @@
                                 {% plural %}
                                 {{ counter }} requests need to be printed.
                             {% endblocktrans %}
-                        </strong><br>
+                        </strong>
+                        <br>
                         <p>{% blocktrans trimmed %}
                             The following organizations require that data requests are sent by mail:
                         {% endblocktrans %}</p>
@@ -50,10 +47,26 @@
                         <br>
                         <p>{% trans "You can send data requests to the listed organizations by mail. The following document contains the required pages:" %}</p>
                         <br>
-                        <a class="btn btn-xl btn-success" href="data:application/pdf;base64,{{ pdf_data }}"
-                           target="_blank" download="request.pdf"><span
-                                class="glyphicon glyphicon-download-alt"></span> {% trans "Download PDF" %}</a>
+                        <form id="feedback_form" method="post" action="{% url 'data_request:give_feedback' org_ids %}">
+                            {% csrf_token %}
+                            {% bootstrap_form form|hide_form %}
+                            <input id="submit_form" style="display: none;" type="submit" value="submit"/>
+                            <a class="btn btn-xl btn-success" href="data:application/pdf;base64,{{ pdf_data }}"
+                               target="_blank" download="request.pdf" onclick="$('#submit_form').click()"><span
+                                    class="glyphicon glyphicon-download-alt"></span> {% trans "Download PDF" %}</a>
+                        </form>
+                        <br>
+                        {% if mail_request_copy_sent %}
+                        <p>{% trans "A copy of the PDF has been sent to your email address." %}</p>
+                        {% endif %}
                     </div>
+                    <a class="btn btn-primary" id="next_step_button">{% trans "Finish" %}</a>
+                    <script>
+                    // For browsers without JavaScript, leave the button above visible so that the users
+                    // can continue to the last step
+                    // For browsers with JavaScript, hide the above button on page load
+                    document.getElementById("next_step_button").style["display"] = "none";
+                    </script>
                 </div>
             {% endif %}
             {% if email_organizations %}
@@ -72,7 +85,5 @@
                 </div>
             {% endif %}
         </div>
-
-
     </div>
 {% endblock %}

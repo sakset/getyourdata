@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    {% include "process_bar.html" with process_step=4 %}
+                </div>
+                <div class="page-header">
+                    <h1>{% trans "Thanks!" %}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    <strong>{% trans "Thanks!" %}</strong>
+                    <p>{% blocktrans count counter=organizations|length trimmed %}
+                    You have successfully finished creating and sending a data request!
+                    {% plural %}
+                    You have successfully finished creating and sending your data requests!
+                    {% endblocktrans %}
+                    {% if email_organizations|length > 0 %}{% trans "You should receive a copy of your email requests to your email address shortly." %}{% endif %}</p>
+                    <p>{% blocktrans count counter=organizations|length trimmed %}
+                    When you have received a reply to your data request, please review your process with the organization below. Your feedback will help the other users!
+                    {% plural %}
+                    When you have received a reply to your data request, please review your process with the organizations below. Your feedback will help the other users!
+                    {% endblocktrans %}</p>
+                    <hr>
+                    <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
+                    You can add this page into your bookmarks for later use.
+                    {% endblocktrans %}</b></p>
+                    {% if pdf_data %}
+                    <p>
+                        <a class="btn btn-primary btn-sm" href="data:application/pdf;base64,{{ pdf_data }}"
+                           target="_blank" download="request.pdf">{% trans "Redownload PDF" %}</a>
+                    </p>
+                    {% endif %}
+                </div>
+                <table class="table table-striped">
+                    <tbody>
+                        {% for organization in organizations %}
+                            <tr>
+                                <td><a href="{% url "organization:view_organization" organization.id %}"><span class="glyphicon glyphicon-star"></span> {{ organization.name }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

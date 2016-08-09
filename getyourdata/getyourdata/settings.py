@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'bootstrap3',
     'tinymce',
     'rosetta',
     'rest_framework',
@@ -74,6 +73,10 @@ INSTALLED_APPS = [
     'organization',
     'data_request',
     'feedback',
+
+    # We're overriding bootstrap3's default templates, which is why it's loaded
+    # last
+    'bootstrap3',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -207,6 +210,8 @@ EMAIL_HOST_USER = secrets.get("EMAIL_HOST_USER", "")
 EMAIL_PORT = secrets.get("EMAIL_PORT", 25)
 EMAIL_USE_TLS = secrets.get("EMAIL_USE_TLS", False)
 EMAIL_USE_SSL = secrets.get("EMAIL_USE_SSL", False)
+
+NOREPLY_EMAIL_ADDRESS = "noreply@getyourdata.org"
 
 # reCAPTCHA settings
 

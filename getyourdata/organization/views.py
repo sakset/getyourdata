@@ -21,12 +21,14 @@ def list_organizations(request):
     View to select organizations for a data request
     """
     page = request.GET.get("page", 1)
-
+    show_pagination = True
+    orgs = Organization.objects.filter(verified=True)
+    orgs_per_page = settings.ORGANIZATIONS_PER_PAGE
     org_ids = request.POST.getlist("org_ids")
 
     p = Paginator(
-        Organization.objects.filter(verified=True),
-        settings.ORGANIZATIONS_PER_PAGE)
+        orgs,
+        orgs_per_page)
 
     try:
         organizations = p.page(page)
@@ -40,11 +42,16 @@ def list_organizations(request):
         return redirect(
             reverse("data_request:request_data", args=(",".join(org_ids),)))
 
+    if orgs_per_page > len(orgs):
+        show_pagination = False
+
     return render(
         request, 'organization/list.html',
         {'organizations': organizations,
+         'show_pagination': show_pagination,
          'org_ids': org_ids,
-         'pag_url': reverse("organization:list_organizations")})
+         'pag_url': reverse("organization:list_organizations"),
+         })
 
 
 def view_organization(request, org_id):
@@ -53,6 +60,7 @@ def view_organization(request, org_id):
     some stats later
     """
     organization = cache.get("organization-%s" % org_id)
+    show_pagination = True
 
     if not organization and organization is not None:
         raise Http404()
@@ -68,9 +76,11 @@ def view_organization(request, org_id):
         cache.set("organization-%s" % org_id, organization, 60)
 
     page = request.GET.get("page", 1)
+    org_comments = organization.comments(manager='objects').all()
+    comments_per_page = settings.COMMENTS_PER_PAGE
     p = Paginator(
-        organization.comments(manager='objects').all(),
-        settings.COMMENTS_PER_PAGE
+        org_comments,
+        comments_per_page
     )
     try:
         comments = p.page(page)
@@ -82,6 +92,9 @@ def view_organization(request, org_id):
     form = CommentForm(request.POST or None)
     captcha_form = CaptchaForm(request.POST or None)
 
+    if comments_per_page > len(org_comments):
+        show_pagination = False
+
     if request.method == 'POST':
         if form.is_valid() and captcha_form.is_valid():
             comment = form.save(commit=False)
@@ -89,13 +102,14 @@ def view_organization(request, org_id):
             comment.save()
             messages.success(request, _('Thank you for your feedback!'))
             return redirect(reverse('organization:view_organization', args=(organization.id,)))
-            
+
     return render(request, 'organization/view.html', {
         'organization': organization,
         'comments': comments,
         'form': form,
         'captcha_form': captcha_form,
         'pag_url': reverse("organization:view_organization", args=(org_id,)),
+        'show_pagination': show_pagination,
     })
 
 
@@ -120,9 +134,9 @@ def new_organization(request):
         organization.authentication_fields.add(*authentication_fields)
         organization.save()
 
-        return render(
-            request, "organization/new_organization/created.html",
-            {"organization": organization})
+        messages.success(request,
+            _("Organization profile created! Note that the organization profile won't be made visible until it has been verified by the site staff."))
+        return redirect(reverse('organization:view_organization', args=(organization.id,)))
     else:
         return render(
             request, "organization/new_organization/new.html",
@@ -167,8 +181,9 @@ def edit_organization(request, org_id=None):
         organization_draft.authentication_fields.add(*authentication_fields)
         organization_draft.save()
 
-        return render(request, "organization/edit_organization/done.html", {
-            "organization": organization})
+        messages.success(request,
+            _("An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff."))
+        return redirect(reverse('organization:view_organization', args=(organization.id,)))
 
     return render(
         request, "organization/edit_organization/edit.html",
