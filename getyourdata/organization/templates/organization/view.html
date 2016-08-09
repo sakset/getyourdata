@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
-{% load staticfiles %}
+{% load pipeline %}
 
 {% block content %}
 <div class="container">
@@ -130,10 +130,10 @@
 
 
 {% block extrahead %}
-<link rel="stylesheet" href="{% static 'css/star-rating.min.css' %}"/>
+{% stylesheet 'star_rating' %}
 {% endblock %}
 
 
 {% block script %}
-<script src="{% static 'js/star-rating.min.js' %}"></script>
+{% javascript 'star_rating' %}
 {% endblock %}

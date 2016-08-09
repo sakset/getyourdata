@@ -23,3 +23,7 @@ if TESTING:
     EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 os.environ["RECAPTCHA_TESTING"] = 'True'
+
+PIPELINE['PIPELINE_ENABLED'] = False
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
