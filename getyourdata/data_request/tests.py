@@ -59,6 +59,14 @@ class DataRequestCreationTests(TestCase):
             postal_code='012345',
             country='Sweden'
             )
+        self.organization3 = Organization.objects.create(
+            name='Organization Three',
+            email_address="fake@addressb.com",
+            address_line_one='Address 5',
+            address_line_two='Address 6',
+            postal_code='123456',
+            country='Estonia'
+        )
 
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
@@ -78,6 +86,10 @@ class DataRequestCreationTests(TestCase):
         self.organization2.authentication_fields.add(self.auth_field2)
         self.organization2.authentication_fields.add(self.auth_field3)
 
+        self.organization3.authentication_fields.add(self.auth_field1)
+        self.organization3.authentication_fields.add(self.auth_field2)
+        self.organization3.authentication_fields.add(self.auth_field3)
+
         self.assertEquals(self.organization.authentication_fields.all().count(), 2)
         self.assertEquals(self.organization2.authentication_fields.all().count(), 2)
         self.assertEquals(DataRequest.objects.all().count(), 0)
@@ -90,6 +102,18 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Some number")
         self.assertContains(response, "Other thing")
         self.assertContains(response, "Request your data from Organization")
+
+    def test_required_by_is_present_when_supposed(self):
+        response = self.client.get(reverse("data_request:request_data",
+            args=("%d,%d,%d" % (self.organization.id, self.organization2.id, self.organization3.id),)))
+
+        self.assertContains(response, "required-by")
+
+    def test_required_by_is_not_present_when_supposed(self):
+        response = self.client.get(reverse("data_request:request_data",
+            args=(self.organization.id,)))
+
+        self.assertNotContains(response, "Required by:")
 
     def test_data_request_form_with_multiple_organizations_is_correct(self):
         response = self.client.get(
