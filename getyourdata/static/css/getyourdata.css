@@ -128,3 +128,11 @@ img.center {
 .comment-message {
     word-break: break-all;
 }
+
+/* multi-organization rating page */
+
+.errorlist {
+    background: red;
+    color: white;
+    margin-top: 0.5em;
+}

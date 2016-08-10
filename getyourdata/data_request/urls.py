@@ -11,4 +11,7 @@ urlpatterns = [
     url(
         r'^feedback/(?P<org_ids>[\w,]+)$',
         data_request_views.give_feedback, name="give_feedback"),
+    # feedback submit, org_ids passed as POST variable
+    url(r'^feedback/$',
+        data_request_views.submit_feedback, name="submit_feedback"),
 ]
