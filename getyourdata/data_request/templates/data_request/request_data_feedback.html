@@ -1,55 +1,124 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load staticfiles %}
+{% load dynamic_form_helper %}
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div>
-                    {% include "process_bar.html" with process_step=4 %}
-                </div>
                 <div class="page-header">
-                    <h1>{% trans "Thanks!" %}</h1>
+                    {% if form_submitted %}
+                        <h1>{% trans "Thanks!" %}</h1>
+                    {% else %}
+                        <h1>{% trans "Rate organizations" %}</h1>
+                    {% endif %}
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12">
-                <div class="alert alert-success">
-                    <strong>{% trans "Thanks!" %}</strong>
-                    <p>{% blocktrans count counter=organizations|length trimmed %}
-                    You have successfully finished creating and sending a data request!
-                    {% plural %}
-                    You have successfully finished creating and sending your data requests!
-                    {% endblocktrans %}
-                    {% if email_organizations|length > 0 %}{% trans "You should receive a copy of your email requests to your email address shortly." %}{% endif %}</p>
-                    <p>{% blocktrans count counter=organizations|length trimmed %}
-                    When you have received a reply to your data request, please review your process with the organization below. Your feedback will help the other users!
-                    {% plural %}
-                    When you have received a reply to your data request, please review your process with the organizations below. Your feedback will help the other users!
-                    {% endblocktrans %}</p>
-                    <hr>
-                    <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
-                    You can add this page into your bookmarks for later use.
-                    {% endblocktrans %}</b></p>
-                    {% if pdf_data %}
-                    <p>
-                        <a class="btn btn-primary btn-sm" href="data:application/pdf;base64,{{ pdf_data }}"
-                           target="_blank" download="request.pdf">{% trans "Redownload PDF" %}</a>
-                    </p>
-                    {% endif %}
-                </div>
-                <table class="table table-striped">
-                    <tbody>
-                        {% for organization in organizations %}
+
+                {% if form_submitted %}
+
+                    <div class="alert alert-success">
+                        <p>{% blocktrans count counter=organizations|length trimmed %}
+                            You have successfully finished creating and sending a data request!
+                            {% plural %}
+                            You have successfully finished creating and sending your data requests!
+                        {% endblocktrans %}
+                            {% if email_organizations|length > 0 %}
+                                {% trans "You should receive a copy of your email requests to your email address shortly." %}{% endif %}</p>
+                        <p>{% blocktrans count counter=organizations|length trimmed %}
+                            When you have received a reply to your data request, please review your process with the
+                            organization below. Your feedback will help the other users!
+                            {% plural %}
+                            When you have received a reply to your data request, please review your process with the
+                            organizations below. Your feedback will help the other users!
+                        {% endblocktrans %}</p>
+                        <hr>
+                        <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
+                            You can add this page into your bookmarks for later use.
+                        {% endblocktrans %}</b></p>
+                        {% if pdf_data %}
+                            <p>
+                                <a class="btn btn-primary btn-sm" href="data:application/pdf;base64,{{ pdf_data }}"
+                                   target="_blank" download="request.pdf">{% trans "Redownload PDF" %}</a>
+                            </p>
+                        {% endif %}
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success">
+                        <p>{% blocktrans count counter=organizations|length trimmed %}
+                            When you have received a reply to your data request, please review your process with the
+                            organization below. Your feedback will help the other users!
+                            {% plural %}
+                            When you have received a replies to your data requests, please review your process with the
+                            organizations below. Your feedback will help the other users!
+                        {% endblocktrans %}</p>
+
+                    </div>
+
+                {% endif %}
+
+                {% if organizations %}
+
+                    <form role="form" action="{% url 'data_request:submit_feedback' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" id="id_org_ids" name="org_ids" value="{{ org_ids }}"/>
+                        <table class="table table-striped">
+                            <tbody>
+
+                            {% for organization in organizations %}
+                                <tr>
+                                    <td>{{ organization.name }}</td>
+                                    <td>
+                                        <input id="id_rating_{{ organization.id }}" type="number"
+                                               name="rating_{{ organization.id }}" class="rating"
+                                               min=0 max=5 step=1 data-size="xs"
+                                               data-show-caption="false" data-show-clear="false"
+                                               value="{% field_value form=rating_form field="rating" counter=forloop.counter %}"/>
+                                        {% form_errors form=rating_form field="rating" counter=forloop.counter %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <textarea style="resize:none" class="form-control" cols="40"
+                                                  id="id_message_{{ organization.id }}"
+                                                  name="message_{{ organization.id }}"
+                                                  placeholder="{{ rating_form.message.label }}" rows="10"
+                                                  title>{% field_value form=rating_form field="message" counter=forloop.counter %}</textarea>
+                                        {% form_errors form=rating_form field="message" counter=forloop.counter %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
                             <tr>
-                                <td><a href="{% url "organization:view_organization" organization.id %}"><span class="glyphicon glyphicon-star"></span> {{ organization.name }}</a></td>
+                                <td>
+                                    {% bootstrap_form captcha_form %}
+                                    <input class="btn btn-default" type="submit" id="feedback_submit" value="{% trans 'Submit feedback' %}"/>
+                                </td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </form>
+
+                {% endif %}
+
             </div>
         </div>
     </div>
+{% endblock %}
+
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/star-rating.min.css' %}"/>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/star-rating.min.js' %}"></script>
 {% endblock %}
