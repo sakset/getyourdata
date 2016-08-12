@@ -10,7 +10,6 @@ from PyPDF2 import PdfFileMerger
 
 from StringIO import StringIO
 
-
 def convert_html_to_pdf(html_data):
     """
     Converts a HTML document into a formatted PDF
@@ -85,11 +84,18 @@ def send_feedback_message_by_email(
                will be attached
 
     """
+    from data_request.models import FeedbackMessageContent
+
+    feedback_content = FeedbackMessageContent.objects.get_or_create(
+        name="Default"
+    )
+
     org_ids = [str(organization.id) for organization in organizations]
     org_ids = ",".join(org_ids)
 
     email_body = render_to_string(
         "data_request/email_plain/thanks.html", {
+            "feedback_content": feedback_content,
             "organizations": organizations,
             "org_ids": org_ids,
             "request": request,
@@ -98,11 +104,11 @@ def send_feedback_message_by_email(
 
     email_html_body = render_to_string(
         "data_request/email/thanks.html", {
+            "feedback_content": feedback_content,
             "organizations": organizations,
             "org_ids": org_ids,
             "request": request,
-            "send_mail_request_copy": True if pdf_data else None,
-            "render_as_html": True
+            "send_mail_request_copy": True if pdf_data else None
         })
 
     email = EmailMultiAlternatives(

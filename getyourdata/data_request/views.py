@@ -241,7 +241,11 @@ def give_feedback(request, org_ids):
 
     captcha_form = CaptchaForm(request.POST or None)
 
+    form_submitted = False
+
     if form.is_valid() and len(mail_organizations) > 0:
+        form_submitted = True
+
         # Let user redownload the PDF file in case he accidentally cancelled
         # the download during the last step
         pdf_pages = []
@@ -259,16 +263,9 @@ def give_feedback(request, org_ids):
             # Encode the PDF data as base64 to be rendered in the view
             pdf_data = base64.b64encode(pdf_data)
 
-    # We'll only display the thank-yous if the user arrived to the page through
-    # a successfully completed data request form. Otherwise the user is returning to the
-    # page through a direct URL in order to rate the organizations.
-    if request.method == 'POST':
-        form_submitted = True
-    else:
-        form_submitted = False
-
     # the organization rating/comment form
-    rating_form = OrganizationRatingForm(request.POST or None, organizations=organizations)
+    rating_form = OrganizationRatingForm(
+        request.POST or None, organizations=organizations)
 
     return render(request, "data_request/request_data_feedback.html", {
         "org_ids": org_ids,
@@ -283,9 +280,9 @@ def give_feedback(request, org_ids):
 
 def submit_feedback(request):
     """
-    A view method for submitting ratings for several organizations at the same time
+    A view method for submitting ratings for several organizations at the
+    same time
     """
-
     # Only POST requests should end up here.
     if request.method == 'POST':
 

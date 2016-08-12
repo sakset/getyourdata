@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from getyourdata.models import BaseModel
 from data_request.services import convert_html_to_pdf
@@ -23,16 +24,17 @@ class RequestContent(BaseModel):
     footer = models.TextField(blank=True, default="Footer here")
 
 
-class RequestCopyContent(BaseModel):
+class FeedbackMessageContent(BaseModel):
     """
-    The text content of an email message sent when user requests
-    a PDF copy of his mail requests to his email address
+    The text content of an email message sent when user creates any amount
+    of data requests
     """
-    title = models.TextField(default="Default", unique=True)
+    name = models.TextField(default="Default", unique=True)
     header = models.TextField(
-        blank=True, default="Copy of mail requests")
-    content1 = models.TextField(blank=True, default="content first")
-    content2 = models.TextField(blank=True, default="content second")
+        blank=True, default="Thank you for using [SITE NAME HERE]")
+    pdf_copy = models.TextField(
+        blank=True, default="A copy of your PDF has been included.",
+        help_text=_("Included if user requested a copy of his mail request PDF"))
     footer = models.TextField(blank=True, default="Regards,")
 
 
@@ -43,7 +45,6 @@ class AuthenticationContent(BaseModel):
     This is not saved to the database and only exists during the request
     creation process
     """
-    # We don't actually want to save these...
     auth_field = models.ForeignKey(AuthenticationField, related_name="+")
     data_request = models.ForeignKey(
         "data_request.DataRequest", related_name="auth_contents")
@@ -75,10 +76,12 @@ class DataRequest(BaseModel):
         request_content, created = RequestContent.objects.get_or_create(
             title="Default")
         return render_to_string(
-            "data_request/mail/request.html", {"data_request": self,
-                                               "person_name": person_name,
-                                               "request_content": request_content,
-                                               "current_datetime": timezone.now()})
+            "data_request/mail/request.html", {
+                "data_request": self,
+                "person_name": person_name,
+                "request_content": request_content,
+                "current_datetime": timezone.now()
+            })
 
     def to_plain_text(self):
         """
@@ -92,11 +95,12 @@ class DataRequest(BaseModel):
         request_content, created = RequestContent.objects.get_or_create(
             title="Default")
         return render_to_string(
-            "data_request/mail_plain/request.html",
-            {"data_request": self,
-             "person_name": person_name,
-             "request_content": request_content,
-             "current_datetime": timezone.now()})
+            "data_request/mail_plain/request.html", {
+                "data_request": self,
+                "person_name": person_name,
+                "request_content": request_content,
+                "current_datetime": timezone.now()
+            })
 
     def to_email_body(self):
         """
