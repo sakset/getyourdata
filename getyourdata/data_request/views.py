@@ -16,11 +16,9 @@ from getyourdata.forms import CaptchaForm
 
 from data_request.services import concatenate_pdf_pages
 from data_request.services import send_data_requests_by_email
-from data_request.services import send_mail_request_pdf
 from data_request.services import send_feedback_message_by_email
 
 import base64
-
 
 
 def request_data(request, org_ids=None):
@@ -153,6 +151,9 @@ def send_request(request, org_ids):
         if form.is_valid() and captcha_form.is_valid():
             cleaned_data = form.cleaned_data
 
+            send_mail_request_copy = cleaned_data.get(
+                "send_mail_request_copy", None)
+
             pdf_pages = []
             email_requests = []
 
@@ -185,23 +186,12 @@ def send_request(request, org_ids):
 
                 return review_request(request, org_ids, prevent_redirect=True)
 
-            if cleaned_data.get("send_mail_request_copy", None) and \
-                    cleaned_data.get("user_email_address", None):
-                # User wants a copy of mail requests, send them
-                if not send_mail_request_pdf(
-                        cleaned_data.get("user_email_address"),
-                        mail_organizations, pdf_data):
-                    messages.error(
-                        request,
-                        _("A copy of the mail requests couldn't be sent!"))
-                else:
-                    mail_request_copy_sent = True
-
             if cleaned_data.get("user_email_address", None):
                 if not send_feedback_message_by_email(
                         cleaned_data.get("user_email_address"),
                         request,
-                        organizations):
+                        organizations,
+                        pdf_data if send_mail_request_copy else None):
                     messages.error(
                         request,
                         _("A feedback message couldn't be sent!"))

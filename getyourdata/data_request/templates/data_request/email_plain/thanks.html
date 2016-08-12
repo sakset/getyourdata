@@ -1,0 +1,27 @@
+{% load i18n %}
+{% blocktrans %}
+Thank you for using GetYourData.
+{% endblocktrans %}
+
+{% if request_pdf_copy %}
+{% blocktrans %}
+A copy of the mail PDF has been included as an attachment in this email message.
+{% endblocktrans %}
+{% endif %}
+
+{% blocktrans %}
+Once you have received a reply to your data request, please review your experience using the link below. Your feedback will help other users.
+{% endblocktrans %}
+
+{% blocktrans count counter=organizations|length %}
+You created a data request for the following organization:
+{% plural %}
+You created data requests for the following organizations:
+{% endblocktrans %}
+{% for organization in organizations %}
+{% if render_as_html %}
+- {{ organization.name }} (<a href="{% url 'organization:view_organization' organization.id %}">{% trans "Review organization" %}</a>)
+{% else %}
+- {{ organization.name }} (Review orgnization {% url 'organization:view_organization' organization.id %})
+{% endif %}
+{% endfor %}

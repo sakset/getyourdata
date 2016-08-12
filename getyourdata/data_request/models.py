@@ -111,7 +111,7 @@ class DataRequest(BaseModel):
             title="Default")
 
         return render_to_string(
-            "data_request/email/request.html", {
+            "data_request/email_plain/request.html", {
                 "data_request": self,
                 "request_content": request_content,
                 "person_name": person_name
