@@ -2,8 +2,6 @@ from django.test import TestCase
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,6 +10,42 @@ from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
 
 from organization.models import Organization, OrganizationDraft, Comment, AuthenticationField
+
+
+def find_element_by_xpath(self, xpath, click_it=False, wait_time=10):
+    """
+    Finds element using XPATH
+    """
+    element = WebDriverWait(self.selenium, wait_time).until(
+        EC.presence_of_element_located((
+            By.XPATH, xpath))
+    )
+    if click_it:
+        element.click()
+    else:
+        return element
+
+
+def create_simple_organization():
+    """
+    Creates simple organization with default information
+    """
+    return Organization.objects.create(
+        name="Some organization",
+        email_address="valid@address.com",
+        verified=True)
+
+
+def create_comment(user_organization, user_rating=1,
+                   user_message="some message"):
+    """
+    Creates either default comment or custom comment
+    """
+    return Comment.objects.create(
+        organization=user_organization,
+        message=user_message,
+        rating=user_rating
+        )
 
 
 @isDjangoTest()
@@ -128,15 +162,20 @@ class OrganizationCreationTests(TestCase):
         self.assertEquals(Organization.objects.all().count(), 0)
 
 
-def create_organization(test_case):
-    Organization.objects.create(
-        name="The Organization",
-        email_address="valid@address.com",
-        verified=True)
+def is_certain_amount_of_organizations_listed_on_page(self, number_of_listed,
+                                                      page=-1):
+    """
+    Tests if certain amount of organizations are shown in organization list on
+    current page
+    """
+    if page != -1:
+        response = self.client.get(
+            reverse("organization:list_organizations"),
+            {"page": page})
+    else:
+        response = self.client.get(reverse("organization:list_organizations"))
 
-
-def verify_all_organizations():
-    Organization.objects.all().update(verified=True)
+    self.assertContains(response, "Some organization", number_of_listed)
 
 
 @isDjangoTest()
@@ -148,36 +187,22 @@ class OrganizationListingTests(TestCase):
 
     def test_existing_organizations_listed_on_page(self):
         for i in range(0, 5):
-            create_organization(self)
-        verify_all_organizations()
+            create_simple_organization()
 
-        response = self.client.get(reverse("organization:list_organizations"))
-
-        self.assertContains(response, "The Organization", 5)
+        is_certain_amount_of_organizations_listed_on_page(self, 5)
 
     def test_only_15_organizations_are_listed_per_page(self):
         for i in range(0, 20):
-            create_organization(self)
-        verify_all_organizations()
+            create_simple_organization()
 
-        response = self.client.get(reverse("organization:list_organizations"))
-
-        self.assertContains(response, "The Organization", 15)
+        is_certain_amount_of_organizations_listed_on_page(self, 15)
 
     def test_correct_amount_of_organizations_listed_per_page(self):
         for i in range(0, 25):
-            create_organization(self)
-        verify_all_organizations()
+            create_simple_organization()
 
-        response = self.client.get(reverse("organization:list_organizations"))
-
-        self.assertContains(response, "The Organization", 15)
-
-        response = self.client.get(
-            reverse("organization:list_organizations"),
-            {"page": 2})
-
-        self.assertContains(response, "The Organization", 10)
+        is_certain_amount_of_organizations_listed_on_page(self, 15)
+        is_certain_amount_of_organizations_listed_on_page(self, 10, 2)
 
 
 @isDjangoTest()
@@ -323,7 +348,7 @@ class OrganizationUpdateTests(TestCase):
         )
 
         self.assertContains(response,
-            "Authentication fields are required")
+                            "Authentication fields are required")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 
@@ -488,6 +513,19 @@ class OrganizationUpdateAdminTests(TestCase):
 @isSeleniumTest()
 class OrganizationListJavascriptTests(LiveServerTestCase):
     def setUp(self):
+        self.xpaths = ["(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
+                       "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]",
+                       "(//button[@id='create-request' and contains(@onclick, 'orgList')])",
+                       "(//a[@id='page-1' and contains(@onclick, 'orgList')])",
+                       "(//a[@id='page-2' and contains(@onclick, 'orgList')])",
+                       "(//a[@id='page-3' and contains(@onclick, 'orgList')])",
+                       "(//a[@id='page-1' and @onclick='' and text()='1'])",
+                       "(//a[@id='page-2' and @onclick='' and text()='2'])",
+                       "(//a[@id='page-3' and @onclick='' and text()='3'])",
+                       ]
+
+        self.click_it = True
+
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
             title='Some number')
@@ -506,161 +544,73 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
 
             organization.authentication_fields.add(self.auth_field1)
 
-    def test_cant_create_request_with_no_selected_organizations(self):
         self.selenium.get(
             "%s%s" % (self.live_server_url,
                       reverse("organization:list_organizations")))
 
+    def test_cant_create_request_with_no_selected_organizations(self):
         self.assertEquals(
             self.selenium.find_element_by_id("create-request").is_enabled(),
             False)
-
         self.assertIn("0 organizations selected", self.selenium.page_source)
 
     def test_select_single_organization_for_request(self):
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
-
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH, "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
-        ).click()
+        find_element_by_xpath(self, self.xpaths[0], self.click_it)
 
         self.assertIn("1 organization selected", self.selenium.page_source)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//button[@id='create-request' and contains(@onclick, 'orgList')])"))
-        ).click()
+        find_element_by_xpath(self, self.xpaths[2], self.click_it)
 
         self.assertIn(
             "Fill in your details", self.selenium.page_source)
 
     def test_select_multiple_organizations_for_request(self):
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
-
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
-        ).click()
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
-        ).click()
+        find_element_by_xpath(self, self.xpaths[0], self.click_it)
+        find_element_by_xpath(self, self.xpaths[1], self.click_it)
 
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//button[@id='create-request' and contains(@onclick, 'orgList')])"))
-        ).click()
+        find_element_by_xpath(self, self.xpaths[2], self.click_it)
 
         self.assertIn(
             "Fill in your details",
             self.selenium.page_source)
 
     def test_can_change_page_to_display_different_organizations(self):
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
+        find_element_by_xpath(self, self.xpaths[4], self.click_it)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
-        ).click()
-
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-2' and @onclick='' and text()='2'])"))
-        )
+        find_element_by_xpath(self, self.xpaths[7])
 
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-1' and contains(@onclick, 'orgList')])"))
-        ).click()
+        find_element_by_xpath(self, self.xpaths[3], self.click_it)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-1' and @onclick='' and text()='1'])"))
-        )
+        find_element_by_xpath(self, self.xpaths[6])
 
         self.assertIn("Organization 0", self.selenium.page_source)
         self.assertNotIn("Organization 15", self.selenium.page_source)
 
     def test_user_can_select_multiple_organizations_from_different_pages(self):
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
+        find_element_by_xpath(self, self.xpaths[0], self.click_it)
+        find_element_by_xpath(self, self.xpaths[1], self.click_it)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
-        ).click()
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
-        ).click()
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
+        find_element_by_xpath(self, self.xpaths[4], self.click_it)
+        find_element_by_xpath(self, self.xpaths[7])
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-2' and contains(@onclick, 'orgList')])"))
-        ).click()
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-2' and @onclick='' and text()='2'])"))
-        )
+        find_element_by_xpath(self, self.xpaths[0], self.click_it)
+        find_element_by_xpath(self, self.xpaths[1], self.click_it)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
-        ).click()
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
-        ).click()
         self.assertIn("4 organizations selected", self.selenium.page_source)
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-3' and contains(@onclick, 'orgList')])"))
-        ).click()
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                "(//a[@id='page-3' and @onclick='' and text()='3'])"))
-        )
+        find_element_by_xpath(self, self.xpaths[5], self.click_it)
+        find_element_by_xpath(self, self.xpaths[8])
 
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH, "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]"))
-        ).click()
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((
-                By.XPATH, "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]"))
-        ).click()
+        find_element_by_xpath(self, self.xpaths[0], self.click_it)
+        find_element_by_xpath(self, self.xpaths[1], self.click_it)
+
         self.assertIn("6 organizations selected", self.selenium.page_source)
 
 
@@ -668,19 +618,11 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
 class CommentCreationTests(TestCase):
 
     def setUp(self):
-        self.organization = Organization.objects.create(
-            name="The Organization",
-            address_line_one="Fake Street 4",
-            postal_code="00234",
-            country="Finland",
-            verified=True)
+        self.organization = create_simple_organization()
 
     def test_comment_can_be_created(self):
-        Comment.objects.create(
-            organization=self.organization,
-            message='Test message',
-            rating=1
-        )
+        create_comment(self.organization, 1, 'Test message')
+
         self.assertEquals(self.organization.comments.all().count(), 1)
 
     def test_user_can_create_a_comment(self):
@@ -698,25 +640,12 @@ class CommentCreationTests(TestCase):
     def test_organization_rating_average(self):
         self.assertEquals(self.organization.average_rating, '0')
 
-        Comment.objects.create(
-            organization=self.organization,
-            message='Test message',
-            rating=1
-        )
-
-        Comment.objects.create(
-            organization=self.organization,
-            message='Test message2',
-            rating=3
-        )
+        create_comment(self.organization, 1, 'Test message')
+        create_comment(self.organization, 3, 'Test message2')
 
         self.assertEquals(self.organization.average_rating, '2.0')
 
-        Comment.objects.create(
-            organization=self.organization,
-            message='Test message3',
-            rating=1
-        )
+        create_comment(self.organization, 1, 'Test message3')
 
         self.assertEquals(self.organization.average_rating, '1.7')
 
@@ -731,6 +660,24 @@ def pagination_can_be_seen(self):
         return False
 
 
+def is_pagination_shown_in_organization_list(self, number_of_organizations,
+                                             should_be):
+    """
+    Tests if pagination can be seen with certain amount of organizations in
+    organizations list
+    """
+    for i in range(0, number_of_organizations):
+        self.organization = create_simple_organization()
+
+        self.organization.authentication_fields.add(self.auth_field1)
+
+    self.selenium.get(
+        "%s%s" % (self.live_server_url,
+                  reverse("organization:list_organizations")))
+
+    self.assertEquals(pagination_can_be_seen(self), should_be)
+
+
 @isSeleniumTest()
 class OrganizationListPaginationShownTests(LiveServerTestCase):
     def setUp(self):
@@ -739,65 +686,36 @@ class OrganizationListPaginationShownTests(LiveServerTestCase):
             title='Some number')
 
     def test_pagination_isnt_shown_when_there_are_no_organization(self):
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
-
-        self.assertEquals(pagination_can_be_seen(self), False)
+        is_pagination_shown_in_organization_list(self, 0, False)
 
     def test_pagination_isnt_shown_when_there_are_only_few_organization(self):
-        for i in range(1, 7):
-            self.organization = Organization.objects.create(
-                name='Organization %d' % i,
-                email_address='fake@address.com',
-                address_line_one='Address one',
-                address_line_two='Address two',
-                postal_code='00000',
-                country='Finland',
-                verified=True
-                )
-
-            self.organization.authentication_fields.add(self.auth_field1)
-
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
-
-        self.assertEquals(pagination_can_be_seen(self), False)
+        is_pagination_shown_in_organization_list(self, 7, False)
 
     def test_pagination_is_shown_when_there_are_many_organization(self):
-        for i in range(1, 45):
-            self.organization = Organization.objects.create(
-                name='Organization %d' % i,
-                email_address='fake@address.com',
-                address_line_one='Address one',
-                address_line_two='Address two',
-                postal_code='00000',
-                country='Finland',
-                verified=True
-                )
+        is_pagination_shown_in_organization_list(self, 32, True)
 
-            self.organization.authentication_fields.add(self.auth_field1)
+
+def is_pagination_shown_in_view_organization(self, number_of_comments,
+                                             should_be):
+        """
+        Tests if pagination can be seen with certain amount of comments in
+        organization view
+        """
+        for i in range(0, number_of_comments):
+            create_comment(self.organization)
 
         self.selenium.get(
             "%s%s" % (self.live_server_url,
-                      reverse("organization:list_organizations")))
+                      reverse("organization:view_organization",
+                              args=(self.organization.id,))))
 
-        self.assertEquals(pagination_can_be_seen(self), True)
+        self.assertEquals(pagination_can_be_seen(self), should_be)
 
 
 @isSeleniumTest()
 class OrganizationViewPaginationShownTests(LiveServerTestCase):
     def setUp(self):
-        self.organization = Organization.objects.create(
-            name='Organization',
-            email_address='fake@address.com',
-            address_line_one='Address one',
-            address_line_two='Address two',
-            postal_code='00000',
-            country='Finland',
-            verified=True
-            )
+        self.organization = create_simple_organization()
 
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
@@ -806,36 +724,10 @@ class OrganizationViewPaginationShownTests(LiveServerTestCase):
         self.organization.authentication_fields.add(self.auth_field1)
 
     def test_pagination_isnt_shown_when_there_are_no_comments(self):
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:view_organization", args=(self.organization.id,))))
-
-        self.assertEquals(pagination_can_be_seen(self), False)
+        is_pagination_shown_in_view_organization(self, 0, False)
 
     def test_pagination_isnt_shown_when_there_are_only_few_comments(self):
-        for i in range(1, 7):
-            Comment.objects.create(
-                organization=self.organization,
-                message='Test message',
-                rating=1
-            )
-
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:view_organization", args=(self.organization.id,))))
-
-        self.assertEquals(pagination_can_be_seen(self), False)
+        is_pagination_shown_in_view_organization(self, 7, False)
 
     def test_pagination_is_shown_when_there_are_many_comments(self):
-        for i in range(1, 20):
-            Comment.objects.create(
-                organization=self.organization,
-                message='Test message',
-                rating=1
-            )
-
-        self.selenium.get(
-            "%s%s" % (self.live_server_url,
-                      reverse("organization:view_organization", args=(self.organization.id,))))
-
-        self.assertEquals(pagination_can_be_seen(self), True)
+        is_pagination_shown_in_view_organization(self, 20, True)
