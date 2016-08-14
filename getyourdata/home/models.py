@@ -42,3 +42,13 @@ class HomePage(BaseModel):
 
     def __unicode__(self):
         return self.admin_name
+
+
+class FaqContent(BaseModel):
+    title = models.CharField(
+        max_length=75,
+        default="")
+
+    priority = models.IntegerField(default=777)
+
+    content = tinymce_models.HTMLField(blank=True, default='')

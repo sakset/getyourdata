@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container">
-
     <div class="row">
         <div class="col-md-12">
             <div>
@@ -12,19 +11,14 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
                 {% csrf_token %}
-                <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
+                <input type="hidden" name="org_ids" value="{{ org_ids }}" />
                 <div class="form-group">
                     <label class="control-label" for="select-email">
-                        {% blocktrans count counter=data_requests|length trimmed %}
-                        Please review the following message
-                        {% plural %}
-                        Please review the following messages
-                        {% endblocktrans %}
+                        {% blocktrans count counter=data_requests|length trimmed %} Please review the following message {% plural %} Please review the following messages {% endblocktrans %}
                     </label>
                     {% if data_requests|length > 1 %}
                     <select class="form-control" id="select-email" onchange="displaySelectedText()">
@@ -35,18 +29,14 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-
                     {% for data_request in data_requests %}
                     <div id="message-body-{{ forloop.counter0 }}">
-
-                        <pre>{% if data_request.organization.accepts_email %}{{ data_request.to_email_body }}{% else %}{{ data_request.to_plain_text }}{% endif %}</pre>
+                        <pre>{% if data_request.organization.accepts_email %}{{ data_request.to_email_body }}{% else %}{{ data_request.to_text }}{% endif %}</pre>
                     </div>
                     {% endfor %}
                 </div>
-                {% bootstrap_form form %}
-                {% if captcha_form %}{% bootstrap_form captcha_form %}{% endif %}
-                <input class="btn btn-success" id="create_request" name="send" type="submit"
-                    value="{% if email_organizations and mail_organizations %}
+                {% bootstrap_form form %} {% if captcha_form %}{% bootstrap_form captcha_form %}{% endif %}
+                <input class="btn btn-success" id="create_request" name="send" type="submit" value="{% if email_organizations and mail_organizations %}
                             {% trans 'Send and create requests' %}
                            {% elif email_organizations %}
                             {% blocktrans count counter=data_requests|length trimmed %}
@@ -56,24 +46,24 @@
                             {% endblocktrans %}
                            {% elif mail_organizations %}
                             {% trans 'Create request PDF' %}
-                           {% endif %}"/>
+                           {% endif %}" />
 
-                   <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
-                        Put the "Back" button here as the second button, but move it to the first position using pull-left -->
-                   <input class="btn btn-primary first-button" type="submit" name="create" value="{% trans 'Back' %}">
+                <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
+                    Put the "Back" button here as the second button, but move it to the first position using pull-left -->
+                <input class="btn btn-primary first-button" type="submit" name="create" value="{% trans 'Back' %}">
             </form>
         </div>
         <div class="col-md-4">
             <div class="alert alert-info">
                 {% if email_organizations %}
-                <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
+                <strong>{% trans "Following organizations will receive request by email" %}</strong>
+                <br>
                 <ul>
                     {% for organization in email_organizations %}
                     <li>{{ organization.name }}</li>
                     {% endfor %}
                 </ul>
-                {% endif %}
-                {% if mail_organizations %}
+                {% endif %} {% if mail_organizations %}
                 <strong>{% trans "Requests for the following organizations will have to be sent via mail" %}</strong>
                 <br>
                 <ul>
@@ -90,15 +80,15 @@
 
 {% block script %}
 <script>
-window.addEventListener("load", function(evt) {
-    $("[id^=message-body]").hide();
-    $("#message-body-0").show();
-});
+    window.addEventListener("load", function(evt) {
+        $("[id^=message-body]").hide();
+        $("#message-body-0").show();
+    });
 
-function displaySelectedText() {
-    $("[id^=message-body]").hide();
-    var id = $("#select-email").val();
-    $("#message-body-" + id).show();
-};
+    function displaySelectedText() {
+        $("[id^=message-body]").hide();
+        var id = $("#select-email").val();
+        $("#message-body-" + id).show();
+    };
 </script>
 {% endblock %}

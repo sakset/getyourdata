@@ -1,0 +1,17 @@
+{% load i18n %}
+{{ feedback_content.header }}
+
+{% if send_mail_request_copy %}
+{{ feedback_content.pdf_copy }}
+{% endif %}
+
+{% blocktrans count counter=organizations|length %}
+You created a data request for the following organization:
+{% plural %}
+You created data requests for the following organizations:
+{% endblocktrans %}
+{% for organization in organizations %}
+- {{ organization.name }} ({% trans "Review organization" %} https://{{ request.get_host }}{% url 'organization:view_organization' organization.id %} )
+{% endfor %}
+
+{{ feedback_content.footer }}

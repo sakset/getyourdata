@@ -307,7 +307,7 @@ class OrganizationUpdateTests(TestCase):
                  "authentication_fields": []})
 
         self.assertContains(response,
-            "Authentication Fields are required")
+            "Authentication fields are required")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 

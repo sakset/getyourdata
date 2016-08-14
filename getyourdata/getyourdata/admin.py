@@ -10,12 +10,13 @@ from tinymce.widgets import AdminTinyMCE
 
 admin.site.unregister(FlatPage)
 
+
 @admin.register(FlatPage)
 class FlatPageAdmin(TranslationAdmin):
-
     form = FlatpageForm
     fieldsets = (
-        (None, {'fields': (
+        (None,
+        {'fields': (
             'url',
             'title',
             'content',

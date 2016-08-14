@@ -28,7 +28,7 @@ urlpatterns = i18n_patterns(
     url(r'^feedback/', include('feedback.urls', namespace="feedback")),
     url(r'^request/', include(
         'data_request.urls', namespace="data_request")),
-    url(r'^faq/', data_request_views.faq, name='faq'),
+    url(r'^faq/', home_views.faq, name='faq'),
     url(r'^(?P<url>.*/)$', flatpage_views.flatpage),
 
 )

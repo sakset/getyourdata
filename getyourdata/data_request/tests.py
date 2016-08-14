@@ -7,7 +7,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
 
-from data_request.models import DataRequest, AuthenticationContent, FaqContent
+from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
 
 
@@ -197,8 +197,8 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, "A copy of the PDF")
 
-        # User receives a copy of the PDF and a feedback message
-        self.assertEquals(len(mail.outbox), 2)
+        # User receives a copy of the PDF and a feedback message in one message
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_mail_request_copy_can_be_sent_successfully_with_email_requests(self):
         mail_organization = create_mail_organization(self)
@@ -426,49 +426,6 @@ class AuthenticationAttributeValidationTests(TestCase):
 
 
 @isSeleniumTest()
-class FaqsValidationTests(LiveServerTestCase):
-    def setUp(self):
-        self.data_requests = FaqContent.objects.create(
-            title='testtitle',
-            content='testcontent',
-            priority='1',
-        )
-        self.data_requests = FaqContent.objects.create(
-            title='othertitle',
-            content='longer content with spaces',
-            priority='10',
-        )
-
-        self.data_requests = FaqContent.objects.create(
-            title='somethingelse',
-            content='last, but not least',
-            priority='5',
-        )
-
-    def test_selenium_faqs_can_be_seen_in_faq_view(self):
-        self.selenium.get("%s%s" % (self.live_server_url,
-                                    reverse("faq")))
-
-        self.assertIn("testtitle", self.selenium.page_source)
-        self.assertIn("testcontent", self.selenium.page_source)
-        self.assertIn("othertitle", self.selenium.page_source)
-        self.assertIn("longer content with spaces", self.selenium.page_source)
-        self.assertIn("somethingelse", self.selenium.page_source)
-        self.assertIn("last, but not least", self.selenium.page_source)
-
-    def test_selenium_faqs_order_can_be_prioritized(self):
-        self.selenium.get("%s%s" % (self.live_server_url,
-                                    reverse("faq")))
-
-        accordion = self.selenium.find_element_by_id("accordion")
-        faqs = accordion.find_elements_by_class_name("panel-title")
-
-        self.assertIn("testtitle", faqs[0].text)
-        self.assertIn("othertitle", faqs[2].text)
-        self.assertIn("somethingelse", faqs[1].text)
-
-
-@isSeleniumTest()
 class ProcessBarNavigationTests(LiveServerTestCase):
     def setUp(self):
         self.organization = Organization.objects.create(
@@ -583,7 +540,11 @@ class OrganizationRatingTests(TestCase):
         self.organization_two.authentication_fields.add(self.auth_field)
         self.organization_three.authentication_fields.add(self.auth_field)
 
-        self.organizations = [self.organization_one, self.organization_two, self.organization_three]
+        self.organizations = [
+            self.organization_one,
+            self.organization_two,
+            self.organization_three
+        ]
 
         # a few help-variables to make code inside the methods more readable
         org_ids = [str(organization.id) for organization in self.organizations]
@@ -591,7 +552,6 @@ class OrganizationRatingTests(TestCase):
         self.org_id_one = str(self.organization_one.id)
         self.org_id_two = str(self.organization_two.id)
         self.org_id_three = str(self.organization_three.id)
-
 
     def test_user_can_rate_organizations(self):
         response = self.client.post(
@@ -607,7 +567,6 @@ class OrganizationRatingTests(TestCase):
             follow=True)
         self.assertContains(response, "Thank you for your contribution!")
 
-
     def test_no_missing_message_allowed(self):
         response = self.client.post(
             reverse("data_request:submit_feedback"),
@@ -620,7 +579,6 @@ class OrganizationRatingTests(TestCase):
              "g-recaptcha-response": "PASSED"},
             follow=True)
         self.assertContains(response, "Some of the fields were invalid or missing")
-
 
     def test_no_empty_message_allowed(self):
         response = self.client.post(

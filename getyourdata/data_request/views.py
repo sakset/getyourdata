@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
 from data_request.forms import OrganizationRatingForm
-from data_request.models import DataRequest, AuthenticationContent, FaqContent
+from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, Comment
 
 from getyourdata import util
@@ -16,11 +16,9 @@ from getyourdata.forms import CaptchaForm
 
 from data_request.services import concatenate_pdf_pages
 from data_request.services import send_data_requests_by_email
-from data_request.services import send_mail_request_pdf
 from data_request.services import send_feedback_message_by_email
 
 import base64
-
 
 
 def request_data(request, org_ids=None):
@@ -153,6 +151,9 @@ def send_request(request, org_ids):
         if form.is_valid() and captcha_form.is_valid():
             cleaned_data = form.cleaned_data
 
+            send_mail_request_copy = cleaned_data.get(
+                "send_mail_request_copy", None)
+
             pdf_pages = []
             email_requests = []
 
@@ -185,26 +186,17 @@ def send_request(request, org_ids):
 
                 return review_request(request, org_ids, prevent_redirect=True)
 
-            if cleaned_data.get("send_mail_request_copy", None) and \
-                    cleaned_data.get("user_email_address", None):
-                # User wants a copy of mail requests, send them
-                if not send_mail_request_pdf(
-                        cleaned_data.get("user_email_address"),
-                        mail_organizations, pdf_data):
-                    messages.error(
-                        request,
-                        _("A copy of the mail requests couldn't be sent!"))
-                else:
-                    mail_request_copy_sent = True
-
             if cleaned_data.get("user_email_address", None):
                 if not send_feedback_message_by_email(
                         cleaned_data.get("user_email_address"),
                         request,
-                        organizations):
+                        organizations,
+                        pdf_data if send_mail_request_copy else None):
                     messages.error(
                         request,
                         _("A feedback message couldn't be sent!"))
+                else:
+                    mail_request_copy_sent = send_mail_request_copy
 
             if pdf_data:
                 # Encode the PDF data as base64 to be rendered in the view
@@ -251,6 +243,8 @@ def give_feedback(request, org_ids):
 
     captcha_form = CaptchaForm(request.POST or None)
 
+    form_submitted = form.is_valid()
+
     if form.is_valid() and len(mail_organizations) > 0:
         # Let user redownload the PDF file in case he accidentally cancelled
         # the download during the last step
@@ -269,16 +263,9 @@ def give_feedback(request, org_ids):
             # Encode the PDF data as base64 to be rendered in the view
             pdf_data = base64.b64encode(pdf_data)
 
-    # We'll only display the thank-yous if the user arrived to the page through
-    # a successfully completed data request form. Otherwise the user is returning to the
-    # page through a direct URL in order to rate the organizations.
-    if request.method == 'POST':
-        form_submitted = True
-    else:
-        form_submitted = False
-
     # the organization rating/comment form
-    rating_form = OrganizationRatingForm(request.POST or None, organizations=organizations)
+    rating_form = OrganizationRatingForm(
+        request.POST or None, organizations=organizations)
 
     return render(request, "data_request/request_data_feedback.html", {
         "org_ids": org_ids,
@@ -293,12 +280,11 @@ def give_feedback(request, org_ids):
 
 def submit_feedback(request):
     """
-    A view method for submitting ratings for several organizations at the same time
+    A view method for submitting ratings for several organizations at the
+    same time
     """
-
     # Only POST requests should end up here.
     if request.method == 'POST':
-
         # Organizations passed as POST vars
         org_ids = request.POST.get("org_ids", None)
 
@@ -306,7 +292,8 @@ def submit_feedback(request):
          mail_organizations) = get_organization_tuple(org_ids)
 
         # The organization rating/comment form initialization
-        rating_form = OrganizationRatingForm(request.POST, organizations=organizations)
+        rating_form = OrganizationRatingForm(
+            request.POST, organizations=organizations)
         captcha_form = CaptchaForm(request.POST or None)
 
         # If the input is valid, we'll loop through the individual organizations and
@@ -323,10 +310,13 @@ def submit_feedback(request):
                 comment.message = message
                 comment.save()
 
-            messages.success(request, _('Thank you for your contribution! Your feedback will help the other users '
-                                        'and the organizations.'))
+            messages.success(request,
+                _('Thank you for your contribution! Your feedback will help '
+                  'the other users and the organizations.'))
         else:
-            messages.error(request, _('Some of the fields were invalid or missing, please review.'))
+            messages.error(request,
+                _('Some of the fields were invalid or missing, please review.'))
+
             return render(request, "data_request/request_data_feedback.html", {
                 "org_ids": org_ids,
                 "email_organizations": email_organizations,
@@ -456,8 +446,3 @@ def get_data_request(organization, form):
     AuthenticationContent.objects.bulk_create(auth_contents)
 
     return data_request
-
-
-def faq(request):
-    faqs = FaqContent.objects.order_by("priority")
-    return render(request, 'data_request/faq/faq.html', {"faqs": faqs})
