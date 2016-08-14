@@ -38,30 +38,6 @@ class NewOrganizationForm(forms.ModelForm):
             help_text=_("What authentication fields this organizations requires"))
 
 
-def form_has_changes(new_organization_raw, organization, new_authentication_fields):
-    """
-    Checks if certain form's fields have been changed
-    """
-    if not new_organization_raw.get("authentication_fields"):
-        raise forms.ValidationError("Authentication Fields are required")
-    del new_organization_raw["authentication_fields"]
-    new_organization = Organization(**new_organization_raw)
-    new_authentication_fields = [int(field) for field in new_authentication_fields]
-    new_authentication_fields.sort()
-
-    new_organization = model_to_dict(new_organization)
-    organization = model_to_dict(organization)
-
-    del new_organization["id"]
-    del organization["id"]
-    del new_organization["verified"]
-    del organization["verified"]
-
-    new_organization["authentication_fields"] = new_authentication_fields
-
-    return new_organization != organization
-
-
 class EditOrganizationForm(forms.ModelForm):
     """
     A form to edit an existing organization and to save it as a draft
@@ -99,10 +75,57 @@ class EditOrganizationForm(forms.ModelForm):
             label=_("Authentication fields"),
             help_text=_("What authentication fields this organizations requires"))
 
+    def form_has_changes(self, new_authentication_fields):
+        """
+        Checks if certain form's fields have been changed
+
+        :new_authentication_fields: A list of authentication field IDs from
+                                    Form.cleaned_data
+                                    Will be modified by this method as it is
+                                    checked
+        """
+        new_organization_raw = self.cleaned_data
+
+        if not new_organization_raw.get("authentication_fields"):
+            raise forms.ValidationError("Authentication fields are required")
+
+        del new_organization_raw["authentication_fields"]
+        new_organization = Organization(**new_organization_raw)
+
+        new_authentication_fields = self.normalize_authentication_fields(
+            new_authentication_fields)
+
+        new_organization = model_to_dict(new_organization)
+        organization = model_to_dict(self.organization)
+
+        del new_organization["id"]
+        del organization["id"]
+        del new_organization["verified"]
+        del organization["verified"]
+
+        new_organization["authentication_fields"] = new_authentication_fields
+
+        return new_organization != organization
+
+    def normalize_authentication_fields(self, authentication_fields):
+        """
+        Convert a list of IDs into integers and sort them so that they are
+        identical to what would be in a Organization instance
+
+        :authentication_fields: A list of authentication field IDs from a
+                                Form.cleaned_data
+        """
+        authentication_fields = [int(field) for field in authentication_fields]
+        authentication_fields.sort()
+
+        return authentication_fields
+
     def clean(self):
-        new_authentication_fields = self.cleaned_data.get("authentication_fields")
-        if form_has_changes(self.cleaned_data, self.organization, new_authentication_fields):
-            self.cleaned_data["authentication_fields"] = new_authentication_fields
+        new_authentication_fields = self.cleaned_data.get(
+            "authentication_fields")
+        if self.form_has_changes(new_authentication_fields):
+            self.cleaned_data["authentication_fields"] = self.normalize_authentication_fields(
+                new_authentication_fields)
             return self.cleaned_data
         else:
             raise forms.ValidationError(

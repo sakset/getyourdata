@@ -20,9 +20,7 @@
 
         <div class="row">
             <div class="col-md-12">
-
                 {% if form_submitted %}
-
                     <div class="alert alert-success">
                         <p>{% blocktrans count counter=organizations|length trimmed %}
                             You have successfully finished creating and sending a data request!
@@ -44,14 +42,14 @@
                         {% endblocktrans %}</b></p>
                         {% if pdf_data %}
                             <p>
-                                <a class="btn btn-primary btn-sm" href="data:application/pdf;base64,{{ pdf_data }}"
-                                   target="_blank" download="request.pdf">{% trans "Redownload PDF" %}</a>
+                                <b>
+                                    <a class="btn btn-default" href="data:application/pdf;base64,{{ pdf_data }}"
+                                       target="_blank" download="request.pdf">{% trans "If PDF wasn't downloaded automatically, click here to download it" %}</a>
+                                </b>
                             </p>
                         {% endif %}
                     </div>
-
                 {% else %}
-
                     <div class="alert alert-success">
                         <p>{% blocktrans count counter=organizations|length trimmed %}
                             When you have received a reply to your data request, please review your process with the
@@ -62,17 +60,14 @@
                         {% endblocktrans %}</p>
 
                     </div>
-
                 {% endif %}
 
                 {% if organizations %}
-
                     <form role="form" action="{% url 'data_request:submit_feedback' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" id="id_org_ids" name="org_ids" value="{{ org_ids }}"/>
                         <table class="table table-striped">
                             <tbody>
-
                             {% for organization in organizations %}
                                 <tr>
                                     <td>{{ organization.name }}</td>
@@ -96,7 +91,6 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-
                             <tr>
                                 <td>
                                     {% bootstrap_form captcha_form %}
@@ -106,9 +100,7 @@
                             </tbody>
                         </table>
                     </form>
-
                 {% endif %}
-
             </div>
         </div>
     </div>

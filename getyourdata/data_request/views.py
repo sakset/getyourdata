@@ -195,6 +195,8 @@ def send_request(request, org_ids):
                     messages.error(
                         request,
                         _("A feedback message couldn't be sent!"))
+                else:
+                    mail_request_copy_sent = send_mail_request_copy
 
             if pdf_data:
                 # Encode the PDF data as base64 to be rendered in the view
@@ -241,11 +243,9 @@ def give_feedback(request, org_ids):
 
     captcha_form = CaptchaForm(request.POST or None)
 
-    form_submitted = False
+    form_submitted = form.is_valid()
 
     if form.is_valid() and len(mail_organizations) > 0:
-        form_submitted = True
-
         # Let user redownload the PDF file in case he accidentally cancelled
         # the download during the last step
         pdf_pages = []

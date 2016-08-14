@@ -197,8 +197,8 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, "A copy of the PDF")
 
-        # User receives a copy of the PDF and a feedback message
-        self.assertEquals(len(mail.outbox), 2)
+        # User receives a copy of the PDF and a feedback message in one message
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_mail_request_copy_can_be_sent_successfully_with_email_requests(self):
         mail_organization = create_mail_organization(self)
@@ -583,7 +583,11 @@ class OrganizationRatingTests(TestCase):
         self.organization_two.authentication_fields.add(self.auth_field)
         self.organization_three.authentication_fields.add(self.auth_field)
 
-        self.organizations = [self.organization_one, self.organization_two, self.organization_three]
+        self.organizations = [
+            self.organization_one,
+            self.organization_two,
+            self.organization_three
+        ]
 
         # a few help-variables to make code inside the methods more readable
         org_ids = [str(organization.id) for organization in self.organizations]
@@ -591,7 +595,6 @@ class OrganizationRatingTests(TestCase):
         self.org_id_one = str(self.organization_one.id)
         self.org_id_two = str(self.organization_two.id)
         self.org_id_three = str(self.organization_three.id)
-
 
     def test_user_can_rate_organizations(self):
         response = self.client.post(
@@ -607,7 +610,6 @@ class OrganizationRatingTests(TestCase):
             follow=True)
         self.assertContains(response, "Thank you for your contribution!")
 
-
     def test_no_missing_message_allowed(self):
         response = self.client.post(
             reverse("data_request:submit_feedback"),
@@ -620,7 +622,6 @@ class OrganizationRatingTests(TestCase):
              "g-recaptcha-response": "PASSED"},
             follow=True)
         self.assertContains(response, "Some of the fields were invalid or missing")
-
 
     def test_no_empty_message_allowed(self):
         response = self.client.post(
