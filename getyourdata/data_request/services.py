@@ -86,7 +86,7 @@ def send_feedback_message_by_email(
     """
     from data_request.models import FeedbackMessageContent
 
-    feedback_content = FeedbackMessageContent.objects.get_or_create(
+    feedback_content, created = FeedbackMessageContent.objects.get_or_create(
         name="Default"
     )
 
