@@ -64,9 +64,12 @@ class DataRequest(BaseModel):
     organization = models.ForeignKey(
         Organization, related_name="data_requests")
 
-    def to_html(self):
+    def to_text(self, html=False):
         """
         Return data request as a HTML-formatted document
+
+        :html: If True, return a HTML-formatted document,
+               otherwise return the content in plain-text
         """
         try:
             person_name = self.auth_contents.get(auth_field__name="name")
@@ -75,27 +78,14 @@ class DataRequest(BaseModel):
 
         request_content, created = RequestContent.objects.get_or_create(
             title="Default")
-        return render_to_string(
-            "data_request/mail/request.html", {
-                "data_request": self,
-                "person_name": person_name,
-                "request_content": request_content,
-                "current_datetime": timezone.now()
-            })
 
-    def to_plain_text(self):
-        """
-        Return data request as plain text that would be used in the PDF document
-        """
-        try:
-            person_name = self.auth_contents.get(auth_field__name="name")
-        except:
-            person_name = None
+        if html:
+            template = "data_request/mail/request.html"
+        else:
+            template = "data_request/mail_plain/request.html"
 
-        request_content, created = RequestContent.objects.get_or_create(
-            title="Default")
         return render_to_string(
-            "data_request/mail_plain/request.html", {
+            template, {
                 "data_request": self,
                 "person_name": person_name,
                 "request_content": request_content,
@@ -126,7 +116,7 @@ class DataRequest(BaseModel):
         """
         Return data request as a PDF-formatted document
         """
-        return convert_html_to_pdf(self.to_html())
+        return convert_html_to_pdf(self.to_text(html=True))
 
     def __unicode__(self):
         return "Data request for " + self.organization.name

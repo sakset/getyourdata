@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 
+from data_request.models import FaqContent
+
 from home.models import HomePage
 
 
@@ -17,3 +19,11 @@ def home(request):
     return render(request, 'home/home.html', {
         'content': page.content,
     })
+
+
+def faq(request):
+    """
+    Show the FAQ page
+    """
+    faqs = FaqContent.objects.order_by("priority")
+    return render(request, 'home/faq/faq.html', {"faqs": faqs})

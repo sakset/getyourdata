@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
 from data_request.forms import OrganizationRatingForm
-from data_request.models import DataRequest, AuthenticationContent, FaqContent
+from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, Comment
 
 from getyourdata import util
@@ -443,8 +443,3 @@ def get_data_request(organization, form):
     AuthenticationContent.objects.bulk_create(auth_contents)
 
     return data_request
-
-
-def faq(request):
-    faqs = FaqContent.objects.order_by("priority")
-    return render(request, 'data_request/faq/faq.html', {"faqs": faqs})
