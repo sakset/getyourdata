@@ -285,7 +285,6 @@ def submit_feedback(request):
     """
     # Only POST requests should end up here.
     if request.method == 'POST':
-
         # Organizations passed as POST vars
         org_ids = request.POST.get("org_ids", None)
 
@@ -293,7 +292,8 @@ def submit_feedback(request):
          mail_organizations) = get_organization_tuple(org_ids)
 
         # The organization rating/comment form initialization
-        rating_form = OrganizationRatingForm(request.POST, organizations=organizations)
+        rating_form = OrganizationRatingForm(
+            request.POST, organizations=organizations)
         captcha_form = CaptchaForm(request.POST or None)
 
         # If the input is valid, we'll loop through the individual organizations and
@@ -310,10 +310,13 @@ def submit_feedback(request):
                 comment.message = message
                 comment.save()
 
-            messages.success(request, _('Thank you for your contribution! Your feedback will help the other users '
-                                        'and the organizations.'))
+            messages.success(request,
+                _('Thank you for your contribution! Your feedback will help '
+                  'the other users and the organizations.'))
         else:
-            messages.error(request, _('Some of the fields were invalid or missing, please review.'))
+            messages.error(request,
+                _('Some of the fields were invalid or missing, please review.'))
+
             return render(request, "data_request/request_data_feedback.html", {
                 "org_ids": org_ids,
                 "email_organizations": email_organizations,

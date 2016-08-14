@@ -2,9 +2,7 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 
-from data_request.models import FaqContent
-
-from home.models import HomePage
+from home.models import HomePage, FaqContent
 
 
 def home(request):

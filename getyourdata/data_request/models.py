@@ -120,13 +120,3 @@ class DataRequest(BaseModel):
 
     def __unicode__(self):
         return "Data request for " + self.organization.name
-
-
-class FaqContent(BaseModel):
-    title = models.CharField(
-        max_length=75,
-        default="")
-
-    priority = models.IntegerField(default=777)
-
-    content = tinymce_models.HTMLField(blank=True, default='')
