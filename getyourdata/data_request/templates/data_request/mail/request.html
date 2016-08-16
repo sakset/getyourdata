@@ -94,12 +94,13 @@ everything two sided -->
     <div class="datarequest-content">
 
         <p>{{ request_content.content1 }}</p>
-        <p>{{ request_content.content2 }}</p>
+
 
         {% for auth_content in data_request.auth_contents.all %}
             <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
         {% endfor %}
 
+        <p>{{ request_content.content2 }}</p>
 
     </div>
 

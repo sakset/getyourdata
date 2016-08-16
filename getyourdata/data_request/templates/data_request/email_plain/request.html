@@ -5,11 +5,11 @@
 
 {{ request_content.content1 }}
 
-{{ request_content.content2 }}
-
 {% for auth_content in data_request.auth_contents.all %}
 {{ auth_content.auth_field }}: {{ auth_content.content }}
 {% endfor %}
+
+{{ request_content.content2 }}
 
 {% if person_name %}
 {{ request_content.footer }}
