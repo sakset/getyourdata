@@ -28,6 +28,8 @@ class AuthenticationField(BaseModel):
     def __unicode__(self):
         return self.title
 
+    def required_by(self, organizations):
+        return Organization.objects.filter(authentication_fields=self, id__in=organizations.values_list('id'))
 
 def form_has_fields(form, fields):
     """

@@ -14,7 +14,10 @@ class AuthenticationAttributeField(forms.CharField):
     """
 
     def __init__(self, *args, **kwargs):
+        required_by = kwargs['required_by']
+        del kwargs['required_by']
         super(AuthenticationAttributeField, self).__init__(*args, **kwargs)
+        self.required_by = required_by
 
     def clean(self, value):
         try:
@@ -50,6 +53,8 @@ class DataRequestForm(forms.Form):
                 self.contains_mail_requests = True
 
             for auth_field in organization.authentication_fields.all():
+                required_organizations = auth_field.required_by(self.organizations)
+
                 # Only add each authentication field once
                 if auth_field.name in self.fields:
                     continue
@@ -64,6 +69,7 @@ class DataRequestForm(forms.Form):
                 self.fields[auth_field.name] = AuthenticationAttributeField(
                     label=auth_field.title,
                     help_text=auth_field.help_text,
+                    required_by=required_organizations,
                     max_length=255,
                     validators=validators,
                     required=True,

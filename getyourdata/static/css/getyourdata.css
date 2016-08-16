@@ -129,6 +129,10 @@ img.center {
     word-break: break-all;
 }
 
+.required-by {
+    display: block;
+}
+
 /* multi-organization rating page */
 
 .errorlist {
