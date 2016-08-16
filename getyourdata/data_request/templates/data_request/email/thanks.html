@@ -1,18 +1,26 @@
 {% load i18n %}
-{% blocktrans %}
-Thank you for using GetYourData.
-{% endblocktrans %}
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <p>{{ feedback_content.header }}</p>
 
-{% blocktrans count counter=organizations|length %}
-You created a data request for the following organization:
-{% plural %}
-You created data requests for the following organizations:
-{% endblocktrans %}
-{% for organization in organizations %}
-- {{ organization.name }}
-{% endfor %}
+        {% if send_mail_request_copy %}
+        <p>{{ feedback_content.pdf_copy }}</p>
+        {% endif %}
 
-{% blocktrans %}
-Once you have received a reply to your data request, please review your experience using the link below. Your feedback will help other users.
-{% endblocktrans %}
-https://{{ request.get_host }}{% url "data_request:give_feedback" org_ids %}
+        <p>{% blocktrans count counter=organizations|length %}
+        You created a data request for the following organization:
+        {% plural %}
+        You created data requests for the following organizations:
+        {% endblocktrans %}</p>
+        <ul>
+            {% for organization in organizations %}
+            <li>{{ organization.name }} - <a href="https://{{ request.get_host }}{% url 'organization:view_organization' organization.id %}">{% trans "Review organization" %}</a></li>
+            {% endfor %}
+        </ul>
+
+        <p>{{ feedback_content.footer }}</p>
+    </body>
+</html>

@@ -7,7 +7,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
 
-from data_request.models import DataRequest, AuthenticationContent, FaqContent
+from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, AuthenticationField
 
 
@@ -19,7 +19,7 @@ def create_email_organization(test_case):
         address_line_two='Address two',
         postal_code='00000',
         country='Finland'
-        )
+    )
 
     email_organization.authentication_fields.add(test_case.auth_field1)
 
@@ -33,7 +33,7 @@ def create_mail_organization(test_case):
         address_line_two='Address two',
         postal_code='00000',
         country='Finland'
-        )
+    )
 
     mail_organization.authentication_fields.add(test_case.auth_field1)
 
@@ -50,7 +50,7 @@ class DataRequestCreationTests(TestCase):
             address_line_two='Address two',
             postal_code='00000',
             country='Finland'
-            )
+        )
         self.organization2 = Organization.objects.create(
             name='Organization Two',
             email_address='fake@addressa.com',
@@ -58,7 +58,7 @@ class DataRequestCreationTests(TestCase):
             address_line_two='Address 4',
             postal_code='012345',
             country='Sweden'
-            )
+        )
 
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
@@ -85,7 +85,7 @@ class DataRequestCreationTests(TestCase):
 
     def test_data_request_form_is_correct(self):
         response = self.client.get(reverse("data_request:request_data",
-            args=(self.organization.id,)))
+                                           args=(self.organization.id,)))
 
         self.assertContains(response, "Some number")
         self.assertContains(response, "Other thing")
@@ -111,7 +111,7 @@ class DataRequestCreationTests(TestCase):
              "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
-            )
+        )
 
         self.assertEquals(DataRequest.objects.all().count(), 1)
 
@@ -149,7 +149,7 @@ class DataRequestCreationTests(TestCase):
              "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
-            )
+        )
 
         # All requests were email requests
         self.assertContains(response, "You have successfully finished")
@@ -168,7 +168,7 @@ class DataRequestCreationTests(TestCase):
             address_line_two='Address two',
             postal_code='00000',
             country='Finland'
-            )
+        )
 
         response = self.client.post(
             reverse("data_request:request_data", args=(mail_organization.id,)),
@@ -176,7 +176,7 @@ class DataRequestCreationTests(TestCase):
              "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
-            )
+        )
 
         self.assertContains(response, "Further action required")
         self.assertContains(response, "Download PDF")
@@ -193,12 +193,12 @@ class DataRequestCreationTests(TestCase):
              "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
-            )
+        )
 
         self.assertContains(response, "A copy of the PDF")
 
-        # User receives a copy of the PDF and a feedback message
-        self.assertEquals(len(mail.outbox), 2)
+        # User receives a copy of the PDF and a feedback message in one message
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_mail_request_copy_can_be_sent_successfully_with_email_requests(self):
         mail_organization = create_mail_organization(self)
@@ -213,7 +213,7 @@ class DataRequestCreationTests(TestCase):
              "send": "true",
              "g-recaptcha-response": "PASSED"},
             follow=True
-            )
+        )
 
         self.assertContains(response, "A copy of the PDF")
 
@@ -225,7 +225,7 @@ class DataRequestCreationTests(TestCase):
             address_line_two='Address two',
             postal_code='00000',
             country='Finland'
-            )
+        )
         response = self.client.get(
             reverse("data_request:request_data",
                     args=(email_organization.id,)),
@@ -300,7 +300,7 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
             address_line_two='Address 4',
             postal_code='012345',
             country='Sweden'
-            )
+        )
 
         self.auth_field = AuthenticationField.objects.create(
             name="some_number",
@@ -336,7 +336,7 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
             address_line_two='Address 4',
             postal_code='012345',
             country='Sweden'
-            )
+        )
 
         self.auth_field = AuthenticationField.objects.create(
             name="some_number",
@@ -373,7 +373,7 @@ class AuthenticationAttributeValidationTests(TestCase):
             address_line_two='Address two',
             postal_code='00000',
             country='Finland'
-            )
+        )
         self.auth_field1 = AuthenticationField.objects.create(
             name="phone_number",
             title='Phone number',
@@ -393,7 +393,7 @@ class AuthenticationAttributeValidationTests(TestCase):
              "other_thing": "Some text here",
              "user_email_address": "test@test.com"},
             follow=True
-            )
+        )
 
         self.assertNotContains(response, "The value for this field was not valid")
 
@@ -404,7 +404,7 @@ class AuthenticationAttributeValidationTests(TestCase):
              "other_thing": "Some text here",
              "user_email_address": "test@test.com"},
             follow=True
-            )
+        )
 
         self.assertContains(response, "The value for this field was not valid")
 
@@ -419,57 +419,14 @@ class AuthenticationAttributeValidationTests(TestCase):
             {"phone_number": "notaphonenumber",
              "other_thing": "Some text here"},
             follow=True
-            )
+        )
 
         self.assertContains(response, "This is a phone number")
         self.assertContains(response, "The value for this field was not valid")
 
 
 @isSeleniumTest()
-class FaqsValidationTests(LiveServerTestCase):
-    def setUp(self):
-        self.data_requests = FaqContent.objects.create(
-            title='testtitle',
-            content='testcontent',
-            priority='1',
-        )
-        self.data_requests = FaqContent.objects.create(
-            title='othertitle',
-            content='longer content with spaces',
-            priority='10',
-        )
-
-        self.data_requests = FaqContent.objects.create(
-            title='somethingelse',
-            content='last, but not least',
-            priority='5',
-        )
-
-    def test_selenium_faqs_can_be_seen_in_faq_view(self):
-        self.selenium.get("%s%s" % (self.live_server_url,
-            reverse("faq")))
-
-        self.assertIn("testtitle", self.selenium.page_source)
-        self.assertIn("testcontent", self.selenium.page_source)
-        self.assertIn("othertitle", self.selenium.page_source)
-        self.assertIn("longer content with spaces", self.selenium.page_source)
-        self.assertIn("somethingelse", self.selenium.page_source)
-        self.assertIn("last, but not least", self.selenium.page_source)
-
-    def test_selenium_faqs_order_can_be_prioritized(self):
-        self.selenium.get("%s%s" % (self.live_server_url,
-            reverse("faq")))
-
-        accordion = self.selenium.find_element_by_id("accordion")
-        faqs = accordion.find_elements_by_class_name("panel-title")
-
-        self.assertIn("testtitle", faqs[0].text)
-        self.assertIn("othertitle", faqs[2].text)
-        self.assertIn("somethingelse", faqs[1].text)
-
-@isSeleniumTest()
 class ProcessBarNavigationTests(LiveServerTestCase):
-
     def setUp(self):
         self.organization = Organization.objects.create(
             name='Organization Two',
@@ -478,14 +435,13 @@ class ProcessBarNavigationTests(LiveServerTestCase):
             address_line_two='Address 4',
             postal_code='012345',
             country='Sweden'
-            )
+        )
 
         self.auth_field = AuthenticationField.objects.create(
             name="some_number",
             title='Some number')
 
         self.organization.authentication_fields.add(self.auth_field)
-
 
     def test_selenium_back_to_organization_list_works(self):
         self.selenium.get(
@@ -544,3 +500,96 @@ class ProcessBarNavigationTests(LiveServerTestCase):
 
         element_lookup = self.selenium.find_elements_by_id("back-to-input-details")
         self.assertFalse(len(element_lookup) > 0)
+
+
+@isDjangoTest()
+class OrganizationRatingTests(TestCase):
+    def setUp(self):
+        self.organization_one = Organization.objects.create(
+            name='FirstOrganization',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+        )
+
+        self.organization_two = Organization.objects.create(
+            name='SecondOrganization',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+        )
+
+        self.organization_three = Organization.objects.create(
+            name='ThirdOrganization',
+            email_address='fake@addressa.com',
+            address_line_one='Address 2',
+            address_line_two='Address 4',
+            postal_code='012345',
+            country='Sweden'
+        )
+
+        self.auth_field = AuthenticationField.objects.create(
+            name="some_number",
+            title='Some number')
+
+        self.organization_one.authentication_fields.add(self.auth_field)
+        self.organization_two.authentication_fields.add(self.auth_field)
+        self.organization_three.authentication_fields.add(self.auth_field)
+
+        self.organizations = [
+            self.organization_one,
+            self.organization_two,
+            self.organization_three
+        ]
+
+        # a few help-variables to make code inside the methods more readable
+        org_ids = [str(organization.id) for organization in self.organizations]
+        self.org_ids = ",".join(org_ids)
+        self.org_id_one = str(self.organization_one.id)
+        self.org_id_two = str(self.organization_two.id)
+        self.org_id_three = str(self.organization_three.id)
+
+    def test_user_can_rate_organizations(self):
+        response = self.client.post(
+            reverse("data_request:submit_feedback"),
+            {"org_ids": self.org_ids,
+             "rating_" + self.org_id_one: 1,
+             "message_" + self.org_id_one: "First Organization gets one",
+             "rating_" + self.org_id_two: 2,
+             "message_" + self.org_id_two: "Second Organization has to live with two",
+             "rating_" + self.org_id_three: 3,
+             "message_" + self.org_id_three: "Third Org is the hi-scorer with three",
+             "g-recaptcha-response": "PASSED"},
+            follow=True)
+        self.assertContains(response, "Thank you for your contribution!")
+
+    def test_no_missing_message_allowed(self):
+        response = self.client.post(
+            reverse("data_request:submit_feedback"),
+            {"org_ids": self.org_ids,
+             "rating_" + self.org_id_one: 1,
+             "message_" + self.org_id_one: "First Organization gets one",
+             "rating_" + self.org_id_two: 2,
+             "message_" + self.org_id_two: "Second Organization has to live with two",
+             "rating_" + self.org_id_three: 3,
+             "g-recaptcha-response": "PASSED"},
+            follow=True)
+        self.assertContains(response, "Some of the fields were invalid or missing")
+
+    def test_no_empty_message_allowed(self):
+        response = self.client.post(
+            reverse("data_request:submit_feedback"),
+            {"org_ids": self.org_ids,
+             "rating_" + self.org_id_one: 1,
+             "message_" + self.org_id_one: "First Organization gets one",
+             "rating_" + self.org_id_two: 2,
+             "message_" + self.org_id_two: "",
+             "rating_" + self.org_id_three: 3,
+             "message_" + self.org_id_three: "Third Org is the hi-scorer with three",
+             "g-recaptcha-response": "PASSED"},
+            follow=True)
+        self.assertContains(response, "Some of the fields were invalid or missing")

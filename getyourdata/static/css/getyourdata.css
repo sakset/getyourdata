@@ -132,3 +132,11 @@ img.center {
 .required-by {
     display: block;
 }
+
+/* multi-organization rating page */
+
+.errorlist {
+    background: red;
+    color: white;
+    margin-top: 0.5em;
+}
