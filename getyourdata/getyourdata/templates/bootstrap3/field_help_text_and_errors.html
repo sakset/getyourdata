@@ -1,3 +1,14 @@
+{% load i18n %}
+
 {% for text in help_text_and_errors reversed %}
     <div class="help-block">{{ text }}</div>
 {% endfor %}
+
+{% if field.field.required_by and field.field.required_by|length > 1 %}
+    <div class="help-block required-by">
+        <b>{% trans 'Required by:' %}</b>
+        {% for organization in field.field.required_by %}
+            {{ organization.name }}{% if not forloop.last %}, {% elif forloop.last %}.{% endif %}
+        {%  endfor %}
+    </div>
+{% endif %}
