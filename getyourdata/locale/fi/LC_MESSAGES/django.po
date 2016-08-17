@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 17:42+0300\n"
-"PO-Revision-Date: 2016-08-17 16:11+0000\n"
+"PO-Revision-Date: 2016-08-17 16:35+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -172,7 +172,7 @@ msgstr "Pyydä tietosi organisaatiolta: "
 
 #: data_request/templates/data_request/request_data.html:23
 msgid "Request your data from multiple organizations"
-msgstr "Pyydä tietosi useammalta organisaatiolta"
+msgstr "Täytä tietosi"
 
 #: data_request/templates/data_request/request_data.html:37
 msgid "Review request"
@@ -297,7 +297,7 @@ msgstr "Valmista!"
 #. Translators: User still needs to print a few requests
 #: data_request/templates/data_request/request_data_sent.html:20
 msgid "Further action required"
-msgstr "Jatkotoimenpiteitä tarvitaan"
+msgstr "Tulosta ja postita pyynnöt"
 
 #: data_request/templates/data_request/request_data_sent.html:29
 msgid "Print mail requests"
@@ -550,7 +550,7 @@ msgstr ""
 #. Translators: On the "list organizations" view
 #: organization/templates/organization/list.html:23 templates/navbar.html:36
 msgid "Organizations"
-msgstr "Organisaatiot"
+msgstr "Valitse organisaatiot"
 
 #: organization/templates/organization/list.html:27
 msgid ""
@@ -564,7 +564,7 @@ msgstr ""
 #: organization/templates/organization/list_js.html:24
 #| msgid "Update details"
 msgid "View details"
-msgstr "Päivitä tiedot"
+msgstr "Näytä tiedot"
 
 #: organization/templates/organization/list.html:51
 #: organization/templates/organization/list_js.html:17
@@ -748,7 +748,7 @@ msgstr "UKK"
 #: templates/process_bar.html:12
 #| msgid "Choose organization from the list"
 msgid "Choose organizations"
-msgstr "Valitse organisaatio listasta"
+msgstr "Valitse organisaatiot"
 
 #: templates/process_bar.html:32
 msgid "Fill in your details"
