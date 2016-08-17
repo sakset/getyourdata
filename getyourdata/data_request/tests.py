@@ -101,7 +101,7 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, "Some number")
         self.assertContains(response, "Other thing")
-        self.assertContains(response, "Request your data from Organization")
+        self.assertContains(response, "Fill in your details")
 
     def test_required_by_is_present_when_supposed(self):
         response = self.client.get(reverse("data_request:request_data",
@@ -125,7 +125,6 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Some number")
         self.assertContains(response, "Other thing")
         self.assertContains(response, "Oddest thing")
-        self.assertContains(response, "Request your data from multiple organizations")
 
     def test_data_request_is_created(self):
         self.client.post(

@@ -512,7 +512,7 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
         ).click()
 
         self.assertIn(
-            "Request your data from Organization 0", self.selenium.page_source)
+            "Fill in your details", self.selenium.page_source)
 
     def test_select_multiple_organizations_for_request(self):
         self.selenium.get(
@@ -539,7 +539,7 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
         ).click()
 
         self.assertIn(
-            "Request your data from multiple organizations",
+            "Fill in your details",
             self.selenium.page_source)
 
     def test_can_change_page_to_display_different_organizations(self):
