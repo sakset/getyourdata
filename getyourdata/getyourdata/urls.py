@@ -29,8 +29,6 @@ urlpatterns = i18n_patterns(
     url(r'^request/', include(
         'data_request.urls', namespace="data_request")),
     url(r'^faq/', home_views.faq, name='faq'),
-    url(r'^(?P<url>.*/)$', flatpage_views.flatpage),
-
 )
 
 urlpatterns += [
@@ -45,3 +43,7 @@ if settings.DEBUG:
 
 if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += url(r'^rosetta/', include('rosetta.urls')),
+
+urlpatterns += i18n_patterns(
+    url(r'^(?P<url>.*/)$', flatpage_views.flatpage),
+)
