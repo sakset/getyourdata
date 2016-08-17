@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 17:42+0300\n"
-"PO-Revision-Date: 2016-08-17 16:35+0000\n"
+"PO-Revision-Date: 2016-08-17 16:48+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -550,7 +550,7 @@ msgstr ""
 #. Translators: On the "list organizations" view
 #: organization/templates/organization/list.html:23 templates/navbar.html:36
 msgid "Organizations"
-msgstr "Valitse organisaatiot"
+msgstr "Organisaatiot"
 
 #: organization/templates/organization/list.html:27
 msgid ""
