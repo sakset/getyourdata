@@ -5,71 +5,82 @@
 {% load staticfiles %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
 
-    <div class="row">
-        <div class="col-md-12">
-            <div>
-                {% include "process_bar.html" with process_step=2 %}
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    {% include "process_bar.html" with process_step=2 %}
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h1>{% trans 'Fill in your details' %}</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>{% trans 'Fill in your details' %}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
+                    <input type="hidden" name="action" value="review"/>
+                    <table class="table">
+                        {% bootstrap_form form layout='horizontal' %}
+                    </table>
+                    <input class="btn btn-success" id="create_request" type="submit" name="review"
+                           value="{% trans 'Review request' %}"/>
+                    <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
+                         Put the "Back" button here as the second button, but move it to the first position using pull-left -->
+                    <input formnovalidate class="btn btn-primary first-button" type="submit" name="return"
+                           value="{% trans 'Back' %}">
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="alert alert-info">
+                    {% if email_organizations %}
+                        <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
+                        <ul>
+                            {% for organization in email_organizations %}
+                                <li>{{ organization.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if mail_organizations %}
+                        <strong>{% trans "Requests for the following organizations will have to be sent via mail" %}</strong>
+                        <br>
+                        <ul>
+                            {% for organization in mail_organizations %}
+                                <li>{{ organization.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="alert alert-info">
+                    {% blocktrans %}
+                        Note: The personal details submitted here will not be stored on the server, but they will only
+                        be used temporarily for data request generation.
+                    {% endblocktrans %}
+                </div>
+
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="{% url 'data_request:request_data' %}">
-                {% csrf_token %}
-                <input type="hidden" name="org_ids" value="{{ org_ids }}"/>
-                <input type="hidden" name="action" value="review"/>
-                <table class="table">
-                {% bootstrap_form form layout='horizontal' %}
-            </table>
-                <input class="btn btn-success" id="create_request" type="submit" name="review" value="{% trans 'Review request' %}"/>
-                <!-- First button on form is considered the default, eg. pressing Enter will invoke the first button in the form
-                     Put the "Back" button here as the second button, but move it to the first position using pull-left -->
-                <input formnovalidate class="btn btn-primary first-button" type="submit" name="return" value="{% trans 'Back' %}">
-            </form>
-        </div>
-        <div class="col-md-4">
-            <div class="alert alert-info">
-                {% if email_organizations %}
-                <strong>{% trans "Following organizations will receive request by email" %}</strong><br>
-                <ul>
-                    {% for organization in email_organizations %}
-                    <li>{{ organization.name}}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                {% if mail_organizations %}
-                <strong>{% trans "Requests for the following organizations will have to be sent via mail" %}</strong><br>
-                <ul>
-                    {% for organization in mail_organizations %}
-                    <li>{{ organization.name}}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block script %}
     <script src="{% static 'js/jquery.shorten.min.js' %}" type="text/javascript"></script>
     <script>
         $(".required-by").shorten({
-            ellipsesText:'',
-            moreText:'[...]',
-            lessText:''
+            ellipsesText: '',
+            moreText: '[...]',
+            lessText: ''
         });
-        $($(".required-by").find(".shortcontent")).css("display","inline");
+        $($(".required-by").find(".shortcontent")).css("display", "inline");
     </script>
 
 {% endblock script %}
