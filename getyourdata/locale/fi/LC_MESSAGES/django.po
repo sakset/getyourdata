@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 17:42+0300\n"
-"PO-Revision-Date: 2016-08-17 15:28+0000\n"
+"PO-Revision-Date: 2016-08-17 16:11+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,6 @@ msgid "Receiving email address"
 msgstr "Vastaanottava sähköpostiosoite"
 
 #: data_request/forms.py:75
-#, fuzzy
 #| msgid ""
 #| "You should receive a copy of your email requests to your email address "
 #| "shortly."
@@ -36,26 +35,21 @@ msgid ""
 "Optional - A copy of your mail requests can be sent to this email address if"
 " filled"
 msgstr ""
-"Sinun tulisi saada kopio sähköpostipyynnöstäsi sähköpostiisi vähän ajan "
-"kuluttua."
+"Valinnainen - Kopio tietopyynnöstäsi voidaan lähettää tähän osoitteeseen"
 
 #: data_request/forms.py:85
-#, fuzzy
 #| msgid "Send a request"
 msgid "Send a copy of mail requests"
-msgstr "Lähetä pyyntö"
+msgstr "Lähetä kopio tietopyynnöistä"
 
 #: data_request/forms.py:88
-#, fuzzy
 #| msgid ""
 #| "You should receive a copy of your email requests to your email address "
 #| "shortly."
 msgid ""
 "If checked, a copy of your mail requests will be sent to the receiving email"
 " address"
-msgstr ""
-"Sinun tulisi saada kopio sähköpostipyynnöstäsi sähköpostiisi vähän ajan "
-"kuluttua."
+msgstr "Jos valittu, kopio tietopyynnöstäsi lähetetään tähän osoitteeseen"
 
 #: data_request/forms.py:94
 msgid ""
@@ -65,7 +59,6 @@ msgstr ""
 "Tietosi ja organisaatioiden kyselyt lähetetään tähän sähköpostiosoitteeseen"
 
 #: data_request/forms.py:115
-#, fuzzy
 #| msgid ""
 #| "You should receive a copy of your email requests to your email address "
 #| "shortly."
@@ -73,8 +66,8 @@ msgid ""
 "You must enter a receiving email address if you want a copy of your mail "
 "requests as an email message."
 msgstr ""
-"Sinun tulisi saada kopio sähköpostipyynnöstäsi sähköpostiisi vähän ajan "
-"kuluttua."
+"Jos haluat saada kopion sähköpostipyynnöstäsi sähköpostiisi, täytä "
+"sähköpostiosoitteesi."
 
 #: data_request/forms.py:141 data_request/forms.py:142
 #: organization/forms.py:141 organization/forms.py:142
@@ -88,10 +81,9 @@ msgstr "Arvosana"
 
 #: data_request/forms.py:152 data_request/forms.py:175 feedback/forms.py:10
 #: organization/forms.py:152
-#, fuzzy
 #| msgid "Make a request"
 msgid "Message is required"
-msgstr "Tee pyyntö"
+msgstr "Viesti pakollinen."
 
 #: data_request/forms.py:153 organization/forms.py:153
 msgid "Maximum allowed length is 2000 characters"
@@ -114,13 +106,11 @@ msgid "Data request: %s"
 msgstr "Tietopyyntö: %s"
 
 #: data_request/services.py:115
-#, fuzzy
 #| msgid "Thank you for your feedback!"
 msgid "Thank you for using GetYourData"
 msgstr "Kiitos palautteestasi!"
 
 #: data_request/templates/data_request/email/thanks.html:13
-#, fuzzy
 #| msgid ""
 #| "Requests for the following organizations will have to be sent via mail"
 msgid ""
@@ -140,7 +130,6 @@ msgstr[1] ""
 
 #: data_request/templates/data_request/email/thanks.html:20
 #: data_request/templates/data_request/email_plain/thanks.html:14
-#, fuzzy
 #| msgid "Add organization"
 msgid "Review organization"
 msgstr "Lisää organisaatio"
@@ -151,7 +140,6 @@ msgid "Data request: "
 msgstr "Tietopyyntö: "
 
 #: data_request/templates/data_request/email_plain/thanks.html:8
-#, fuzzy
 #| msgid "Requests were sent to the following organizations by email:"
 msgid ""
 "\n"
@@ -161,10 +149,10 @@ msgid_plural ""
 "You created data requests for the following organizations:\n"
 msgstr[0] ""
 "\n"
-"Tietopyynnöt lähetettiin seuraaville organisaatioille sähköpostitse:\n"
+"Tietopyyntö luotiin organisaatiolle \n"
 msgstr[1] ""
 "\n"
-"Tietopyynnöt lähetettiin seuraaville organisaatioille sähköpostitse:\n"
+"Tietopyynnöt luotiin seuraaville organisaatioille: \n"
 
 #: data_request/templates/data_request/expired.html:10
 msgid "Page expired"
@@ -212,10 +200,9 @@ msgid "Thanks!"
 msgstr "Kiitos!"
 
 #: data_request/templates/data_request/request_data_feedback.html:15
-#, fuzzy
 #| msgid "Update organization"
 msgid "Rate organizations"
-msgstr "Päivitä organisaatio"
+msgstr "Arvostele organisaatio"
 
 #: data_request/templates/data_request/request_data_feedback.html:25
 msgid "You have successfully finished creating and sending a data request!"
@@ -266,17 +253,15 @@ msgstr ""
 "ladataksesi sen uudelleen."
 
 #: data_request/templates/data_request/request_data_feedback.html:97
-#, fuzzy
 #| msgid "Recieved feedback"
 msgid "Submit feedback"
-msgstr "Saatu palaute"
+msgstr "Lähetä palaute"
 
 #: data_request/templates/data_request/request_data_review.html:21
-#, fuzzy
 #| msgid "Please review the following email messages"
 msgid "Please review the following message"
 msgid_plural "Please review the following messages"
-msgstr[0] "Ole hyvä ja katselmoi seuraavat sähköpostiviestit"
+msgstr[0] "Ole hyvä ja katselmoi seuraava viesti"
 msgstr[1] "Ole hyvä ja katselmoi seuraavat sähköpostiviestit"
 
 #: data_request/templates/data_request/request_data_review.html:26
@@ -288,24 +273,21 @@ msgid "(Mail)"
 msgstr "(Kirje)"
 
 #: data_request/templates/data_request/request_data_review.html:40
-#, fuzzy
 #| msgid "Send a request"
 msgid "Send and create requests"
-msgstr "Lähetä pyyntö"
+msgstr "Lähetä pyynnöt"
 
 #: data_request/templates/data_request/request_data_review.html:42
-#, fuzzy
 #| msgid "Send a request"
 msgid "Send request"
 msgid_plural "Send requests"
 msgstr[0] "Lähetä pyyntö"
-msgstr[1] "Lähetä pyyntö"
+msgstr[1] "Lähetä pyynnöt"
 
 #: data_request/templates/data_request/request_data_review.html:48
-#, fuzzy
 #| msgid "Create request"
 msgid "Create request PDF"
-msgstr "Luo pyyntö"
+msgstr "Luo tietopyyntökirje"
 
 #. Translators: All requests chosen by user were sent automatically via email
 #: data_request/templates/data_request/request_data_sent.html:17
@@ -351,7 +333,6 @@ msgid "A copy of the PDF has been sent to your email address."
 msgstr "Kopio PDF-tiedostosta on lähetetty sähköpostiisi."
 
 #: data_request/templates/data_request/request_data_sent.html:63
-#, fuzzy
 #| msgid "Finnish"
 msgid "Finish"
 msgstr "Valmista"
@@ -581,14 +562,12 @@ msgstr ""
 
 #: organization/templates/organization/list.html:42
 #: organization/templates/organization/list_js.html:24
-#, fuzzy
 #| msgid "Update details"
 msgid "View details"
 msgstr "Päivitä tiedot"
 
 #: organization/templates/organization/list.html:51
 #: organization/templates/organization/list_js.html:17
-#, fuzzy
 #| msgid "Create request"
 msgid "Create request with selections"
 msgstr "Luo pyyntö"
@@ -709,7 +688,6 @@ msgid ""
 msgstr "Organisaatiolla ei ole tällä hetkellä voimassa olevia yhteystietoja."
 
 #: organization/templates/organization/view.html:102
-#, fuzzy
 #| msgid "Recieved feedback"
 msgid "Received feedback"
 msgstr "Saatu palaute"
@@ -719,13 +697,11 @@ msgid "Average rating"
 msgstr "Arvosanojen keskiarvo"
 
 #: organization/templates/organization/view.html:122
-#, fuzzy
 #| msgid "Leave feedback"
 msgid "No feedback yet."
 msgstr "Jätä palautetta"
 
 #: organization/views.py:116
-#, fuzzy
 #| msgid ""
 #| "Note that the organization profile won't be made visible until it has been "
 #| "verified by the site staff."
@@ -733,8 +709,8 @@ msgid ""
 "Organization profile created! Note that the organization profile won't be "
 "made visible until it has been verified by the site staff."
 msgstr ""
-"Ota huomioon ettei organisaatioprofiili näy muille käyttäjille ennen "
-"kuinsivuston ylläpito on tarkistanut sen."
+"Organisaatio lisätty! Organisaatio ei näy muille käyttäjille ennen kuin "
+"sivuston ylläpito on tarkistanut sen."
 
 #: organization/views.py:163
 msgid ""
@@ -761,7 +737,6 @@ msgid "Toggle navigation"
 msgstr "Vaihda navigaatio"
 
 #: templates/navbar.html:19
-#, fuzzy
 #| msgid "Leave feedback"
 msgid "Give feedback"
 msgstr "Jätä palautetta"
@@ -771,7 +746,6 @@ msgid "FAQ"
 msgstr "UKK"
 
 #: templates/process_bar.html:12
-#, fuzzy
 #| msgid "Choose organization from the list"
 msgid "Choose organizations"
 msgstr "Valitse organisaatio listasta"
@@ -781,10 +755,9 @@ msgid "Fill in your details"
 msgstr "Täytä tietosi"
 
 #: templates/process_bar.html:41
-#, fuzzy
 #| msgid "Review request"
 msgid "Review and send requests"
-msgstr "Katselmoi pyyntö"
+msgstr "Katselmoi ja lähetä pyynnöt"
 
 #~ msgid "What are datarequest?"
 #~ msgstr "Mitä ovat henkilötietopyynnöt?"
