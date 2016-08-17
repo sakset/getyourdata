@@ -45,7 +45,15 @@
                             {% endfor %}
                         </ul>
                         <br>
-                        <p>{% trans "You can send data requests to the listed organizations by mail. The following document contains the required pages:" %}</p>
+                        <p>
+                            {% blocktrans %}
+                            You can send data requests to the listed organizations by mail. The following document
+                            contains the required pages. If your printer supports two-sided printing, the print-out
+                            can be folded, stapled and mailed as-is (please consult your printer's user guide for
+                            two-sided printing instructions). If using one-sided printing the address pages are
+                            printed on separate papers.
+                            {% endblocktrans %}
+                        </p>
                         <br>
                         <form id="feedback_form" method="post" action="{% url 'data_request:give_feedback' org_ids %}">
                             {% csrf_token %}
