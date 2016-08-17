@@ -4,10 +4,10 @@
     <head>
     </head>
     <body>
-        <p>{{ feedback_content.header }}</p>
+        <p>{{ feedback_content.header|linebreaks }}</p>
 
         {% if send_mail_request_copy %}
-        <p>{{ feedback_content.pdf_copy }}</p>
+        <p>{{ feedback_content.pdf_copy|linebreaks }}</p>
         {% endif %}
 
         <p>{% blocktrans count counter=organizations|length %}
@@ -21,6 +21,6 @@
             {% endfor %}
         </ul>
 
-        <p>{{ feedback_content.footer }}</p>
+        <p>{{ feedback_content.footer|linebreaks }}</p>
     </body>
 </html>

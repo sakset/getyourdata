@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 00:32+0300\n"
-"PO-Revision-Date: 2016-08-17 21:33+0000\n"
+"PO-Revision-Date: 2016-08-17 21:48+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr "Tietopyyntö: %s"
 
 #: data_request/services.py:115
 msgid "Thank you for using GetYourData"
-msgstr "Kiitos palautteestasi!"
+msgstr "Kiitos Getyourdatan käytöstä!"
 
 #: data_request/templates/data_request/email/thanks.html:13
 msgid ""
@@ -117,7 +117,7 @@ msgstr[1] ""
 #: data_request/templates/data_request/email/thanks.html:20
 #: data_request/templates/data_request/email_plain/thanks.html:14
 msgid "Review organization"
-msgstr "Lisää organisaatio"
+msgstr "Anna organisaatiolle arvosana"
 
 #: data_request/templates/data_request/email_plain/request.html:2
 #: data_request/templates/data_request/mail/request.html:4
