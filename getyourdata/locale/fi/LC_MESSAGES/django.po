@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 00:32+0300\n"
-"PO-Revision-Date: 2016-08-17 21:48+0000\n"
+"POT-Creation-Date: 2016-08-18 01:20+0300\n"
+"PO-Revision-Date: 2016-08-17 22:23+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -101,20 +101,22 @@ msgstr "Kiitos Getyourdatan käytöstä!"
 #: data_request/templates/data_request/email/thanks.html:13
 msgid ""
 "\n"
-"        You created a data request for the following organization:\n"
+"        When you receive a reply from the following organization, please take a minute to rate it based on how your\n"
+"        request was handled.\n"
 "        "
 msgid_plural ""
 "\n"
-"        You created data requests for the following organizations:\n"
+"        When you receive a reply from the following organizations, please take a minute to rate them based on how your\n"
+"        requests were handled.\n"
 "        "
 msgstr[0] ""
 "\n"
-"Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
+"Kun saat vastauksen allaolevalta organisaatiolta, anna organisaatiolle arvosana siitä miten hyvin tietopyyntöösi vastattiin."
 msgstr[1] ""
 "\n"
-"Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
+"Kun saat vastauksen allaolevilta organisaatioilta, anna organisaatioille arvosanoja siitä miten hyvin tietopyyntöihisi vastattiin."
 
-#: data_request/templates/data_request/email/thanks.html:20
+#: data_request/templates/data_request/email/thanks.html:22
 #: data_request/templates/data_request/email_plain/thanks.html:14
 msgid "Review organization"
 msgstr "Anna organisaatiolle arvosana"
@@ -202,7 +204,7 @@ msgstr[0] "Tietopyyntö tehty ja lähetetty onnistuneesti!"
 msgstr[1] "Tietopyynnöt tehty ja lähetetty onnistuneesti!"
 
 #: data_request/templates/data_request/request_data_feedback.html:31
-#: data_request/templates/data_request/request_data_sent.html:83
+#: data_request/templates/data_request/request_data_sent.html:91
 msgid ""
 "You should receive a copy of your email requests to your email address "
 "shortly."
@@ -250,7 +252,7 @@ msgstr "Lähetä palaute"
 msgid "Please review the following message"
 msgid_plural "Please review the following messages"
 msgstr[0] "Ole hyvä ja katselmoi seuraava viesti"
-msgstr[1] "Ole hyvä ja katselmoi seuraavat sähköpostiviestit"
+msgstr[1] "Ole hyvä ja katselmoi seuraavat viestit"
 
 #: data_request/templates/data_request/request_data_review.html:26
 msgid "(Email)"
@@ -301,35 +303,40 @@ msgid ""
 msgstr ""
 "Seuraavat organisaatiot vaativat että tietopyynnöt lähetetään postitse:"
 
-#: data_request/templates/data_request/request_data_sent.html:48
+#: data_request/templates/data_request/request_data_sent.html:49
 msgid ""
-"You can send data requests to the listed organizations by mail. The "
-"following document contains the required pages:"
+"\n"
+"                            You can send data requests to the listed organizations by mail. The following document\n"
+"                            contains the required pages. If your printer supports two-sided printing, the print-out\n"
+"                            can be folded, stapled and mailed as-is (please consult your printer's user guide for\n"
+"                            two-sided printing instructions). If using one-sided printing the address pages are\n"
+"                            printed on separate papers.\n"
+"                            "
 msgstr ""
-"Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava "
-"asiakirja sisältää tarvittavat kirjeet:"
+"\n"
+"Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava PDF-muotoinen tiedosto sisältää tarvittavat kirjeet. Mikäli tulostimesi tukee kaksipuolista tulostusta (kts. tulostimesi käyttöohje), voi PDF-tiedoston tulostaa ja postittaa sellaisenaan yhteentaitettuna ja postimerkillä varustettuna. Yksipuoleisena tulostettuna kirjeiden osoitesivut tulostuvat omille sivuilleen."
 
-#: data_request/templates/data_request/request_data_sent.html:56
+#: data_request/templates/data_request/request_data_sent.html:64
 msgid "Download PDF"
 msgstr "Lataa PDF-tiedosto"
 
-#: data_request/templates/data_request/request_data_sent.html:60
+#: data_request/templates/data_request/request_data_sent.html:68
 msgid "A copy of the PDF has been sent to your email address."
 msgstr "Kopio PDF-tiedostosta on lähetetty sähköpostiisi."
 
-#: data_request/templates/data_request/request_data_sent.html:63
+#: data_request/templates/data_request/request_data_sent.html:71
 msgid "Finish"
 msgstr "Valmista"
 
-#: data_request/templates/data_request/request_data_sent.html:74
+#: data_request/templates/data_request/request_data_sent.html:82
 msgid "Email requests sent!"
 msgstr "Sähköpostipyynnöt lähetetty!"
 
-#: data_request/templates/data_request/request_data_sent.html:76
+#: data_request/templates/data_request/request_data_sent.html:84
 msgid "Email requests sent successfully!"
 msgstr "Sähköpostipyynnöt lähetetty onnistuneesti!"
 
-#: data_request/templates/data_request/request_data_sent.html:77
+#: data_request/templates/data_request/request_data_sent.html:85
 msgid "Requests were sent to the following organizations by email:"
 msgstr "Tietopyynnöt lähetettiin seuraaville organisaatioille sähköpostitse:"
 
@@ -733,6 +740,28 @@ msgstr "UKK"
 #: templates/process_bar.html:41
 msgid "Review and send requests"
 msgstr "Katselmoi ja lähetä pyynnöt"
+
+#~ msgid ""
+#~ "You can send data requests to the listed organizations by mail. The "
+#~ "following document contains the required pages:"
+#~ msgstr ""
+#~ "Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava "
+#~ "asiakirja sisältää tarvittavat kirjeet:"
+
+#~ msgid ""
+#~ "\n"
+#~ "        You created a data request for the following organization:\n"
+#~ "        "
+#~ msgid_plural ""
+#~ "\n"
+#~ "        You created data requests for the following organizations:\n"
+#~ "        "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
 
 #~ msgid "Request your data from"
 #~ msgstr "Pyydä tietosi organisaatiolta: "

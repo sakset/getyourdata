@@ -11,9 +11,11 @@
         {% endif %}
 
         <p>{% blocktrans count counter=organizations|length %}
-        You created a data request for the following organization:
+        When you receive a reply from the following organization, please take a minute to rate it based on how your
+        request was handled.
         {% plural %}
-        You created data requests for the following organizations:
+        When you receive a reply from the following organizations, please take a minute to rate them based on how your
+        requests were handled.
         {% endblocktrans %}</p>
         <ul>
             {% for organization in organizations %}
