@@ -19,7 +19,8 @@ class HomePageManager(models.Manager):
         for lang_code, lang_name in settings.LANGUAGES:
             setattr(
                 home_page, "content_%s" % lang_code,
-                render_to_string("home/default.html", {"lang_code": lang_code}))
+                render_to_string(
+                    "home/default.html", {"lang_code": lang_code}))
 
         home_page.save()
         return home_page

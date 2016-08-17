@@ -12,7 +12,6 @@ class AuthenticationAttributeField(forms.CharField):
     """
     A helper field to be used for authentication fields in DataRequestForm
     """
-
     def __init__(self, *args, **kwargs):
         super(AuthenticationAttributeField, self).__init__(*args, **kwargs)
 
@@ -164,8 +163,8 @@ class OrganizationRatingForm(forms.Form):
         # we'll loop through the organizations included in the form (org_ids form field)
         # and see which ones have been rated
         for organization in self.organizations:
-            rating_key = "rating_" + str(organization.id)
-            message_key = "message_" + str(organization.id)
+            rating_key = "rating_%s" % organization.id
+            message_key = "message_%s" % organization.id
 
             # if a rating was given, we'll make sure that there shall also be a message,
             # otherwise an error message is displayed

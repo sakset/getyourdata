@@ -82,7 +82,8 @@ def create_request(request, org_ids):
     })
 
 
-def review_request(request, org_ids, ignore_captcha=True, prevent_redirect=False):
+def review_request(request, org_ids, ignore_captcha=True,
+                   prevent_redirect=False):
     """
     SECOND STEP
     Let user review his email requests if he's sending any

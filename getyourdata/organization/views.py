@@ -59,7 +59,6 @@ def view_organization(request, org_id):
         except Http404:
             cache.set("organization-%s" % org_id, False, 30)
             raise Http404()
-            return
 
         cache.set("organization-%s" % org_id, organization, 60)
 
@@ -79,7 +78,11 @@ def view_organization(request, org_id):
             comment.organization = organization
             comment.save()
             messages.success(request, _('Thank you for your feedback!'))
-            return redirect(reverse('organization:view_organization', args=(organization.id,)))
+
+            return redirect(
+                reverse(
+                    'organization:view_organization',
+                    args=(organization.id,)))
 
     return render(request, 'organization/view.html', {
         'organization': organization,
@@ -112,9 +115,14 @@ def new_organization(request):
         organization.authentication_fields.add(*authentication_fields)
         organization.save()
 
-        messages.success(request,
-            _("Organization profile created! Note that the organization profile won't be made visible until it has been verified by the site staff."))
-        return redirect(reverse('organization:view_organization', args=(organization.id,)))
+        messages.success(
+            request,
+            _("Organization profile created! Note that the organization "
+              "profile won't be made visible until it has been verified "
+              "by the site staff."))
+        return redirect(
+            reverse('organization:view_organization', args=(
+                organization.id,)))
     else:
         return render(
             request, "organization/new_organization/new.html",
@@ -159,9 +167,13 @@ def edit_organization(request, org_id=None):
         organization_draft.authentication_fields.add(*authentication_fields)
         organization_draft.save()
 
-        messages.success(request,
-            _("An organization profile with your modifications has been sent! The changes won't be made visible until they have been verified by the site staff."))
-        return redirect(reverse('organization:view_organization', args=(organization.id,)))
+        messages.success(
+            request,
+            _("An organization profile with your modifications has been sent! "
+              "The changes won't be made visible until they have been "
+              "verified by the site staff."))
+        return redirect(reverse('organization:view_organization', args=(
+            organization.id,)))
 
     return render(
         request, "organization/edit_organization/edit.html",

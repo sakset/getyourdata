@@ -221,7 +221,8 @@ class OrganizationViewTests(TestCase):
         response = self.client.get(
             reverse("organization:view_organization", args=(organization.id,)))
 
-        self.assertContains(response,
+        self.assertContains(
+            response,
             "The contact details for this organization have not been verified")
 
 
@@ -261,16 +262,22 @@ class OrganizationUpdateTests(TestCase):
 
         response = self.client.post(
             reverse(
-                "organization:edit_organization", args=(self.organization.id,)),
-                {"name": "Da Organization",
-                 "address_line_one": "Fake Street 44",
-                 "postal_code": "00234",
-                 "country": "Finland",
-                 "authentication_fields": [
-                    self.auth_field3.id, self.auth_field1.id],
-                 "g-recaptcha-response": "PASSED"})
+                "organization:edit_organization",
+                args=(self.organization.id,)
+            ),
+            {"name": "Da Organization",
+             "address_line_one": "Fake Street 44",
+             "postal_code": "00234",
+             "country": "Finland",
+             "authentication_fields": [
+                self.auth_field3.id, self.auth_field1.id],
+             "g-recaptcha-response": "PASSED"}
+        )
 
-        self.assertRedirects(response, "/en/organizations/view/%s/" % self.organization.id, status_code=302)
+        self.assertRedirects(
+            response,
+            "/en/organizations/view/%s/" % self.organization.id,
+            status_code=302)
 
         self.assertEquals(
             self.organization.authentication_fields.all().count(), 1)
@@ -283,28 +290,37 @@ class OrganizationUpdateTests(TestCase):
     def test_user_can_create_organization_draft_with_email_address(self):
         response = self.client.post(
             reverse(
-                "organization:edit_organization", args=(self.organization.id,)),
-                {"name": "Da Organization",
-                 "email_address": "some.email@random.com",
-                 "address_line_one": "",
-                 "postal_code": "",
-                 "country": "",
-                 "authentication_fields": [self.auth_field1.id],
-                 "g-recaptcha-response": "PASSED"})
+                "organization:edit_organization",
+                args=(self.organization.id,)
+            ),
+            {"name": "Da Organization",
+             "email_address": "some.email@random.com",
+             "address_line_one": "",
+             "postal_code": "",
+             "country": "",
+             "authentication_fields": [self.auth_field1.id],
+             "g-recaptcha-response": "PASSED"}
+        )
 
-        self.assertRedirects(response, "/en/organizations/view/%s/" %self.organization.id, status_code=302)
+        self.assertRedirects(
+            response,
+            "/en/organizations/view/%s/" % self.organization.id,
+            status_code=302)
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 1)
 
     def test_user_cant_create_organization_without_authentication_fields(self):
         response = self.client.post(
             reverse(
-                "organization:edit_organization", args=(self.organization.id,)),
-                {"name": "Da Organization",
-                 "address_line_one": "Fake Street 44",
-                 "postal_code": "00234",
-                 "country": "Finland",
-                 "authentication_fields": []})
+                "organization:edit_organization",
+                args=(self.organization.id,)
+                ),
+            {"name": "Da Organization",
+             "address_line_one": "Fake Street 44",
+             "postal_code": "00234",
+             "country": "Finland",
+             "authentication_fields": []}
+        )
 
         self.assertContains(response,
             "Authentication fields are required")
@@ -314,29 +330,37 @@ class OrganizationUpdateTests(TestCase):
     def test_user_cant_create_organization_draft_without_valid_email_or_postal_address(self):
         response = self.client.post(
             reverse(
-                "organization:edit_organization", args=(self.organization.id,)),
-                {"name": "Da Organization",
-                 "address_line_one": "",
-                 "postal_code": "00234",
-                 "country": "Finland",
-                 "authentication_fields": [self.auth_field1.id],
-                 "g-recaptcha-response": "PASSED"})
+                "organization:edit_organization",
+                args=(self.organization.id,)
+                ),
+            {"name": "Da Organization",
+             "address_line_one": "",
+             "postal_code": "00234",
+             "country": "Finland",
+             "authentication_fields": [self.auth_field1.id],
+             "g-recaptcha-response": "PASSED"}
+        )
 
-        self.assertContains(response,
-         "Organization profile must contain either a valid email address or postal information")
+        self.assertContains(
+            response,
+            "Organization profile must contain either a valid email "
+            "address or postal information")
 
         self.assertEquals(OrganizationDraft.objects.all().count(), 0)
 
     def test_user_cant_create_organization_draft_without_any_changes(self):
         response = self.client.post(
             reverse(
-                "organization:edit_organization", args=(self.organization.id,)),
-                {"name": "The Organization",
-                 "address_line_one": "Fake Street 4",
-                 "postal_code": "00234",
-                 "country": "Finland",
-                 "authentication_fields": [self.auth_field1.id],
-              "g-recaptcha-response": "PASSED"})
+                "organization:edit_organization",
+                args=(self.organization.id,)
+            ),
+            {"name": "The Organization",
+             "address_line_one": "Fake Street 4",
+             "postal_code": "00234",
+             "country": "Finland",
+             "authentication_fields": [self.auth_field1.id],
+             "g-recaptcha-response": "PASSED"}
+        )
 
         self.assertContains(response, "Update form needs some changes for it to be sent!")
 
@@ -350,10 +374,10 @@ class OrganizationUpdateAdminTests(TestCase):
             'moderator', 'moderator@moderator.com', 'password')
         self.moderator_user.is_staff = True
 
-        self.moderator_user.user_permissions.add(Permission.objects.get(
-            codename='check_organization_draft'))
-        self.moderator_user.user_permissions.add(Permission.objects.get(
-            codename='change_organizationdraft'))
+        self.moderator_user.user_permissions.add(
+            Permission.objects.get(codename='check_organization_draft'))
+        self.moderator_user.user_permissions.add(
+            Permission.objects.get(codename='change_organizationdraft'))
         self.moderator_user.save()
         self.client.login(username="moderator", password="password")
 
