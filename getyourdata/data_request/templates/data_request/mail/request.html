@@ -89,24 +89,25 @@ everything two sided -->
 
 <div class="datarequest">
 
-    <div class="datarequest-heading">{{ request_content.header }}</div>
+    <div class="datarequest-heading">{{ request_content.header|linebreaks }}</div>
 
     <div class="datarequest-content">
 
-        <p>{{ request_content.content1 }}</p>
-        <p>{{ request_content.content2 }}</p>
+        <p>{{ request_content.content1|linebreaks }}</p>
+
 
         {% for auth_content in data_request.auth_contents.all %}
             <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
         {% endfor %}
 
+        <p>{{ request_content.content2|linebreaks }}</p>
 
     </div>
 
     {% if person_name %}
 
         <div class="datarequest-footer">
-            <p>{{ request_content.footer }}</p>
+            <p>{{ request_content.footer|linebreaks }}</p>
             <p>{{ person_name.content }}</p>
         </div>
 
