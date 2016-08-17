@@ -66,6 +66,11 @@
 #bootstrap-overrides .well .thumbnail {
     padding: 0px;
     border: 0px;
+    background-color: transparent;
+}
+
+#bootstrap-overrides .col-md-4.begin-here {
+    background: green;
 }
 
 
