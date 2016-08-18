@@ -34,7 +34,8 @@ class FeedbackMessageContent(BaseModel):
         blank=True, default="Thank you for using [SITE NAME HERE]")
     pdf_copy = models.TextField(
         blank=True, default="A copy of the PDF has been included.",
-        help_text=_("Included if user requested a copy of his mail request PDF"))
+        help_text=_(
+            "Included if user requested a copy of his mail request PDF"))
     footer = models.TextField(blank=True, default="Regards,")
 
 

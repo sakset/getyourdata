@@ -40,7 +40,9 @@ class DataRequestForm(forms.Form):
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
         if not self.organizations:
-            raise AttributeError("'%s' requires a list of Organization objects as 'organizations'")
+            raise AttributeError(
+                "'%s' requires a list of Organization objects as "
+                "'organizations'")
 
         for organization in self.organizations:
             if organization.accepts_email:
@@ -90,7 +92,8 @@ class DataRequestForm(forms.Form):
 
         if self.contains_email_requests:
             self.fields["user_email_address"].help_text = _(
-                "Your data and further enquiries by organizations will be sent to this address")
+                "Your data and further enquiries by organizations "
+                "will be sent to this address")
             self.fields["user_email_address"].required = True
 
         # Make the fields invisible if needed
@@ -100,13 +103,13 @@ class DataRequestForm(forms.Form):
 
     def clean(self):
         """
-        If user has checked 'send mail request copy to email' but hasn't entered
-        an email address, throw an error
+        If user has checked 'send mail request copy to email' but hasn't
+        entered an email address, throw an error
         """
         cleaned_data = super(DataRequestForm, self).clean()
 
-        # If user is creating only mail requests and wants a copy of his requests
-        # to his email address, require that email address is provided
+        # If user is creating only mail requests and wants a copy of his
+        # requests to his email address, require that email address is provided
         if self.contains_mail_requests:
             if cleaned_data.get("send_mail_request_copy", False) and \
                     not cleaned_data.get("user_email_address", None):
@@ -149,30 +152,33 @@ class OrganizationRatingForm(forms.Form):
             self.fields['message_%i' % organization.id] = forms.CharField(
                 error_messages={
                     'required': _('Message is required'),
-                    'max_length': _('Maximum allowed length is 2000 characters')
+                    'max_length': _(
+                        'Maximum allowed length is 2000 characters')
                 },
                 label=_('Message'),
                 max_length=2000,
                 required=False,
             )
 
-
     def clean(self):
         cleaned_data = super(OrganizationRatingForm, self).clean()
 
-        # we'll loop through the organizations included in the form (org_ids form field)
-        # and see which ones have been rated
+        # We'll loop through the organizations included in the form
+        # (org_ids form field) and see which ones have been rated
         for organization in self.organizations:
             rating_key = "rating_%s" % organization.id
             message_key = "message_%s" % organization.id
 
-            # if a rating was given, we'll make sure that there shall also be a message,
-            # otherwise an error message is displayed
+            # if a rating was given, we'll make sure that there shall also
+            # be a message, otherwise an error message is displayed
             if rating_key in cleaned_data:
-                if cleaned_data.get(rating_key) != 0 and (not cleaned_data.get(message_key) or
-                                                              cleaned_data.get(message_key).isspace()):
+                message_exists = cleaned_data.get(
+                    message_key, "").strip() != ""
+
+                if cleaned_data.get(rating_key) != 0 and not message_exists:
                     self.add_error(message_key, _('Message is required'))
-                    # the rating and organization id shall be removed from the list of valid input
+                    # the rating and organization id shall be removed from the
+                    # list of valid input
                     cleaned_data.pop(rating_key, None)
 
         return cleaned_data

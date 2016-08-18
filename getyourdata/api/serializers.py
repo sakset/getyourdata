@@ -14,5 +14,7 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ('id', 'name', 'verified', 'accepts_email', 'accepts_mail', 'registers')
+        fields = (
+            'id', 'name', 'verified', 'accepts_email',
+            'accepts_mail', 'registers')
         depth = 2

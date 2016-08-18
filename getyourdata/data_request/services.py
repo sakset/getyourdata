@@ -10,6 +10,7 @@ from PyPDF2 import PdfFileMerger
 
 from StringIO import StringIO
 
+
 def convert_html_to_pdf(html_data):
     """
     Converts a HTML document into a formatted PDF

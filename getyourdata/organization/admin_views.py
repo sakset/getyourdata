@@ -27,7 +27,8 @@ def check_organization_draft(request, draft_id):
     organization_draft_fields = organization_draft.authentication_fields.all()
     original_organization_fields = original_organization.authentication_fields.all()
 
-    organization_default_fields = ("name", "email_address",
+    organization_default_fields = (
+        "name", "email_address",
         "address_line_one", "address_line_two", "postal_code",
         "country")
 
@@ -55,8 +56,9 @@ def check_organization_draft(request, draft_id):
             for field in ORGANIZATION_FIELDS:
                 # Replace the fields in the original organization
                 # with new ones
-                setattr(original_organization, field,
-                        getattr(organization_draft, field))
+                setattr(
+                    original_organization, field,
+                    getattr(organization_draft, field))
 
             original_organization.authentication_fields = organization_draft_fields
             original_organization.save()

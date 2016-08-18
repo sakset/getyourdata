@@ -168,7 +168,9 @@ def send_request(request, org_ids):
                         pdf_pages.append(pdf_page)
                 except RuntimeError:
                     messages.error(
-                        request, _("The PDF file couldn't be created! Please try again later."))
+                        request,
+                        _("The PDF file couldn't be created! Please "
+                          "try again later."))
 
                     return review_request(
                         request, org_ids, prevent_redirect=True)
@@ -302,8 +304,10 @@ def submit_feedback(request):
         # one by one.
         if rating_form.is_valid() and captcha_form.is_valid():
             for organization in organizations:
-                rating = rating_form.cleaned_data["rating_" + str(organization.id)]
-                message = rating_form.cleaned_data["message_" + str(organization.id)]
+                rating = rating_form.cleaned_data[
+                    "rating_%d" % organization.id]
+                message = rating_form.cleaned_data[
+                    "message_%d" % organization.id]
 
                 comment = Comment(None)
                 comment.organization = organization
@@ -311,11 +315,13 @@ def submit_feedback(request):
                 comment.message = message
                 comment.save()
 
-            messages.success(request,
+            messages.success(
+                request,
                 _('Thank you for your contribution! Your feedback will help '
                   'the other users and the organizations.'))
         else:
-            messages.error(request,
+            messages.error(
+                request,
                 _('Some of the fields were invalid or missing, please review.'))
 
             return render(request, "data_request/request_data_feedback.html", {
