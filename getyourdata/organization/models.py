@@ -54,7 +54,8 @@ class OrganizationDetails(BaseModel):
     email_address = models.EmailField(
         max_length=255, null=True, blank=True,
         default="",
-        help_text=_("Email address used by the organization to respond to user data requests"),
+        help_text=_("Email address used by the organization for receiving data requests. Leave empty if the "
+                    "organization only accepts requests by post."),
         verbose_name=_("Email address"))
 
     # Postal contact

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 01:20+0300\n"
-"PO-Revision-Date: 2016-08-17 22:23+0000\n"
+"POT-Creation-Date: 2016-08-18 17:50+0300\n"
+"PO-Revision-Date: 2016-08-18 15:01+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -60,26 +60,26 @@ msgstr ""
 "sähköpostiosoitteesi."
 
 #: data_request/forms.py:147 data_request/forms.py:148
-#: organization/forms.py:141 organization/forms.py:142
+#: organization/forms.py:143 organization/forms.py:144
 msgid "Please leave a rating"
 msgstr "Anna arvosana"
 
-#: data_request/forms.py:150 organization/forms.py:144
-#: organization/forms.py:164
+#: data_request/forms.py:150 organization/forms.py:146
+#: organization/forms.py:166
 msgid "Rating"
 msgstr "Arvosana"
 
 #: data_request/forms.py:158 data_request/forms.py:181 feedback/forms.py:10
-#: organization/forms.py:152
+#: organization/forms.py:154
 msgid "Message is required"
 msgstr "Viesti pakollinen."
 
-#: data_request/forms.py:159 organization/forms.py:153
+#: data_request/forms.py:159 organization/forms.py:155
 msgid "Maximum allowed length is 2000 characters"
 msgstr "Suurin sallittu merkkimäärä 2000 merkkiä."
 
-#: data_request/forms.py:161 feedback/forms.py:13 organization/forms.py:155
-#: organization/forms.py:165
+#: data_request/forms.py:161 feedback/forms.py:13 organization/forms.py:157
+#: organization/forms.py:167
 msgid "Message"
 msgstr "Viesti"
 
@@ -433,9 +433,19 @@ msgstr "Organisaatioluonnos organisaatiolle %s sivuutettiin."
 msgid "Authentication fields"
 msgstr "Tunnistekentät"
 
-#: organization/forms.py:38 organization/forms.py:76
+#: organization/forms.py:38
 msgid "What authentication fields this organizations requires"
 msgstr "Mitä tunnistekenttiä tämä organisaatio vaatii"
+
+#: organization/forms.py:76
+msgid ""
+"What personal details this organizations requires for identifying the "
+"customer and forresponding to data requests. For example: postal address, "
+"social security number, loyalty card number, customer number"
+msgstr ""
+"Mitä tunnistautumistietoja tämä organisaatio tarvitsee tunnistaakseen "
+"asiakkaansa ja vastatakseen saamiinsa tietopyyntöihin. Esim. postiosoite, "
+"henkilötunnus, kanta-asiakaskortin numero, asiakasnumero."
 
 #: organization/models.py:26
 msgid "If not blank, this regex is used to validate the field value"
@@ -446,56 +456,61 @@ msgid "Name"
 msgstr "Nimi"
 
 #: organization/models.py:57
+#| msgid ""
+#| "Email address used by the organization to respond to user data requests"
 msgid ""
-"Email address used by the organization to respond to user data requests"
-msgstr "Organisaation käyttämä sähköpostiosoite tietopyyntöihin vastaamiseen "
+"Email address used by the organization for receiving data requests. Leave "
+"empty if the organization only accepts requests by post."
+msgstr ""
+"Organisaation käyttämä sähköpostiosoite tietopyyntöjen vastaanottamiseen. "
+"Jätä tyhjäksi mikäli organisaatio vastaanottaa tietopyyntöjä vain kirjeitse."
 
-#: organization/models.py:58
+#: organization/models.py:59
 msgid "Email address"
 msgstr "Sähköpostiosoite"
 
-#: organization/models.py:64
+#: organization/models.py:65
 msgid "Address line 1"
 msgstr "Osoiterivi 1"
 
-#: organization/models.py:68
+#: organization/models.py:69
 msgid "Address line 2"
 msgstr "Osoiterivi 2"
 
-#: organization/models.py:72
+#: organization/models.py:73
 msgid "Postal code"
 msgstr "Postinumero"
 
-#: organization/models.py:76
+#: organization/models.py:77
 msgid "Country"
 msgstr "Maa"
 
-#: organization/models.py:88
+#: organization/models.py:89
 msgid ""
 "Organization profile must contain either a valid email address or postal "
 "information"
 msgstr ""
 "Organisaatioprofiilin pitää sisältää joko kelvollinen sähköpostiosoite tai "
-"osoitetiedot"
+"postiosoitetiedot"
 
-#: organization/models.py:98
+#: organization/models.py:99
 msgid "Verified"
 msgstr "Vahvistettu"
 
-#: organization/models.py:99
+#: organization/models.py:100
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
 
-#: organization/models.py:136
+#: organization/models.py:137
 msgid ""
 "The name of the register used by the organization. Eg. Customer register"
 msgstr "Organisaation käyttämä nimi rekisterille. Esim. \"Asiakasrekisteri\""
 
-#: organization/models.py:137
+#: organization/models.py:138
 msgid "Name of the person register"
 msgstr "Henkilörekisterin nimi"
 
-#: organization/models.py:159
+#: organization/models.py:160
 msgid "Can check organization drafts and update the original organization"
 msgstr ""
 "Voi tarkistaa organisaatioluonnoksia ja päivittää alkuperäistä "
@@ -539,8 +554,8 @@ msgid ""
 "Before the updated organization profile can be seen by other users it will "
 "be verified by site staff."
 msgstr ""
-"Sivuston ylläpitajat varmentavat organisaatioprofiilin ennen kuin se näkyy "
-"käyttäjille"
+"Sivuston ylläpitäjät varmentavat organisaatioprofiilin ennen kuin se näkyy "
+"muille käyttäjille."
 
 #. Translators: On the "list organizations" view
 #: organization/templates/organization/list.html:23
@@ -599,7 +614,7 @@ msgstr "Hyväksyy sähköpostipyynnöt"
 
 #: organization/templates/organization/new_organization/new.html:10
 msgid "Create a new organization profile"
-msgstr "Luo uusi organisaatioprofiili"
+msgstr "Lisää uusi organisaatio palveluun"
 
 #: organization/templates/organization/new_organization/new.html:19
 msgid "Create"
@@ -607,13 +622,15 @@ msgstr "Luo"
 
 #: organization/templates/organization/new_organization/new.html:26
 msgid "Creating an organization profile"
-msgstr "Organisaatioprofiilin luominen"
+msgstr "Organisaation lisääminen"
 
 #: organization/templates/organization/new_organization/new.html:30
 msgid ""
 "Before the organization profile can be seen by other users it will be "
 "verified by site staff."
-msgstr "Organisaatioprofiili varmennetaan ennen kuin se näkyy käyttäjille"
+msgstr ""
+"Organisaatioprofiili varmennetaan ylläpidon toimesta ennen kuin se näkyy "
+"muille käyttäjille."
 
 #: organization/templates/organization/view.html:18
 msgid "Send a request"
