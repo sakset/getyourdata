@@ -3,51 +3,59 @@
 {% load flatpages %}
 
 <div class="navbar navbar-inverse navbar-fixed-top navbar-default" role="navigation">
-	<div class="container">
-	    <div class="navbar-header">
-	    	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
-		        <span class="sr-only">{% trans "Toggle navigation" %}</span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		      </button>
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar"
+                    aria-expanded="false">
+                <span class="sr-only">{% trans "Toggle navigation" %}</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="{% url 'home' %}">GetYourData.org</a>
-			<ul class="pull-left nav navbar-nav">
-				{# Quick feedback #}
-				<li class="dropdown">
-					<a id="give_feedback_nav_link" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-						{% trans "Give feedback" %} <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						{% include 'feedback.html' %}
-					</ul>
-				</li>
-			</ul>
-        </div>
-	    <div class="collapse navbar-collapse" id="main-navbar">
-	    	<ul class="pull-right nav navbar-nav">
-				{# Translators: Navbar link #}
-				{% get_current_language as current_language %}
-				{% get_flatpages as flatpages %}
-
-				{% for page in flatpages %}
-			        <li><a href="/{{ current_language }}{{ page.url }}">{{ page.title }}</a></li>
-			    {% endfor %}
-		        <li><a href="{% url 'organization:list_organizations' %}">{% trans "Organizations" %}</a></li>
-                <li><a href="{% url 'faq' %}">{% trans "FAQ" %}</a></li>
-		        {# Language selection #}
-		        <li class="dropdown">
-					{% get_language_info for current_language as current_lang_info %}
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-						{{ current_lang_info.name_translated }} <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-	                    {% for lang_code, lang_name in LANGUAGES %}
-						<li><a href="{{ request.get_full_path|change_url_lang:lang_code }}">{{ lang_name }}</a></li>
-	                    {% endfor %}
-					</ul>
+            <ul class="pull-left nav navbar-nav">
+                {# Quick feedback #}
+                <li class="dropdown">
+                    <a id="give_feedback_nav_link" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        {% trans "Give feedback" %} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% include 'feedback.html' %}
+                    </ul>
                 </li>
             </ul>
-	    </div><!--/.nav-collapse -->
-	</div>
+        </div>
+        <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="pull-right nav navbar-nav">
+                {# Translators: Navbar link #}
+                {% get_current_language as current_language %}
+                {% get_flatpages as flatpages %}
+
+                {% for page in flatpages %}
+                    <li><a href="/{{ current_language }}{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+                <li><a href="{% url 'organization:list_organizations' %}">{% trans "Organizations" %}</a></li>
+                <li><a href="{% url 'faq' %}">{% trans "FAQ" %}</a></li>
+
+                {% if LANGUAGES|length > 1 %}
+                    {# Language selection #}
+                    <li class="dropdown">
+                        {% get_language_info for current_language as current_lang_info %}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            {{ current_lang_info.name_translated }} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for lang_code, lang_name in LANGUAGES %}
+                                <li><a href="{{ request.get_full_path|change_url_lang:lang_code }}">{{ lang_name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+            
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
 </div>
