@@ -35,7 +35,9 @@ class NewOrganizationForm(forms.ModelForm):
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
             choices=authentication_field_choices,
             label=_("Authentication fields"),
-            help_text=_("What authentication fields this organizations requires"))
+            help_text=_("What personal details this organizations requires for identifying the customer and for"
+                        "responding to data requests. For example: postal address, social security number, "
+                        "loyalty card number, customer number"))
 
 
 class EditOrganizationForm(forms.ModelForm):
@@ -73,7 +75,9 @@ class EditOrganizationForm(forms.ModelForm):
             initial=selected_field_choices,
             choices=authentication_field_choices,
             label=_("Authentication fields"),
-            help_text=_("What authentication fields this organizations requires"))
+            help_text=_("What personal details this organizations requires for identifying the customer and for"
+                        "responding to data requests. For example: postal address, social security number, "
+                        "loyalty card number, customer number"))
 
     def form_has_changes(self, new_authentication_fields):
         """
