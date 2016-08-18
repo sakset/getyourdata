@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 17:50+0300\n"
-"PO-Revision-Date: 2016-08-18 14:59+0000\n"
+"PO-Revision-Date: 2016-08-18 15:01+0000\n"
 "Last-Translator:   <kalle.kirjalainen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -491,7 +491,7 @@ msgid ""
 "information"
 msgstr ""
 "Organisaatioprofiilin pitää sisältää joko kelvollinen sähköpostiosoite tai "
-"osoitetiedot"
+"postiosoitetiedot"
 
 #: organization/models.py:99
 msgid "Verified"
@@ -614,7 +614,7 @@ msgstr "Hyväksyy sähköpostipyynnöt"
 
 #: organization/templates/organization/new_organization/new.html:10
 msgid "Create a new organization profile"
-msgstr "Luo uusi organisaatioprofiili"
+msgstr "Lisää uusi organisaatio palveluun"
 
 #: organization/templates/organization/new_organization/new.html:19
 msgid "Create"
@@ -622,7 +622,7 @@ msgstr "Luo"
 
 #: organization/templates/organization/new_organization/new.html:26
 msgid "Creating an organization profile"
-msgstr "Organisaatioprofiilin luominen"
+msgstr "Organisaation lisääminen"
 
 #: organization/templates/organization/new_organization/new.html:30
 msgid ""
