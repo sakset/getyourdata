@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 from modeltranslation.admin import TranslationAdmin
 
 from organization.models import (Organization, AuthenticationField,
-    Register, OrganizationDraft, Comment)
+                                 Register, OrganizationDraft, Comment)
 from organization import admin_views
 
 
@@ -58,11 +58,12 @@ class OrganizationDraftAdmin(admin.ModelAdmin):
 
     def check_organization_draft(self, obj):
         """
-        Display a link to review the organization draft and possibly replace the
-        original organization details with it
+        Display a link to review the organization draft and possibly replace
+        the original organization details with it
         """
         link = u"<a href=\"%s\">{0}</a>" % (
-            reverse("admin:organization_organizationdraft_check_organization_draft",
+            reverse(
+                "admin:organization_organizationdraft_check_organization_draft",
                 args=[obj.id]))
 
         if not obj.checked:
@@ -73,6 +74,7 @@ class OrganizationDraftAdmin(admin.ModelAdmin):
                 return u"{0} - {1}".format(link, _("Updated"))
             else:
                 return u"{0} - {1}".format(link, _("Ignored"))
+
     check_organization_draft.allow_tags = True
 
 

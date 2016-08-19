@@ -16,14 +16,14 @@ class FlatPageAdmin(TranslationAdmin):
     form = FlatpageForm
     fieldsets = (
         (None,
-        {'fields': (
-            'url',
-            'title',
-            'content',
-            'sites',
-            )}
-        ),
+         {'fields': (
+             'url',
+             'title',
+             'content',
+             'sites',
+             )}),
     )
+
     list_display = ('url', 'title')
     formfield_overrides = {
         models.TextField: {'widget': AdminTinyMCE},

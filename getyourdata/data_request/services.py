@@ -10,6 +10,7 @@ from PyPDF2 import PdfFileMerger
 
 from StringIO import StringIO
 
+
 def convert_html_to_pdf(html_data):
     """
     Converts a HTML document into a formatted PDF
@@ -73,8 +74,8 @@ def send_data_requests_by_email(email_address, data_requests):
     return result == len(email_messages)
 
 
-def send_feedback_message_by_email(
-    email_address, request, organizations, pdf_data):
+def send_feedback_message_by_email(email_address, request,
+                                   organizations, pdf_data):
     """Send a message detailing organizations the user created a data request for
 
     :email_address: Email address to send to

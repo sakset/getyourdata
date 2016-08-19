@@ -83,11 +83,15 @@ class OrganizationDetails(BaseModel):
         abstract = True
 
     def clean(self):
-        postal_address_requirements = ["address_line_one", "postal_code", "country"]
-        if not (form_has_fields(self, ["email_address"]) or form_has_fields(self, postal_address_requirements)):
+        postal_address_requirements = [
+            "address_line_one", "postal_code", "country"]
+        if not (form_has_fields(self, ["email_address"]) or
+                form_has_fields(self, postal_address_requirements)):
             raise ValidationError(
-                _("Organization profile must contain either a valid email address or postal information"))
+                _("Organization profile must contain either a valid email "
+                  "address or postal information"))
         return self
+
 
 class Organization(OrganizationDetails):
     """
@@ -118,11 +122,12 @@ class Organization(OrganizationDetails):
 
     @property
     def average_rating(self):
-        rating = self.comments(manager='objects').all().aggregate(avg=Avg('rating'))['avg']
+        rating = self.comments(manager='objects').all().aggregate(
+            avg=Avg('rating'))['avg']
+
         if rating:
             return format(float(rating), '.1f')
         return '0'
-
 
     def __unicode__(self):
         return self.name
@@ -133,9 +138,11 @@ class Register(BaseModel):
     Organization may have multiple registers
     """
     # name of the register
-    name = models.CharField(max_length=255,
-                            help_text=_("The name of the register used by the organization. Eg. Customer register"),
-                            verbose_name=_("Name of the person register"))
+    name = models.CharField(
+        max_length=255,
+        help_text=_("The name of the register used by the organization. "
+                    "Eg. Customer register"),
+        verbose_name=_("Name of the person register"))
 
     # which organization this register belongs to
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
@@ -157,7 +164,8 @@ class OrganizationDraft(OrganizationDetails):
 
         permissions = (
             ("check_organization_draft",
-            _("Can check organization drafts and update the original organization")),
+                _("Can check organization drafts and update the original "
+                  "organization")),
         )
 
     original_organization = models.ForeignKey(

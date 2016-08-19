@@ -8,4 +8,3 @@ class AuthenticationFieldAdmin(admin.ModelAdmin):
     list_display = [
         'content', 'created_on',
     ]
-    
