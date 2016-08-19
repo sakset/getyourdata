@@ -15,6 +15,13 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = []
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -35,8 +35,10 @@ class NewOrganizationForm(forms.ModelForm):
         self.fields["authentication_fields"] = forms.MultipleChoiceField(
             choices=authentication_field_choices,
             label=_("Authentication fields"),
-            help_text=_("What personal details this organizations requires for identifying the customer and for"
-                        "responding to data requests. For example: postal address, social security number, "
+            help_text=_("What personal details this organizations requires "
+                        "for identifying the customer and for "
+                        "responding to data requests. For example: postal "
+                        "address, social security number, "
                         "loyalty card number, customer number"))
 
 
