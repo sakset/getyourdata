@@ -1,4 +1,5 @@
 from django import forms
+from django.core.cache import cache
 from django.utils.translation import ugettext_lazy as _
 from django.forms.models import model_to_dict
 from organization.models import Organization, AuthenticationField, Comment
@@ -24,8 +25,12 @@ class NewOrganizationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(NewOrganizationForm, self).__init__(*args, **kwargs)
 
-        authentication_fields = AuthenticationField.objects.all().only(
-            "name", "title")
+        authentication_fields = cache.get("auth_fields_name_title")
+
+        if authentication_fields is None:
+            authentication_fields = AuthenticationField.objects.all().only(
+                "name", "title")
+            cache.set("auth_fields_name_title", authentication_fields)
 
         authentication_field_choices = []
 
@@ -61,8 +66,12 @@ class EditOrganizationForm(forms.ModelForm):
         for field in ORGANIZATION_FIELDS:
             self.fields[field].initial = getattr(self.organization, field)
 
-        authentication_fields = AuthenticationField.objects.all().only(
-            "name", "title")
+        authentication_fields = cache.get("auth_fields_name_title")
+
+        if authentication_fields is None:
+            authentication_fields = AuthenticationField.objects.all().only(
+                "name", "title")
+            cache.set("auth_fields_name_title", authentication_fields)
 
         authentication_field_choices = []
         selected_field_choices = []
