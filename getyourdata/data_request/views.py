@@ -1,9 +1,7 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMessage
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
+
 from django.utils.translation import ugettext as _
 
 from data_request.forms import DataRequestForm
@@ -152,9 +150,6 @@ def send_request(request, org_ids):
         if form.is_valid() and captcha_form.is_valid():
             cleaned_data = form.cleaned_data
 
-            send_mail_request_copy = cleaned_data.get(
-                "send_mail_request_copy", None)
-
             pdf_pages = []
             email_requests = []
 
@@ -194,12 +189,12 @@ def send_request(request, org_ids):
                         cleaned_data.get("user_email_address"),
                         request,
                         organizations,
-                        pdf_data if send_mail_request_copy else None):
+                        pdf_data):
                     messages.error(
                         request,
                         _("A feedback message couldn't be sent!"))
                 else:
-                    mail_request_copy_sent = send_mail_request_copy
+                    mail_request_copy_sent = True
 
             if pdf_data:
                 # Encode the PDF data as base64 to be rendered in the view
@@ -440,7 +435,7 @@ def get_data_request(organization, form):
 
     """
     data_request = DataRequest.objects.create(
-        organization=organization)
+        organization=organization, user_email_address=form.cleaned_data['user_email_address'])
     auth_fields = organization.authentication_fields.all()
     auth_contents = []
 

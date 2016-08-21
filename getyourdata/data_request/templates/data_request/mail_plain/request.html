@@ -7,7 +7,7 @@
 
 {{ current_datetime }}
 
-{{ pdfcontent.header }}
+{{ request_content.header }}
 
 {{ request_content.content1 }}
 
@@ -16,6 +16,11 @@
 {% endfor %}
 
 {{ request_content.content2 }}
+
+{% if data_request.user_email_address %}
+{{ request_content.content3 }}
+{{ data_request.user_email_address }}
+{% endif %}
 
 {% if person_name %}
 {{ request_content.footer }}

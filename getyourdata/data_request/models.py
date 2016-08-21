@@ -9,8 +9,6 @@ from getyourdata.models import BaseModel
 from data_request.services import convert_html_to_pdf
 from organization.models import Organization, AuthenticationField
 
-from tinymce import models as tinymce_models
-
 
 class RequestContent(BaseModel):
     """
@@ -21,6 +19,7 @@ class RequestContent(BaseModel):
         blank=True, default="Dear recipient,")
     content1 = models.TextField(blank=True, default="content first")
     content2 = models.TextField(blank=True, default="content second")
+    content3 = models.TextField(blank=True, default="content third")
     footer = models.TextField(blank=True, default="Footer here")
 
 
@@ -64,6 +63,11 @@ class DataRequest(BaseModel):
     """
     organization = models.ForeignKey(
         Organization, related_name="data_requests")
+
+    user_email_address = models.EmailField(
+        max_length=255, null=True, blank=True,
+        default="",
+        )
 
     def to_text(self, html=False):
         """
