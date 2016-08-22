@@ -17,16 +17,9 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
-
-if TESTING:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        }
-    }
 
 AUTH_PASSWORD_VALIDATORS = []
 
