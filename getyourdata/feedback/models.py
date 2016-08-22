@@ -11,4 +11,4 @@ class ServiceFeedback(BaseModel):
 
     @property
     def short_content(self):
-        return truncatechars(self.content, 500)
+        return truncatechars(self.content, 125)
