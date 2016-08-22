@@ -364,9 +364,9 @@ class LiveDataRequestCreationTests(LiveServerTestCase):
         self.assertIn("Download PDF", self.selenium.page_source)
 
 
-def is_phone_number_valid(self, number, should_be):
+def is_phone_number_valid(self, number):
     """
-    Tests if phone number posted in request data is valid
+    Check if phone number posted in request data is valid
     """
     response = self.client.post(
         reverse("data_request:request_data", args=(self.organization.id,)),
@@ -375,10 +375,7 @@ def is_phone_number_valid(self, number, should_be):
          "user_email_address": "test@test.com"},
         follow=True
     )
-    if should_be:
-        self.assertNotContains(response, "The value for this field was not valid")
-    else:
-        self.assertContains(response, "The value for this field was not valid")
+    return response.content.count("The value for this field was not valid")
 
 
 @isDjangoTest()
@@ -400,10 +397,10 @@ class AuthenticationAttributeValidationTests(TestCase):
         self.organization.authentication_fields.add(self.auth_field2)
 
     def test_authentication_field_with_regex_accepts_valid_input(self):
-        is_phone_number_valid(self, "1234567", True)
+        self.assertEquals(is_phone_number_valid(self, "1234567"), 0)
 
     def test_authentication_field_with_regex_accepts_invalid_input(self):
-        is_phone_number_valid(self, "notaphonenumber", False)
+        self.assertEquals(is_phone_number_valid(self, "notaphonenumber"), 1)
 
     def test_authentication_field_is_shown_with_help_text(self):
         response = self.client.get(
@@ -489,7 +486,7 @@ def is_organization_feedback_valid(self, second_message, expected_response):
          "rating_" + self.org_id_one: 1,
          "message_" + self.org_id_one: "First Organization gets one",
          "rating_" + self.org_id_two: 2,
-         "message_" + self.org_id_two: "%s" % second_message,
+         "message_" + self.org_id_two: second_message,
          "rating_" + self.org_id_three: 3,
          "message_" + self.org_id_three: "Third Org is the hi-scorer with three",
          "g-recaptcha-response": "PASSED"},
@@ -527,7 +524,7 @@ class OrganizationRatingTests(TestCase):
 
     def test_user_can_rate_organizations(self):
         is_organization_feedback_valid(self, "Second Organization has to live with two",
-                                          "Thank you for your contribution!")
+                                             "Thank you for your contribution!")
 
     def test_no_missing_message_allowed(self):
         response = self.client.post(

@@ -21,7 +21,7 @@ def find_element_by_xpath(self, xpath, click_it=False, wait_time=10):
             By.XPATH, xpath))
     )
     if click_it:
-        element.click()
+        return element.click()
     else:
         return element
 
@@ -162,11 +162,9 @@ class OrganizationCreationTests(TestCase):
         self.assertEquals(Organization.objects.all().count(), 0)
 
 
-def is_certain_amount_of_organizations_listed_on_page(self, number_of_listed,
-                                                      page=-1):
+def get_amount_of_organizations_on_page(self, page=-1):
     """
-    Tests if certain amount of organizations are shown in organization list on
-    current page
+    Get organizations that are in organization list on current page
     """
     if page != -1:
         response = self.client.get(
@@ -175,7 +173,7 @@ def is_certain_amount_of_organizations_listed_on_page(self, number_of_listed,
     else:
         response = self.client.get(reverse("organization:list_organizations"))
 
-    self.assertContains(response, "Some organization", number_of_listed)
+    return response.content.count("Some organization")
 
 
 @isDjangoTest()
@@ -189,20 +187,20 @@ class OrganizationListingTests(TestCase):
         for i in range(0, 5):
             create_simple_organization()
 
-        is_certain_amount_of_organizations_listed_on_page(self, 5)
+        self.assertEquals(get_amount_of_organizations_on_page(self), 5)
 
     def test_only_15_organizations_are_listed_per_page(self):
         for i in range(0, 20):
             create_simple_organization()
 
-        is_certain_amount_of_organizations_listed_on_page(self, 15)
+        self.assertEquals(get_amount_of_organizations_on_page(self), 15)
 
     def test_correct_amount_of_organizations_listed_per_page(self):
         for i in range(0, 25):
             create_simple_organization()
 
-        is_certain_amount_of_organizations_listed_on_page(self, 15)
-        is_certain_amount_of_organizations_listed_on_page(self, 10, 2)
+        self.assertEquals(get_amount_of_organizations_on_page(self), 15)
+        self.assertEquals(get_amount_of_organizations_on_page(self, 2), 10)
 
 
 @isDjangoTest()
@@ -513,18 +511,6 @@ class OrganizationUpdateAdminTests(TestCase):
 @isSeleniumTest()
 class OrganizationListJavascriptTests(LiveServerTestCase):
     def setUp(self):
-        self.xpaths = ["(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
-                       "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]",
-                       "(//button[@id='create-request' and contains(@onclick, 'orgList')])",
-                       "(//a[@id='page-1' and contains(@onclick, 'orgList')])",
-                       "(//a[@id='page-2' and contains(@onclick, 'orgList')])",
-                       "(//a[@id='page-3' and contains(@onclick, 'orgList')])",
-                       "(//a[@id='page-1' and @onclick='' and text()='1'])",
-                       "(//a[@id='page-2' and @onclick='' and text()='2'])",
-                       "(//a[@id='page-3' and @onclick='' and text()='3'])",
-                       ]
-
-        self.click_it = True
 
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
@@ -555,61 +541,114 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
         self.assertIn("0 organizations selected", self.selenium.page_source)
 
     def test_select_single_organization_for_request(self):
-        find_element_by_xpath(self, self.xpaths[0], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
+            click_it=True)
 
         self.assertIn("1 organization selected", self.selenium.page_source)
 
-        find_element_by_xpath(self, self.xpaths[2], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//button[@id='create-request' and contains(@onclick, 'orgList')])",
+            click_it=True)
 
         self.assertIn(
             "Fill in your details", self.selenium.page_source)
 
     def test_select_multiple_organizations_for_request(self):
-        find_element_by_xpath(self, self.xpaths[0], self.click_it)
-        find_element_by_xpath(self, self.xpaths[1], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
+            click_it=True)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]",
+            click_it=True)
 
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
-        find_element_by_xpath(self, self.xpaths[2], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//button[@id='create-request' and contains(@onclick, 'orgList')])",
+            click_it=True)
 
         self.assertIn(
             "Fill in your details",
             self.selenium.page_source)
 
     def test_can_change_page_to_display_different_organizations(self):
-        find_element_by_xpath(self, self.xpaths[4], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-2' and contains(@onclick, 'orgList')])",
+            click_it=True)
 
-        find_element_by_xpath(self, self.xpaths[7])
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-2' and @onclick='' and text()='2'])")
 
         self.assertIn("Organization 15", self.selenium.page_source)
         self.assertNotIn("Organization 0", self.selenium.page_source)
 
-        find_element_by_xpath(self, self.xpaths[3], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-1' and contains(@onclick, 'orgList')])",
+            click_it=True)
 
-        find_element_by_xpath(self, self.xpaths[6])
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-1' and @onclick='' and text()='1'])")
 
         self.assertIn("Organization 0", self.selenium.page_source)
         self.assertNotIn("Organization 15", self.selenium.page_source)
 
     def test_user_can_select_multiple_organizations_from_different_pages(self):
-        find_element_by_xpath(self, self.xpaths[0], self.click_it)
-        find_element_by_xpath(self, self.xpaths[1], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
+            click_it=True)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]",
+            click_it=True)
 
         self.assertIn("2 organizations selected", self.selenium.page_source)
 
-        find_element_by_xpath(self, self.xpaths[4], self.click_it)
-        find_element_by_xpath(self, self.xpaths[7])
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-2' and contains(@onclick, 'orgList')])",
+            click_it=True)
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-2' and @onclick='' and text()='2'])")
 
-        find_element_by_xpath(self, self.xpaths[0], self.click_it)
-        find_element_by_xpath(self, self.xpaths[1], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
+            click_it=True)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]",
+            click_it=True)
 
         self.assertIn("4 organizations selected", self.selenium.page_source)
 
-        find_element_by_xpath(self, self.xpaths[5], self.click_it)
-        find_element_by_xpath(self, self.xpaths[8])
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-3' and contains(@onclick, 'orgList')])",
+            click_it=True)
+        find_element_by_xpath(
+            self,
+            "(//a[@id='page-3' and @onclick='' and text()='3'])")
 
-        find_element_by_xpath(self, self.xpaths[0], self.click_it)
-        find_element_by_xpath(self, self.xpaths[1], self.click_it)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[1]",
+            click_it=True)
+        find_element_by_xpath(
+            self,
+            "(//input[@type='checkbox' and contains(@onclick, 'orgList')])[2]",
+            click_it=True)
 
         self.assertIn("6 organizations selected", self.selenium.page_source)
 
@@ -660,10 +699,9 @@ def pagination_can_be_seen(self):
         return False
 
 
-def is_pagination_shown_in_organization_list(self, number_of_organizations,
-                                             should_be):
+def is_pagination_shown_in_organization_list(self, number_of_organizations):
     """
-    Tests if pagination can be seen with certain amount of organizations in
+    Check if pagination can be seen with certain amount of organizations in
     organizations list
     """
     for i in range(0, number_of_organizations):
@@ -675,7 +713,7 @@ def is_pagination_shown_in_organization_list(self, number_of_organizations,
         "%s%s" % (self.live_server_url,
                   reverse("organization:list_organizations")))
 
-    self.assertEquals(pagination_can_be_seen(self), should_be)
+    return pagination_can_be_seen(self)
 
 
 @isSeleniumTest()
@@ -686,19 +724,18 @@ class OrganizationListPaginationShownTests(LiveServerTestCase):
             title='Some number')
 
     def test_pagination_isnt_shown_when_there_are_no_organization(self):
-        is_pagination_shown_in_organization_list(self, 0, False)
+        self.assertFalse(is_pagination_shown_in_organization_list(self, 0))
 
     def test_pagination_isnt_shown_when_there_are_only_few_organization(self):
-        is_pagination_shown_in_organization_list(self, 7, False)
+        self.assertFalse(is_pagination_shown_in_organization_list(self, 7))
 
     def test_pagination_is_shown_when_there_are_many_organization(self):
-        is_pagination_shown_in_organization_list(self, 32, True)
+        self.assertTrue(is_pagination_shown_in_organization_list(self, 32))
 
 
-def is_pagination_shown_in_view_organization(self, number_of_comments,
-                                             should_be):
+def is_pagination_shown_in_view_organization(self, number_of_comments):
         """
-        Tests if pagination can be seen with certain amount of comments in
+        Check if pagination can be seen with certain amount of comments in
         organization view
         """
         for i in range(0, number_of_comments):
@@ -709,7 +746,7 @@ def is_pagination_shown_in_view_organization(self, number_of_comments,
                       reverse("organization:view_organization",
                               args=(self.organization.id,))))
 
-        self.assertEquals(pagination_can_be_seen(self), should_be)
+        return pagination_can_be_seen(self)
 
 
 @isSeleniumTest()
@@ -724,10 +761,10 @@ class OrganizationViewPaginationShownTests(LiveServerTestCase):
         self.organization.authentication_fields.add(self.auth_field1)
 
     def test_pagination_isnt_shown_when_there_are_no_comments(self):
-        is_pagination_shown_in_view_organization(self, 0, False)
+        self.assertFalse(is_pagination_shown_in_view_organization(self, 0))
 
     def test_pagination_isnt_shown_when_there_are_only_few_comments(self):
-        is_pagination_shown_in_view_organization(self, 7, False)
+        self.assertFalse(is_pagination_shown_in_view_organization(self, 7))
 
     def test_pagination_is_shown_when_there_are_many_comments(self):
-        is_pagination_shown_in_view_organization(self, 20, True)
+        self.assertTrue(is_pagination_shown_in_view_organization(self, 20))
