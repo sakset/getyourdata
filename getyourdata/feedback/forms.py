@@ -15,6 +15,10 @@ class NewFeedbackForm(forms.ModelForm):
         required=True,
     )
 
+    origin_url = forms.CharField(
+        label=_("Originating URL"),
+        max_length=512)
+
     class Meta:
         model = ServiceFeedback
-        fields = ["content"]
+        fields = ["content", "origin_url"]

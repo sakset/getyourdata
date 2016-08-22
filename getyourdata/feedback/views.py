@@ -15,9 +15,8 @@ def send_feedback(request):
     """
     if request.method == "POST":
         form = NewFeedbackForm(request.POST)
-        form_valid = form.is_valid()
 
-        if form_valid:
+        if form.is_valid():
             form.save()
             messages.success(request, _('Thank you for your feedback!'))
         else:
