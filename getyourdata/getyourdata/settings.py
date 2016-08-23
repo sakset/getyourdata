@@ -213,6 +213,13 @@ EMAIL_USE_SSL = secrets.get("EMAIL_USE_SSL", False)
 
 NOREPLY_EMAIL_ADDRESS = "noreply@getyourdata.org"
 
+# Slack integration for site feedback
+#
+# For details on how to implement this, see:
+# https://api.slack.com/incoming-webhooks
+SLACK_WEBHOOK_ENABLED = True
+SLACK_WEBHOOK_URL = secrets.get("SLACK_WEBHOOK_URL", "http://127.0.0.1")
+
 # reCAPTCHA settings
 
 RECAPTCHA_PUBLIC_KEY = secrets.get(

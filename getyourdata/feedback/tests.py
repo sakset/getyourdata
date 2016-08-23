@@ -1,6 +1,7 @@
 #coding:utf-8
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
@@ -10,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from feedback.models import ServiceFeedback
+from feedback import services
 
 from random import choice
 from string import ascii_letters
@@ -54,6 +56,21 @@ class FeedbackTests(TestCase):
             reverse("organization:list_organizations"))
 
         self.assertContains(response, "value=\"/en/organizations/\"")
+
+    def test_feedback_sent_to_slack_channel_only_if_enabled(self):
+        test_feedback = "This site is completely awful."
+
+        with self.settings(SLACK_WEBHOOK_ENABLED=True,
+                           SLACK_WEBHOOK_URL="http://127.0.0.1"):
+            response = self.client.post(
+                reverse("feedback:send_feedback"), {"content": test_feedback},
+                follow=True)
+
+        with self.settings(SLACK_WEBHOOK_ENABLED=False,
+                           SLACK_WEBHOOK_URL="http://127.0.0.1"):
+            response = self.client.post(
+                reverse("feedback:send_feedback"), {"content": test_feedback},
+                follow=True)
 
 
 @isSeleniumTest()
