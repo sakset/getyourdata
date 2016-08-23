@@ -41,8 +41,12 @@
 
         }
 
+        .datarequest-content3 {
+            padding-top: 1cm;
+        }
+
         .datarequest-footer {
-            padding-top: 2cm;
+            padding-top: 1cm;
         }
 
 
@@ -101,14 +105,20 @@ everything two sided -->
         {% endfor %}
 
         <p>{{ request_content.content2|linebreaks }}</p>
-
     </div>
+
+    {% if data_request.user_email_address %}
+        <div class="datarequest-content3">
+            <p>{{ request_content.content3 }}<br><br>
+            {{ data_request.user_email_address }}</p>
+        </div>
+    {% endif %}
 
     {% if person_name %}
 
         <div class="datarequest-footer">
-            <p>{{ request_content.footer|linebreaks }}</p>
-            <p>{{ person_name.content }}</p>
+            <p>{{ request_content.footer }}<br>
+            {{ person_name.content }}</p>
         </div>
 
     {% endif %}

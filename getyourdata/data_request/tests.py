@@ -70,13 +70,16 @@ class DataRequestCreationTests(TestCase):
 
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
-            title='Some number')
+            title='Some number',
+            help_text='some text')
         self.auth_field2 = AuthenticationField.objects.create(
             name='other_thing',
-            title="Other thing")
+            title="Other thing",
+            help_text='other text')
         self.auth_field3 = AuthenticationField.objects.create(
             name='oddest_thing',
-            title="Oddest thing")
+            title="Oddest thing",
+            help_text='oddest text')
 
         self.assertEquals(self.organization.authentication_fields.all().count(), 0)
 
@@ -107,7 +110,7 @@ class DataRequestCreationTests(TestCase):
         response = self.client.get(reverse("data_request:request_data",
             args = ("%d,%d,%d" % (self.organization.id, self.organization2.id, self.organization3.id),)))
 
-        self.assertContains(response, "required-by")
+        self.assertContains(response, "Required by:")
 
 
     def test_required_by_is_not_present_when_supposed(self):
@@ -142,6 +145,7 @@ class DataRequestCreationTests(TestCase):
         data_request = DataRequest.objects.first()
 
         self.assertTrue(data_request.organization == self.organization)
+        self.assertTrue(data_request.user_email_address == "test@test.com")
 
     def test_multiple_data_requests_can_be_created(self):
         self.client.post(
@@ -163,6 +167,8 @@ class DataRequestCreationTests(TestCase):
 
         self.assertEquals(data_request1.organization, self.organization)
         self.assertEquals(data_request2.organization, self.organization2)
+        self.assertEquals(data_request1.user_email_address, "test@test.com")
+        self.assertEquals(data_request2.user_email_address, "test@test.com")
 
     def test_email_request_is_sent_correctly(self):
         response = self.client.post(
