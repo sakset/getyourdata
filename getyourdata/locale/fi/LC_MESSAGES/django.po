@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-19 17:06+0000\n"
-"PO-Revision-Date: 2016-08-19 17:13+0000\n"
+"PO-Revision-Date: 2016-08-24 16:04+0000\n"
 "Last-Translator:   <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -546,7 +546,7 @@ msgstr "Päivitä"
 
 #: organization/templates/organization/edit_organization/edit.html:26
 msgid "Updating an organization profile"
-msgstr "Organisaatioprofiilin päivittäminen"
+msgstr "Organisaation päivittäminen"
 
 #: organization/templates/organization/edit_organization/edit.html:27
 #: organization/templates/organization/new_organization/new.html:27
@@ -622,7 +622,7 @@ msgstr "Hyväksyy sähköpostipyynnöt"
 
 #: organization/templates/organization/new_organization/new.html:10
 msgid "Create a new organization profile"
-msgstr "Luo uusi organisaatioprofiili"
+msgstr "Luo uusi organisaatio"
 
 #: organization/templates/organization/new_organization/new.html:19
 msgid "Create"
@@ -630,15 +630,15 @@ msgstr "Luo"
 
 #: organization/templates/organization/new_organization/new.html:26
 msgid "Creating an organization profile"
-msgstr "Organisaatioprofiilin luonti"
+msgstr "Organisaation luonti"
 
 #: organization/templates/organization/new_organization/new.html:30
 msgid ""
 "Before the organization profile can be seen by other users it will be "
 "verified by site staff."
 msgstr ""
-"Organisaatioprofiili varmennetaan ylläpidon toimesta ennen kuin se näkyy "
-"muille käyttäjille."
+"Organisaatio varmennetaan ylläpidon toimesta ennen kuin se näkyy muille "
+"käyttäjille."
 
 #: organization/templates/organization/view.html:18
 msgid "Send a request"
@@ -723,16 +723,16 @@ msgid ""
 "Organization profile created! Note that the organization profile won't be "
 "made visible until it has been verified by the site staff."
 msgstr ""
-"Organisaatioprofiili luotu! Organisaatio ei näy muille käyttäjille ennen "
-"kuin sivuston ylläpito on tarkistanut sen."
+"Organisaatio luotu! Organisaatio ei näy muille käyttäjille ennen kuin "
+"sivuston ylläpito on tarkistanut sen."
 
 #: organization/views.py:172
 msgid ""
 "An organization profile with your modifications has been sent! The changes "
 "won't be made visible until they have been verified by the site staff."
 msgstr ""
-"Muutoksesi sisältävä organisaatioprofiili lähetetty! Palvelun ylläpito "
-"tarkistaa tiedot ennen kuin ne näkyvät muille käyttäjille."
+"Muutoksesi sisältävä organisaatio lähetetty! Palvelun ylläpito tarkistaa "
+"tiedot ennen kuin ne näkyvät muille käyttäjille."
 
 #: templates/base.html:41
 msgid "No results for "

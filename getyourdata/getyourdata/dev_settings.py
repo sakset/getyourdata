@@ -18,6 +18,9 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
+    'rosetta': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
     }
 }
 
