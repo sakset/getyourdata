@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import sys
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -35,7 +36,13 @@ SECRET_KEY = secrets.get(
 DEBUG = False
 
 # Are we running tests
-TESTING = False
+# A hacky way of doing this, but it's the only way I've found
+# to properly do monkey patching
+try:
+    TESTING = True if sys.argv[1:2][0] in \
+              ["test", "test_selenium", "test_all"] else False
+except:
+    TESTING = False
 
 SITE_ID = 1
 
