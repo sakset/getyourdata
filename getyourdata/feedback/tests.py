@@ -23,11 +23,15 @@ class FeedbackTests(TestCase):
 
         response = self.client.post(
             reverse("feedback:send_feedback"),
-            {"content": test_feedback},
+            {"content": test_feedback,
+             "origin_url": "/en/"},
             follow=True)
 
-        self.assertEquals(
-            ServiceFeedback.objects.all()[0].content, test_feedback)
+        feedback = ServiceFeedback.objects.all()[0]
+
+        self.assertEquals(feedback.content, test_feedback)
+        self.assertEquals(feedback.origin_url, "/en/")
+
         self.assertEquals(
             list(response.context['messages'])[0].message, success_message)
 
@@ -44,6 +48,12 @@ class FeedbackTests(TestCase):
         self.assertEquals(
             list(response.context['messages'])[0].message,
             "Message: Maximum allowed length is 4096 characters")
+
+    def test_feedback_form_includes_current_url(self):
+        response = self.client.get(
+            reverse("organization:list_organizations"))
+
+        self.assertContains(response, "value=\"/en/organizations/\"")
 
 
 @isSeleniumTest()
