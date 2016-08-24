@@ -16,9 +16,20 @@ from feedback import services
 from random import choice
 from string import ascii_letters
 
+import pytest
+
 
 @isDjangoTest()
 class FeedbackTests(TestCase):
+    @pytest.fixture(scope="function", autouse=True)
+    def fx_mock_feedback_services(self, monkeypatch):
+        def mock_send_slack_message(content="", origin_url=""):
+            raise IOError("mocked right m8")
+
+        monkeypatch.setattr(
+            'feedback.services.send_slack_message',
+            mock_send_slack_message)
+
     def test_feedback_can_be_sent_if_valid_message(self):
         success_message = "Thank you for your feedback!"
         test_feedback = ''.join(choice(ascii_letters) for i in range(256))
