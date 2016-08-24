@@ -140,3 +140,11 @@ img.center {
     color: white;
     margin-top: 0.5em;
 }
+
+/* for displaying organization contact info/address in organization list accordion view */
+
+.organization-address {
+    font-weight: bold;
+    font-family: monospace;
+    margin-bottom: 0.5em;
+}

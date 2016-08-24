@@ -21,7 +21,16 @@ MESSAGES = {
     "mail_request_accepted": "{% trans "Accepts postal requests" %}",
     "email_request_accepted": "{% trans "Accepts email requests" %}",
     "add_organization": "{% trans "Add organization" %}",
-    "view_details": "{% trans "View details" %}"
+    "view_details": "{% trans "View details" %}",
+    "contact_information": "{% trans "Contact information" %}",
+    "question_update_details": "{% blocktrans trimmed %}Is this organization's information incorrect or out-of-date? Update the organization profile to keep it up-to-date{% endblocktrans %}",
+    "update_details": "{% trans "Update details" %}",
+    "ratings": "{% trans "Ratings" %}",
+    "view_or_give_ratings": "{% trans "View or give ratings" %}",
+    "give_ratings": "{% trans "Rate the organization" %}",
+    "no_ratings": "{% trans "No ratings (yet)" %}",
+    "amount_ratings": "{% trans "Ratings" %}",
+    "average_ratings": "{% trans "Average rating" %}",
 };
 
 window.addEventListener("load", function(evt) {
@@ -231,24 +240,62 @@ orgList.View = {
 }
 </script>
 <script src="{% static 'js/handlebars.min.js' %}"></script>
+
 {% verbatim %}
 <script id="organization-list-template">
 <table class="table table-striped">
     <tbody>
-        {{#each organizations}}
-        <tr>
-            <td>
+        <div class="panel-group" id="accordion">
 
-                <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
-                <a onclick="orgList.Model.checkOrganization({{ this.id }})" href="#">{{ this.name }}</a>
+            {{#each organizations}}
+            <tr>
+                <td>
+                    <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
+                    <a onclick="orgList.Model.checkOrganization({{ this.id }})" href="#">{{ this.name }}</a>
 
-                <span class="organization-icon-list pull-right">
-                    <a class="btn btn-xs btn-primary" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.view_details }}</a>
-                </span>
+                    <span class="organization-icon-list pull-right">
+                        <a class="btn btn-xs btn-primary"  data-toggle="collapse" href="#organization-{{ this.id }}">{{ ../msg.view_details }}</a>
+                    </span>
 
-            </td>
-        </tr>
-        {{/each}}
+                    <div id="organization-{{ this.id }}" class="panel-collapse collapse out">
+                        <div class="col-md-6">
+                            <h2>{{ ../msg.contact_information }}</h2>
+                            <hr/>
+                            <div class="organization-address">
+                                {{#if this.address_line_one }}{{ this.address_line_one }}<br/>{{/if}}
+	                            {{#if this.address_line_two }}{{ this.address_line_two }}<br/>{{/if}}
+	                            {{#if this.postal_code }}{{ this.postal_code }}<br/>{{/if}}
+	                            {{#if this.country }}{{ this.country }}<br/>{{/if}}
+	                        </div>
+                            {{#if this.email_address}}
+                                <div>
+                                    <a href="mailto:{{ this.email_address }}">{{ this.email_address }}</a>
+                                </div>
+                            {{/if}}
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <p>{{../msg/question_update_details}}</p>
+                                    <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/edit/{{ this.id }}">{{ ../msg.update_details }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>{{ ../msg.ratings }}</h2>
+                            <hr/>
+                            <div>
+                                {{#if this.amount_ratings}}
+                                    {{ ../msg.amount_ratings }}: {{this.amount_ratings}} ({{ ../msg.average_ratings }} {{this.average_rating}}/5) <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.view_or_give_ratings }}</a>
+                                {{else}}
+                                    {{ ../msg.no_ratings }} <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.give_ratings }}</a>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+
+        </div>
     </tbody>
 </table>
 <div>

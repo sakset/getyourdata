@@ -121,6 +121,10 @@ class Organization(OrganizationDetails):
         return self.register_set is not None
 
     @property
+    def has_comments(self):
+        return self.comments is not None
+
+    @property
     def average_rating(self):
         rating = self.comments(manager='objects').all().aggregate(
             avg=Avg('rating'))['avg']
@@ -128,6 +132,10 @@ class Organization(OrganizationDetails):
         if rating:
             return format(float(rating), '.1f')
         return '0'
+
+    @property
+    def amount_ratings(self):
+        return self.comments.count()
 
     def __unicode__(self):
         return self.name
@@ -145,7 +153,7 @@ class Register(BaseModel):
         verbose_name=_("Name of the person register"))
 
     # which organization this register belongs to
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, related_name='registers', on_delete=models.CASCADE)
     help_text = models.CharField(max_length=255, default="", blank=True)
 
     def __unicode__(self):
@@ -192,3 +200,4 @@ class Comment(BaseModel):
 
     def __unicode__(self):
         return 'Comment ' + unicode(self.organization)
+
