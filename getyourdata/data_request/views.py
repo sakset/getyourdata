@@ -239,8 +239,6 @@ def give_feedback(request, org_ids):
     form = DataRequestForm(
         request.POST or None, organizations=organizations, visible=False)
 
-    captcha_form = CaptchaForm(request.POST or None)
-
     form_submitted = form.is_valid()
 
     if form.is_valid() and len(mail_organizations) > 0:
@@ -261,17 +259,11 @@ def give_feedback(request, org_ids):
             # Encode the PDF data as base64 to be rendered in the view
             pdf_data = base64.b64encode(pdf_data)
 
-    # the organization rating/comment form
-    rating_form = OrganizationRatingForm(
-        request.POST or None, organizations=organizations)
-
     return render(request, "data_request/request_data_feedback.html", {
         "org_ids": org_ids,
         "email_organizations": email_organizations,
         "organizations": organizations,
         "pdf_data": pdf_data,
-        "captcha_form": captcha_form,
-        "rating_form": rating_form,
         "form_submitted": form_submitted,
     })
 

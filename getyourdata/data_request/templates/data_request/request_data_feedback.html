@@ -37,9 +37,6 @@
                             organizations below. Your feedback will help the other users!
                         {% endblocktrans %}</p>
                         <hr>
-                        <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
-                            You can add this page into your bookmarks for later use.
-                        {% endblocktrans %}</b></p>
                         {% if pdf_data %}
                             <p>
                                 <b>
@@ -62,6 +59,11 @@
                     </div>
                 {% endif %}
 
+
+
+
+
+                {% comment %}
                 {% if organizations %}
                     <form role="form" action="{% url 'data_request:submit_feedback' %}" method="post">
                         {% csrf_token %}
@@ -101,6 +103,9 @@
                         </table>
                     </form>
                 {% endif %}
+                {% endcomment %}
+
+
             </div>
         </div>
     </div>
