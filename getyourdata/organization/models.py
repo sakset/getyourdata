@@ -122,7 +122,7 @@ class Organization(OrganizationDetails):
 
     @property
     def has_comments(self):
-        return self.comments is not None
+        return self.comments(manager='objects').all().exists()
 
     @property
     def average_rating(self):
