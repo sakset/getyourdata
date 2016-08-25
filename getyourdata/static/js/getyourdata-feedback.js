@@ -22,8 +22,9 @@ window.addEventListener("load", function(evt) {
     $("#send_feedback").attr("type", "button");
     $("#send_feedback").click(function() {
         var data = {
-            "content": $("#id_content").val()
-        }
+            "content": $("#id_content").val(),
+            "origin_url": $("#id_origin_url").val()
+        };
 
         $.post(SEND_FEEDBACK_URL, data, function(data) {
             data = JSON.parse(data);

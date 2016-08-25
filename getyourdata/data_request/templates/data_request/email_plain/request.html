@@ -11,6 +11,11 @@
 
 {{ request_content.content2 }}
 
+{% if data_request.user_email_address %}
+{{ request_content.content3 }}
+{{ data_request.user_email_address }}
+{% endif %}
+
 {% if person_name %}
 {{ request_content.footer }}
 {{ person_name.content }}

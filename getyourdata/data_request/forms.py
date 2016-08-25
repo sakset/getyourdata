@@ -3,10 +3,6 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from captcha.fields import ReCaptchaField
-
-from data_request.models import DataRequest
-
 
 class AuthenticationAttributeField(forms.CharField):
     """
@@ -39,7 +35,6 @@ class DataRequestForm(forms.Form):
 
         self.contains_email_requests = False
         self.contains_mail_requests = False
-
         super(DataRequestForm, self).__init__(*args, **kwargs)
 
         if not self.organizations:
@@ -55,7 +50,6 @@ class DataRequestForm(forms.Form):
 
             for auth_field in organization.authentication_fields.all():
                 required_organizations = auth_field.required_by(self.organizations)
-
                 # Only add each authentication field once
                 if auth_field.name in self.fields:
                     continue
@@ -83,18 +77,6 @@ class DataRequestForm(forms.Form):
                 "this email address if filled"),
             required=False,
             widget=forms.TextInput(attrs={"placeholder": ""}))
-
-        # If user is creating only mail requests, we don't need a
-        # checkbox when user wants a copy of his PDF; just entering
-        # the email address is enough
-        if self.contains_mail_requests:
-            self.fields["send_mail_request_copy"] = forms.BooleanField(
-                label=_("Send a copy of mail requests"),
-                initial=False,
-                help_text=_(
-                    "If checked, a copy of your mail requests will be "
-                    "sent to the receiving email address"),
-                required=False)
 
         if self.contains_email_requests:
             self.fields["user_email_address"].help_text = _(
