@@ -15,6 +15,7 @@ class AuthenticationFieldAdmin(TranslationAdmin):
     list_display = [
         'name',
         'created_on',
+        'order',
     ]
 
 
