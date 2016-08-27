@@ -117,7 +117,7 @@ class EditOrganizationForm(forms.ModelForm):
         del organization["id"]
         del new_organization["verified"]
         del organization["verified"]
-
+        organization["authentication_fields"].sort()
         new_organization["authentication_fields"] = new_authentication_fields
 
         return new_organization != organization

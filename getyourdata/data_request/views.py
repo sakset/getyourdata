@@ -428,7 +428,7 @@ def get_data_request(organization, form):
     """
     data_request = DataRequest.objects.create(
         organization=organization, user_email_address=form.cleaned_data['user_email_address'])
-    auth_fields = organization.authentication_fields.all()
+    auth_fields = organization.authentication_fields.order_by('order')
     auth_contents = []
 
     for auth_field in auth_fields:
