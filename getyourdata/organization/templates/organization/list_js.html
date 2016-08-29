@@ -189,7 +189,7 @@ orgList.Model = {
 
         if (name != this.getContext().currentNameFilter) {
             this.getContext().pendingNameFilter = name;
-            orgList.Controller.loadPage();
+            orgList.Controller.refresh();
         }
     },
 
