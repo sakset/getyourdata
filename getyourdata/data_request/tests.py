@@ -298,7 +298,6 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Send request")
         self.assertNotContains(response, "Review request")
 
-    '''
     def test_feedback_is_displayed_correctly(self):
         email_organization = create_email_organization(self)
         mail_organization = create_mail_organization(self)
@@ -309,7 +308,6 @@ class DataRequestCreationTests(TestCase):
 
         self.assertContains(response, email_organization.name)
         self.assertContains(response, mail_organization.name)
-    '''
 
 
 @isSeleniumTest()
