@@ -103,7 +103,7 @@ orgList.Controller = {
 
         var name = context.pendingNameFilter;
 
-        var url = ORGANIZATION_API_URL + "?page" + page + "&name=" + name;
+        var url = ORGANIZATION_API_URL + "?page=" + page + "&name=" + name;
 
         $.getJSON(url, function(data) {
             orgList.Model.updateContext(data);
