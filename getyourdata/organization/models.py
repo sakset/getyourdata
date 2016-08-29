@@ -117,6 +117,8 @@ class Organization(OrganizationDetails):
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
 
+    requested_amount = models.IntegerField(default=0)
+
     class Meta:
         ordering = ('created_on',)
 

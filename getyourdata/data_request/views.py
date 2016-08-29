@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models import F 
 from django.shortcuts import render, redirect
 
 from django.utils.translation import ugettext as _
@@ -9,7 +11,6 @@ from data_request.forms import OrganizationRatingForm
 from data_request.models import DataRequest, AuthenticationContent
 from organization.models import Organization, Comment
 
-from getyourdata import util
 from getyourdata.forms import CaptchaForm
 
 from data_request.services import concatenate_pdf_pages
@@ -37,8 +38,6 @@ def request_data(request, org_ids=None):
         # or came back to this page after submitting a request
         return render(request, "data_request/expired.html")
 
-    util.set_autocommit_off()
-
     response = None
 
     if request.POST.get("send", None):
@@ -50,8 +49,10 @@ def request_data(request, org_ids=None):
     else:
         response = create_request(request, org_ids)
 
-    util.rollback()
-    util.set_autocommit_on()
+    # Deleting all user data after response is created
+    if not settings.TESTING:
+        AuthenticationContent.objects.all().delete()
+        DataRequest.objects.all().delete()
 
     return response
 
@@ -201,6 +202,10 @@ def send_request(request, org_ids):
                 pdf_data = base64.b64encode(pdf_data)
 
             # Request was successful!
+
+            # Increasing organizations requested amount
+            organizations.update(requested_amount=F('requested_amount') + 1)
+
             if len(mail_organizations) > 0:
                 return render(request, "data_request/request_data_sent.html", {
                     "form": form,

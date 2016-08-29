@@ -24,6 +24,7 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'verified',
+        'requested_amount',
         'created_on',
         'updated_on',
     ]
