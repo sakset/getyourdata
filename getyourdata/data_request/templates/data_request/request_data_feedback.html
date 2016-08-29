@@ -37,9 +37,14 @@
                             organizations below. Your feedback will help the other users!
                         {% endblocktrans %}</p>
                         <hr>
-                        <p><b><span class="glyphicon glyphicon-bookmark"></span> {% blocktrans %}
-                            You can add this page into your bookmarks for later use.
-                        {% endblocktrans %}</b></p>
+                        <p>
+                            <b>
+                                <span class="glyphicon glyphicon-bookmark"></span>
+                                {% blocktrans %}
+                                You can add this page into your bookmarks for later use.
+                                {% endblocktrans %}
+                            </b>
+                        </p>
                         {% if pdf_data %}
                             <p>
                                 <b>
@@ -61,46 +66,18 @@
 
                     </div>
                 {% endif %}
-
                 {% if organizations %}
-                    <form role="form" action="{% url 'data_request:submit_feedback' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" id="id_org_ids" name="org_ids" value="{{ org_ids }}"/>
-                        <table class="table table-striped">
-                            <tbody>
-                            {% for organization in organizations %}
-                                <tr>
-                                    <td>{{ organization.name }}</td>
-                                    <td>
-                                        <input id="id_rating_{{ organization.id }}" type="number"
-                                               name="rating_{{ organization.id }}" class="rating"
-                                               min=0 max=5 step=1 data-size="xs"
-                                               data-show-caption="false" data-show-clear="false"
-                                               value="{% field_value form=rating_form field="rating" counter=forloop.counter %}"/>
-                                        {% form_errors form=rating_form field="rating" counter=forloop.counter %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <textarea style="resize:none" class="form-control" cols="40"
-                                                  id="id_message_{{ organization.id }}"
-                                                  name="message_{{ organization.id }}"
-                                                  placeholder="{{ rating_form.message.label }}" rows="10"
-                                                  title>{% field_value form=rating_form field="message" counter=forloop.counter %}</textarea>
-                                        {% form_errors form=rating_form field="message" counter=forloop.counter %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>
-                                    {% bootstrap_form captcha_form %}
-                                    <input class="btn btn-default" type="submit" id="feedback_submit" value="{% trans 'Submit feedback' %}"/>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </form>
+                <table class="table table-striped">
+                    <tbody>
+                    {% for organization in organizations %}
+                        <tr>
+                            <td><a href="{% url "organization:view_organization" organization.id %}"><span class="glyphicon glyphicon-star"></span> {{ organization.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
                 {% endif %}
+
             </div>
         </div>
     </div>
