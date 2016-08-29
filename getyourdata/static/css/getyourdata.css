@@ -148,3 +148,7 @@ img.center {
     font-family: monospace;
     margin-bottom: 0.5em;
 }
+
+.organization-list-filter {
+    padding-bottom: 10px;
+}
