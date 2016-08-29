@@ -57,30 +57,6 @@ class FeedbackTests(TestCase):
 
         self.assertContains(response, "value=\"/en/organizations/\"")
 
-    def test_feedback_sent_to_slack_channel_only_if_enabled(self):
-        # We've mocked the send_slack_message in test_monkeypatch.py
-        # to track the amount of times it's called
-        test_feedback = "This site is completely awful."
-
-        services.send_slack_message.call_count = 0
-
-        with self.settings(SLACK_WEBHOOK_ENABLED=True,
-                           SLACK_WEBHOOK_URL="http://127.0.0.1"):
-            response = self.client.post(
-                reverse("feedback:send_feedback"), {"content": test_feedback},
-                follow=True)
-
-            self.assertEquals(services.send_slack_message.call_count, 1)
-
-        with self.settings(SLACK_WEBHOOK_ENABLED=False,
-                           SLACK_WEBHOOK_URL="http://127.0.0.1"):
-            response = self.client.post(
-                reverse("feedback:send_feedback"), {"content": test_feedback},
-                follow=True)
-
-            # It wasn't called, so the call count stays the same
-            self.assertEquals(services.send_slack_message.call_count, 1)
-
 
 @isSeleniumTest()
 class FeedbackLiveTests(LiveServerTestCase):
