@@ -12,6 +12,9 @@ class LiveServerTestCase(StaticLiveServerTestCase):
     def setUpClass(cls):
         super(LiveServerTestCase, cls).setUpClass()
 
+        if not os.environ.get("RUN_SELENIUM_TESTS", False):
+            return
+
         os.environ["SELENIUM_TESTS"] = 'True'
 
         cls.sauce_labs_active = False
@@ -54,6 +57,9 @@ class LiveServerTestCase(StaticLiveServerTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        if not os.environ.get("RUN_SELENIUM_TESTS", False):
+            return
+            
         if cls.sauce_labs_active:
             try:
                 if sys.exc_info() == (None, None, None):

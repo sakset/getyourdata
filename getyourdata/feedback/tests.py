@@ -1,6 +1,7 @@
 #coding:utf-8
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from getyourdata.test import isDjangoTest, isSeleniumTest
 from getyourdata.testcase import LiveServerTestCase
@@ -10,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from feedback.models import ServiceFeedback
+from feedback import services
 
 from random import choice
 from string import ascii_letters
