@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.db.models import F 
+from django.db.models import F
 from django.shortcuts import render, redirect
 
 from django.utils.translation import ugettext as _
@@ -18,7 +18,18 @@ from data_request.services import send_data_requests_by_email
 from data_request.services import send_feedback_message_by_email
 
 import base64
+import uuid
 
+
+def delete_user_data(request):
+    """
+    Delete all user data generated during one request.
+    Each request must have a uuid-attribute, which is used to identify
+    objects created during the request.
+    """
+    if not settings.TESTING:
+        AuthenticationContent.objects.filter(request_uuid=request.uuid).delete()
+        DataRequest.objects.filter(request_uuid=request.uuid).delete()
 
 def request_data(request, org_ids=None):
     """
@@ -38,21 +49,23 @@ def request_data(request, org_ids=None):
         # or came back to this page after submitting a request
         return render(request, "data_request/expired.html")
 
+    # Add unique identifier for each request so that we can identify
+    # which objects were created during request processing
+    request.uuid = uuid.uuid4()
+
     response = None
 
-    if request.POST.get("send", None):
-        response = send_request(request, org_ids)
-    elif request.POST.get("review", None):
-        response = review_request(request, org_ids)
-    elif request.POST.get("return", None):
-        return redirect(reverse("organization:list_organizations"))
-    else:
-        response = create_request(request, org_ids)
-
-    # Deleting all user data after response is created
-    if not settings.TESTING:
-        AuthenticationContent.objects.all().delete()
-        DataRequest.objects.all().delete()
+    try:
+        if request.POST.get("send", None):
+            response = send_request(request, org_ids)
+        elif request.POST.get("review", None):
+            response = review_request(request, org_ids)
+        elif request.POST.get("return", None):
+            return redirect(reverse("organization:list_organizations"))
+        else:
+            response = create_request(request, org_ids)
+    finally:
+        delete_user_data(request)
 
     return response
 
@@ -105,7 +118,7 @@ def review_request(request, org_ids, ignore_captcha=True,
         data_requests = []
 
         if form.is_valid():
-            data_requests = get_data_requests(form, organizations)
+            data_requests = get_data_requests(request, form, organizations)
 
             if request.POST.get("send", None) and not prevent_redirect:
                 return send_request(request, org_ids)
@@ -155,7 +168,7 @@ def send_request(request, org_ids):
             email_requests = []
 
             for organization in organizations:
-                data_request = get_data_request(organization, form)
+                data_request = get_data_request(request, organization, form)
 
                 # Generate PDF pages for mail requests
                 try:
@@ -236,6 +249,11 @@ def give_feedback(request, org_ids):
     :org_ids: A list of Organization objects
 
     """
+
+    # Add unique identifier for each request so that we can identify
+    # which objects were created during request processing
+    request.uuid = uuid.uuid4()
+
     pdf_data = None
 
     (organizations, email_organizations,
@@ -246,23 +264,25 @@ def give_feedback(request, org_ids):
 
     form_submitted = form.is_valid()
 
-    if form.is_valid() and len(mail_organizations) > 0:
+    if form_submitted and len(mail_organizations) > 0:
         # Let user redownload the PDF file in case he accidentally cancelled
         # the download during the last step
         pdf_pages = []
+        try:
+            for organization in mail_organizations:
+                data_request = get_data_request(request, organization, form)
 
-        for organization in mail_organizations:
-            data_request = get_data_request(organization, form)
+                pdf_page = generate_pdf_page(data_request)
+                pdf_pages.append(pdf_page)
 
-            pdf_page = generate_pdf_page(data_request)
-            pdf_pages.append(pdf_page)
+            # Generate PDF pages for any mail-only requests
+            pdf_data = generate_request_pdf(pdf_pages)
 
-        # Generate PDF pages for any mail-only requests
-        pdf_data = generate_request_pdf(pdf_pages)
-
-        if pdf_data:
-            # Encode the PDF data as base64 to be rendered in the view
-            pdf_data = base64.b64encode(pdf_data)
+            if pdf_data:
+                # Encode the PDF data as base64 to be rendered in the view
+                pdf_data = base64.b64encode(pdf_data)
+        finally:
+            delete_user_data(request)
 
     return render(request, "data_request/request_data_feedback.html", {
         "org_ids": org_ids,
@@ -273,65 +293,11 @@ def give_feedback(request, org_ids):
     })
 
 
-def submit_feedback(request):
-    """
-    A view method for submitting ratings for several organizations at the
-    same time
-    """
-    # Only POST requests should end up here.
-    if request.method == 'POST':
-        # Organizations passed as POST vars
-        org_ids = request.POST.get("org_ids", None)
-
-        (organizations, email_organizations,
-         mail_organizations) = get_organization_tuple(org_ids)
-
-        # The organization rating/comment form initialization
-        rating_form = OrganizationRatingForm(
-            request.POST, organizations=organizations)
-        captcha_form = CaptchaForm(request.POST or None)
-
-        # If the input is valid, we'll loop through the individual organizations and
-        # create the ratings using a pre-existing model and save them to database
-        # one by one.
-        if rating_form.is_valid() and captcha_form.is_valid():
-            for organization in organizations:
-                rating = rating_form.cleaned_data[
-                    "rating_%d" % organization.id]
-                message = rating_form.cleaned_data[
-                    "message_%d" % organization.id]
-
-                comment = Comment(None)
-                comment.organization = organization
-                comment.rating = rating
-                comment.message = message
-                comment.save()
-
-            messages.success(
-                request,
-                _('Thank you for your contribution! Your feedback will help '
-                  'the other users and the organizations.'))
-        else:
-            messages.error(
-                request,
-                _('Some of the fields were invalid or missing, please review.'))
-
-            return render(request, "data_request/request_data_feedback.html", {
-                "org_ids": org_ids,
-                "email_organizations": email_organizations,
-                "organizations": organizations,
-                "captcha_form": captcha_form,
-                "rating_form": rating_form,
-                "form_submitted": False,
-            })
-
-    return redirect(reverse('home'))
-
-
-def get_data_requests(form, organizations):
+def get_data_requests(request, form, organizations):
     """
     Get a list of every data request
 
+    :request: A request object passed from the view
     :form: A filled DataRequestForm
     :email_organizations: A list of organizations that accept email requests
     :mail_organizations: A list of organizations that only accept mail requests
@@ -339,7 +305,7 @@ def get_data_requests(form, organizations):
     data_requests = []
 
     for organization in organizations:
-        data_request = get_data_request(organization, form)
+        data_request = get_data_request(request, organization, form)
         data_requests.append(data_request)
 
     return data_requests
@@ -423,16 +389,20 @@ def send_email_requests(email_requests, form):
         return True
 
 
-def get_data_request(organization, form):
+def get_data_request(request, organization, form):
     """Get a temporary data request containing user's authentication details
 
+    :request: A request object passed from the view
     :organization: Organization of the data request
     :form: The view's DataRequestForm
     :returns: A DataRequest with details filled
 
     """
     data_request = DataRequest.objects.create(
-        organization=organization, user_email_address=form.cleaned_data['user_email_address'])
+        organization=organization,
+        user_email_address=form.cleaned_data['user_email_address'],
+        request_uuid=request.uuid
+    )
     auth_fields = organization.authentication_fields.order_by('order')
     auth_contents = []
 
@@ -440,7 +410,8 @@ def get_data_request(organization, form):
         auth_contents.append(AuthenticationContent(
             auth_field=auth_field,
             data_request=data_request,
-            content=form.cleaned_data[auth_field.name]
+            content=form.cleaned_data[auth_field.name],
+            request_uuid=request.uuid
         ))
     AuthenticationContent.objects.bulk_create(auth_contents)
 

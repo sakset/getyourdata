@@ -9,6 +9,8 @@ from getyourdata.models import BaseModel
 from data_request.services import convert_html_to_pdf
 from organization.models import Organization, AuthenticationField
 
+import uuid
+
 
 class RequestContent(BaseModel):
     """
@@ -45,6 +47,7 @@ class AuthenticationContent(BaseModel):
     This is not saved to the database and only exists during the request
     creation process
     """
+    request_uuid = models.CharField(max_length=255, default=uuid.uuid4)
     auth_field = models.ForeignKey(AuthenticationField, related_name="+")
     data_request = models.ForeignKey(
         "data_request.DataRequest", related_name="auth_contents")
@@ -61,6 +64,7 @@ class DataRequest(BaseModel):
     This is not saved to the database and only exists during the request
     creation process
     """
+    request_uuid = models.CharField(max_length=255, default=uuid.uuid4)
     organization = models.ForeignKey(
         Organization, related_name="data_requests")
 
