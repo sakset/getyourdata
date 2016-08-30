@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load extra_tags %}
 {% load flatpages %}
+{% load staticfiles %}
 
 <div class="navbar navbar-inverse navbar-fixed-top navbar-default" role="navigation">
     <div class="container">
@@ -12,7 +13,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'home' %}">{% current_site %}</a>
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/home/logo.png' %}"/></a>
             <ul class="pull-left nav navbar-nav">
                 {# Quick feedback #}
                 <li class="dropdown">

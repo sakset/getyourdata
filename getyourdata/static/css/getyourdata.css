@@ -41,7 +41,7 @@ img.center {
 .tabs li {
     text-align: center;
     width: 100%;
-    border-top: 1px solid white;
+    border-top: 1px solid #43b3ae;
     margin: 0;
     position: relative;
     padding: 1em 0;
@@ -59,12 +59,12 @@ img.center {
 }
 
 .tabs li.active {
-    color: white;
-    background-color: #fbbd19;
+    background-color: #43b3ae;
+    color: #ffffff;
 }
 
 .tabs li.active:after {
-    border-left: 14px solid #fbbd19;
+    border-left: 14px solid #43b3ae;
 }
 
 .tabs li.active a {
@@ -78,8 +78,9 @@ img.center {
         vertical-align: middle;
         padding: 0 0 0 15px;
         margin: 0;
-        border: none;
-        background-color: #f5f5f5;
+        border: #43b3ae;
+        color: #43b3ae;
+        background-color: #a6ecf3;
     }
 
     .tabs li .glyphicon {
@@ -97,7 +98,6 @@ img.center {
         border-left: 15px solid white;
         border-bottom: 21px solid transparent;
         z-index: 10;
-
     }
 
     .tabs li:after {
@@ -110,7 +110,7 @@ img.center {
         width: 0;
         height: 0;
         border-top: 20px solid transparent;
-        border-left: 14px solid #f5f5f5;
+        border-left: 14px solid #a6ecf3;
         border-bottom: 20px solid transparent;
         z-index: 11;
 
