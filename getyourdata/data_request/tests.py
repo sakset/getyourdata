@@ -118,7 +118,7 @@ class DataRequestCreationTests(TestCase):
 
     def test_required_by_is_not_present_when_supposed(self):
         response = self.client.get(reverse("data_request:request_data",
-        args = (self.organization.id,)))
+            args = (self.organization.id,)))
 
         self.assertNotContains(response, "Required by:")
 

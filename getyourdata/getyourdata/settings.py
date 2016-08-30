@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import sys
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -35,7 +36,13 @@ SECRET_KEY = secrets.get(
 DEBUG = False
 
 # Are we running tests
-TESTING = False
+# A hacky way of doing this, but it's the only way I've found
+# to properly do monkey patching
+try:
+    TESTING = True if sys.argv[1:2][0] in \
+              ["test", "test_selenium", "test_all"] else False
+except:
+    TESTING = False
 
 SITE_ID = 1
 
@@ -212,6 +219,13 @@ EMAIL_USE_TLS = secrets.get("EMAIL_USE_TLS", False)
 EMAIL_USE_SSL = secrets.get("EMAIL_USE_SSL", False)
 
 NOREPLY_EMAIL_ADDRESS = "noreply@getyourdata.org"
+
+# Slack integration for site feedback
+#
+# For details on how to implement this, see:
+# https://api.slack.com/incoming-webhooks
+SLACK_WEBHOOK_ENABLED = False
+SLACK_WEBHOOK_URL = secrets.get("SLACK_WEBHOOK_URL", "http://127.0.0.1")
 
 # reCAPTCHA settings
 
