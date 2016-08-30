@@ -120,7 +120,7 @@ class Organization(OrganizationDetails):
     requested_amount = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ('created_on',)
+        ordering = ('-requested_amount', 'name')
 
     @property
     def accepts_email(self):
