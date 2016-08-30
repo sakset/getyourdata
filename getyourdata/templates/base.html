@@ -2,6 +2,7 @@
 {% load bootstrap3 %}
 {% load i18n %}
 {% load pipeline %}
+{% load extra_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +17,7 @@
 
         {% stylesheet 'base_style' %}
 
-        <title>{% block title %}GetYourData.org{% endblock %}</title>
+        <title>{% block title %}{% current_site %}{% endblock %}</title>
         {% block extrahead %}
         {% endblock extrahead %}
     </head>
