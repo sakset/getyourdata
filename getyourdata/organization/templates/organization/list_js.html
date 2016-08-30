@@ -306,7 +306,7 @@ orgList.View = {
                 <tr>
                     <td>
                         <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }}); return false;" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
-                        <a onclick="orgList.Model.checkOrganization({{ this.id }}); return false;" href="#">{{ this.name }}</a>
+                        <a id="link-org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }}); return false;" href="#">{{ this.name }}</a>
 
                         <span class="organization-icon-list pull-right">
                             <a class="btn btn-xs btn-primary"  data-toggle="collapse" href="#organization-{{ this.id }}">{{ ../msg.view_details }}</a>

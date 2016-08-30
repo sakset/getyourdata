@@ -20,10 +20,11 @@ def find_element_by_xpath(self, xpath, click_it=False, wait_time=10):
         EC.presence_of_element_located((
             By.XPATH, xpath))
     )
+
     if click_it:
-        return element.click()
-    else:
-        return element
+        element.click()
+
+    return element
 
 
 def create_simple_organization():
@@ -651,6 +652,24 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             click_it=True)
 
         self.assertIn("6 organizations selected", self.selenium.page_source)
+
+    def test_user_can_filter_organizations(self):
+        filter_box = find_element_by_xpath(
+            self,
+            "(//input[@id='organization_name_filter'])")
+
+        filter_box.send_keys("Organization 20")
+
+        organization = Organization.objects.get(name="Organization 20")
+
+        find_element_by_xpath(
+            self,
+            "(//a[@id='link-org-%d'])" % organization.id)
+
+        self.assertIn("Organization 20", self.selenium.page_source)
+
+        self.assertNotIn("Organization 19", self.selenium.page_source)
+        self.assertNotIn("Organization 21", self.selenium.page_source)
 
 
 @isDjangoTest()
