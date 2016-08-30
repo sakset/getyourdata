@@ -1,5 +1,6 @@
 from django import template, forms
 from django.utils.translation import get_language
+from django.contrib.sites.models import Site
 
 register = template.Library()
 
@@ -20,3 +21,10 @@ def hide_form(form):
         form.fields[name].widget = forms.HiddenInput()
 
     return form
+
+@register.simple_tag
+def current_site():
+    """
+    Returns the current site object
+    """
+    return Site.objects.get_current().name
