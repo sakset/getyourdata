@@ -42,7 +42,12 @@ window.addEventListener("load", function(evt) {
 
     orgList.vue = new Vue({
         el: '#organization-list',
-        data: orgList.context
+        data: orgList.context,
+        computed: {
+            isOrganizationChecked: function(id) {
+                return orgList.Model.isOrganizationChecked(id);
+            }
+        }
     });
 
     orgList.Controller.loadList();
@@ -141,6 +146,7 @@ orgList.Model = {
             context.pagination = false;
         }
 
+        this.updateCheckedOrganizations();
         this.updatePages();
         orgList.View.update();
     },
@@ -158,6 +164,8 @@ orgList.Model = {
         } else {
             context.checkedOrganizations.splice(index, 1);
         }
+
+        this.updateCheckedOrganizations();
     },
 
     /*
@@ -165,6 +173,15 @@ orgList.Model = {
      */
     isOrganizationChecked: function(id) {
         return this.getContext().checkedOrganizations.indexOf(id) !== -1 ? true : false;
+    },
+
+    updateCheckedOrganizations: function() {
+        var organizations = this.getContext().organizations;
+
+        for (var i=0; i < organizations.length; i++) {
+            var organization = organizations[i];
+            organization.checked = this.isOrganizationChecked(organization.id);
+        }
     },
 
     /*
@@ -261,7 +278,7 @@ orgList.View = {
             <div class="panel-group" id="accordion">
                 <tr v-for="organization in organizations">
                     <td>
-                        <input id="org-{{ organization.id }}" onclick="orgList.Model.checkOrganization({{ organization.id }});" type="checkbox" name="org_ids" value="{{ organization.id }}"/>
+                        <input id="org-{{ organization.id }}" onclick="orgList.Model.checkOrganization({{ organization.id }});" type="checkbox" name="org_ids" value="{{ organization.id }}" :checked="checkedOrganizations.indexOf(organization.id) !== -1"/>
                         <a id="link-org-{{ organization.id }}" onclick="orgList.Model.checkOrganization({{ organization.id }}); return false;" href="#">{{ organization.name }}</a>
 
                         <span class="organization-icon-list pull-right">
@@ -317,11 +334,3 @@ orgList.View = {
     </ul>
 </div>
 {% endverbatim %}
-
-{% block extrahead %}
-{% stylesheet 'star_rating' %}
-{% endblock %}
-
-{% block script %}
-{% javascript 'star_rating' %}
-{% endblock %}
