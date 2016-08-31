@@ -31,7 +31,10 @@ class AuthenticationField(BaseModel):
         return self.title
 
     def required_by(self, organizations):
-        return Organization.objects.filter(authentication_fields=self, id__in=organizations.values_list('id'))
+        return Organization.objects.filter(
+            authentication_fields=self,
+            id__in=organizations.values_list('id', flat=True)
+        )
 
 def form_has_fields(form, fields):
     """
@@ -54,27 +57,33 @@ class OrganizationDetails(BaseModel):
 
     # Email contact
     email_address = models.EmailField(
-        max_length=255, null=True, blank=True,
+        max_length=255,
+        blank=True,
         default="",
-        help_text=_("Email address used by the organization for receiving data requests. Leave empty if the "
+        help_text=_("Email address used by the organization for receiving "
+                    "data requests. Leave empty if the "
                     "organization only accepts requests by post."),
         verbose_name=_("Email address"))
 
     # Postal contact
     address_line_one = models.CharField(
-        max_length=255, null=True, blank=True,
+        max_length=255,
+        blank=True,
         default="",
         verbose_name=_("Address line 1"))
     address_line_two = models.CharField(
-        max_length=255, null=True, blank=True,
+        max_length=255,
+        blank=True,
         default="",
         verbose_name=_("Address line 2"))
     postal_code = models.CharField(
-        max_length=64, null=True, blank=True,
+        max_length=64,
+        blank=True,
         default="",
         verbose_name=_("Postal code"))
     country = models.CharField(
-        max_length=64, null=True, blank=True,
+        max_length=64,
+        blank=True,
         default="",
         verbose_name=_("Country"))
 
@@ -86,7 +95,10 @@ class OrganizationDetails(BaseModel):
 
     def clean(self):
         postal_address_requirements = [
-            "address_line_one", "postal_code", "country"]
+            "address_line_one",
+            "postal_code",
+            "country"
+        ]
         if not (form_has_fields(self, ["email_address"]) or
                 form_has_fields(self, postal_address_requirements)):
             raise ValidationError(
@@ -105,8 +117,10 @@ class Organization(OrganizationDetails):
         verbose_name=_("Verified"),
         help_text=_("Verified organizations are visible to all users"))
 
+    requested_amount = models.IntegerField(default=0)
+
     class Meta:
-        ordering = ('created_on',)
+        ordering = ('-requested_amount', 'name')
 
     @property
     def accepts_email(self):
@@ -120,7 +134,7 @@ class Organization(OrganizationDetails):
 
     @property
     def has_registers(self):
-        return self.register_set is not None
+        return self.registers(manager='objects').all().exists()
 
     @property
     def has_comments(self):
@@ -137,7 +151,7 @@ class Organization(OrganizationDetails):
 
     @property
     def amount_ratings(self):
-        return self.comments.count()
+        return self.comments(manager='objects').all().count()
 
     def __unicode__(self):
         return self.name
@@ -155,7 +169,11 @@ class Register(BaseModel):
         verbose_name=_("Name of the person register"))
 
     # which organization this register belongs to
-    organization = models.ForeignKey(Organization, related_name='registers', on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization,
+        related_name='registers',
+        on_delete=models.CASCADE
+    )
     help_text = models.CharField(max_length=255, default="", blank=True)
 
     def __unicode__(self):
