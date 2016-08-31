@@ -25,7 +25,7 @@
         .datetime-row {
             width: 100%;
             text-align: right;
-            padding-bottom: 3cm;
+            padding-bottom: 1.5cm;
         }
 
         .datarequest {
@@ -88,7 +88,7 @@ and the user is supposed to configure his/her printer to print
 everything two sided -->
 
 <div class="datetime-row">
-    <p>{{ current_datetime }}</p>
+    {{ current_datetime }}
 </div>
 
 <div class="datarequest">
@@ -116,7 +116,7 @@ everything two sided -->
     {% if person_name %}
 
         <div class="datarequest-footer">
-            <p>{{ request_content.footer|linebreaks }}<br>
+            <p>{{ request_content.footer|linebreaks }}
             {{ person_name.content }}</p>
         </div>
 
