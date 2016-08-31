@@ -9,20 +9,20 @@
 
 {{ request_content.header }}
 
-{{ request_content.content1 }}
+{{ request_content.content1|linebreaks }}
 
 {% for auth_content in data_request.auth_contents.all %}
 {{ auth_content.auth_field }}: {{ auth_content.content }}
 {% endfor %}
 
-{{ request_content.content2 }}
+{{ request_content.content2|linebreaks }}
 
 {% if data_request.user_email_address %}
-{{ request_content.content3 }}
+{{ request_content.content3|linebreaks }}
 {{ data_request.user_email_address }}
 {% endif %}
 
 {% if person_name %}
-{{ request_content.footer }}
+{{ request_content.footer|linebreaks }}
 {{ person_name.content }}
 {% endif %}
