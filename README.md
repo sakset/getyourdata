@@ -8,7 +8,7 @@
 
 GetYourData.org is a semi-crowdsourced site that makes it possible for a single individual to send an information request to a company. The user can select a list of companies that have information of the person, allowing every information request to be created at once. Depending on the organization, a request can be handled using either an email message (automatically sent by GetYourData.org) or in mail (printable letter is created by GetYourData.org).
 
-More information can be found at [requestyourdata.org](http://okffi.github.io/ryd/)
+Information can be found at [requestyourdata.org](http://okffi.github.io/ryd/)
 
 ### Setting up the development server ###
 
