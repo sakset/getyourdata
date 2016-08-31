@@ -17,8 +17,8 @@ script:
 - coverage run dev_manage.py test_all
 - codeclimate-test-reporter
 after_success:
-- test $TRAVIS_BRANCH = "master" && export SSHPASS=$DEPLOY_PASS
-- test $TRAVIS_BRANCH = "master" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST
+- test $TRAVIS_BRANCH = "datamme_color_theme" && export SSHPASS=$DEPLOY_PASS
+- test $TRAVIS_BRANCH = "datamme_color_theme" && sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST
   "cd $DEPLOY_PATH; ./deploy.sh" &> /dev/null
 addons:
   apt:
