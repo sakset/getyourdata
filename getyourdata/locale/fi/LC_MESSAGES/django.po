@@ -754,7 +754,7 @@ msgstr "Saatu palaute"
 
 #: organization/templates/organization/view.html:122
 msgid "No feedback yet."
-msgstr "Jätä palautetta"
+msgstr "Ei annettuja palautteita."
 
 #: organization/views.py:120
 msgid ""
