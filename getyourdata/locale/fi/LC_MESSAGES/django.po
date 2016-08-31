@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 03:55+0300\n"
+"POT-Creation-Date: 2016-08-31 04:47+0300\n"
 "PO-Revision-Date: 2016-08-24 16:04+0000\n"
 "Last-Translator:   <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,6 @@ msgid "Data request: %s"
 msgstr "Tietopyyntö: %s"
 
 #: data_request/services.py:116
-#, fuzzy
 #| msgid "Thank you for using hae.datam.me"
 msgid "Thank you for using GetYourData"
 msgstr "Kiitos hae.datam.me:n käytöstä!"
@@ -225,7 +224,6 @@ msgstr[1] ""
 "tietopyynnön vastaamista koskien. Palautteesi auttaa muita käyttäjiä."
 
 #: data_request/templates/data_request/request_data_feedback.html:43
-#, fuzzy
 #| msgid ""
 #| "\n"
 #| "                            You can add this page into your bookmarks for "

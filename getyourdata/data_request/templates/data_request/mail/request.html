@@ -99,30 +99,26 @@ everything two sided -->
 
         <p>{{ request_content.content1|linebreaks }}</p>
 
-
         {% for auth_content in data_request.auth_contents.all %}
             <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
         {% endfor %}
 
         <p>{{ request_content.content2|linebreaks }}</p>
+
+        {% if data_request.user_email_address %}
+            <div class="datarequest-content3">
+                <p>{{ request_content.content3 }}: {{ data_request.user_email_address }}</p>
+            </div>
+        {% endif %}
+
+        {% if person_name %}
+            <div class="datarequest-footer">
+                <p>{{ request_content.footer|linebreaks }}
+                {{ person_name.content }}</p>
+            </div>
+        {% endif %}
+
     </div>
-
-    {% if data_request.user_email_address %}
-        <div class="datarequest-content3">
-            <p>{{ request_content.content3 }}: {{ data_request.user_email_address }}</p>
-        </div>
-    {% endif %}
-
-    {% if person_name %}
-
-        <div class="datarequest-footer">
-            <p>{{ request_content.footer|linebreaks }}
-            {{ person_name.content }}</p>
-        </div>
-
-    {% endif %}
-
-
 </div>
 
 
