@@ -518,8 +518,12 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
 
         # Create three pages worth of organizations
         for i in range(0, 45):
+            if i < 26:
+                char = unichr(97+i)
+            else:
+                char = 'z' + unichr(97+i-25)
             organization = Organization.objects.create(
-                name='Organization %d' % i,
+                name='%s Organization' % char,
                 email_address='fake@address.com',
                 address_line_one='Address one',
                 address_line_two='Address two',
@@ -587,8 +591,8 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             self,
             "(//a[@id='page-2' and @onclick='' and text()='2'])")
 
-        self.assertIn("Organization 15", self.selenium.page_source)
-        self.assertNotIn("Organization 0", self.selenium.page_source)
+        self.assertIn("p Organization", self.selenium.page_source)
+        self.assertNotIn("a Organization", self.selenium.page_source)
 
         find_element_by_xpath(
             self,
@@ -599,8 +603,8 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
             self,
             "(//a[@id='page-1' and @onclick='' and text()='1'])")
 
-        self.assertIn("Organization 0", self.selenium.page_source)
-        self.assertNotIn("Organization 15", self.selenium.page_source)
+        self.assertIn("a Organization", self.selenium.page_source)
+        self.assertNotIn("p Organization", self.selenium.page_source)
 
     def test_user_can_select_multiple_organizations_from_different_pages(self):
         find_element_by_xpath(
