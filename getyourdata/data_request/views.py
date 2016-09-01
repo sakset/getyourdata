@@ -378,19 +378,12 @@ def get_data_request(request, organization, form):
     auth_fields = organization.authentication_fields.order_by('order')
     auth_contents = []
 
-    print(auth_fields.count())
-
     for auth_field in auth_fields:
-        print(auth_field)
         auth_contents.append(AuthenticationContent(
             auth_field=auth_field,
             content=form.cleaned_data[auth_field.name]
         ))
 
     data_request.add_auth_contents(*auth_contents)
-
-    print("===")
-    for auth_content in auth_contents:
-        print(auth_content)
 
     return data_request

@@ -70,15 +70,19 @@ class DataRequest():
     auth_contents = []
 
     def __init__(self, *args, **kwargs):
-        self.auth_contents = []
+        """
+        Create a DataRequest that contains AuthenticationContent objects
+        that make up an individual user's data request
+        """
+        self.auth_contents = kwargs.get("auth_contents", [])
         self.organization = kwargs.get("organization", None)
 
         if self.organization is None:
-            raise IOError("missing organization")
+            raise AttributeError("'%s' requires an Organization object as its organization parameter")
 
     def add_auth_contents(self, *args):
         """
-        Add an arbitrary amount of AuthenticationContent objects
+        Add AuthenticationContent(s) to the data request
         """
         for organization in args:
              self.auth_contents.append(organization)
@@ -94,7 +98,6 @@ class DataRequest():
                 return auth_content
 
         return None
-
 
     def to_text(self, html=False):
         """
