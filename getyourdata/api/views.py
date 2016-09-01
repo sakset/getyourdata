@@ -13,3 +13,13 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     """
     queryset = Organization.objects.filter(verified=True)
     serializer_class = OrganizationSerializer
+
+    def get_queryset(self):
+        queryset = Organization.objects.filter(verified=True)
+
+        organization_name = self.request.query_params.get("name", "")
+
+        if organization_name != "":
+            queryset = queryset.filter(name__icontains=organization_name)
+
+        return queryset

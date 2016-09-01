@@ -148,3 +148,20 @@ img.center {
     font-family: monospace;
     margin-bottom: 0.5em;
 }
+
+/* organization list */
+
+#organization-list {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#organization-list td > a {
+    margin-top: 1em;
+    margin-left: 1em;
+    color: #959595;
+}
+
+.organization-list-filter {
+    padding-bottom: 10px;
+}

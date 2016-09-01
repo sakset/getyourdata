@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load pipeline %}
 <script>
 // Get the origin URL and the
 ORIGIN = location.protocol + "//" + location.host;
@@ -31,6 +32,7 @@ MESSAGES = {
     "no_ratings": "{% trans "No ratings (yet)" %}",
     "amount_ratings": "{% trans "Ratings" %}",
     "average_ratings": "{% trans "Average rating" %}",
+    "search_organization": "{% trans "Search for organizations" %}"
 };
 
 window.addEventListener("load", function(evt) {
@@ -67,6 +69,11 @@ orgList = {
         pageCount: 1,
         organizationCount: 5,
 
+        // The name filter that was used for the last search
+        currentNameFilter: "",
+        pendingNameFilter: "",
+        filterTimer: null,
+
         // A set of organizations that the user has checked
         checkedOrganizations: [],
 
@@ -94,10 +101,28 @@ orgList.Controller = {
         var context = orgList.Model.getContext();
         context.currentPage = page;
 
-        $.getJSON(ORGANIZATION_API_URL + "?page=" + page, function(data) {
+        var name = context.pendingNameFilter;
+
+        var url = ORGANIZATION_API_URL + "?page=" + page + "&name=" + name;
+
+        $.getJSON(url, function(data) {
             orgList.Model.updateContext(data);
             orgList.View.update();
+
+            if (name != context.currentNameFilter) {
+                context.currentNameFilter = name;
+                $("#organization_name_filter").focus();
+            }
         });
+    },
+
+    /*
+     * Refresh the current page
+     */
+    refresh: function() {
+        var page = orgList.Model.getContext().currentPage;
+
+        this.loadPage(page);
     },
 
     /*
@@ -120,6 +145,7 @@ orgList.Model = {
         context.pageCount = Math.floor(data.count / 15) + 1;
         context.organizationCount = data.count;
         context.organizations = data.results;
+
         context.pages = [];
         if (context.pageCount > 1) {
             context.pagination = true;
@@ -153,6 +179,18 @@ orgList.Model = {
      */
     isOrganizationChecked: function(id) {
         return this.getContext().checkedOrganizations.indexOf(id) !== -1 ? true : false;
+    },
+
+    /*
+     * Check if the organization name to search for changed since last search
+     */
+    updateFilter: function() {
+        var name = $("#organization_name_filter").val();
+
+        if (name != this.getContext().currentNameFilter) {
+            this.getContext().pendingNameFilter = name;
+            orgList.Controller.refresh();
+        }
     },
 
     /*
@@ -236,83 +274,102 @@ orgList.View = {
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        $("#organization_name_filter").on('change keydown paste input', function() {
+            // Don't start
+            var context = orgList.Model.getContext();
+
+            if (context.filterTimeout != null) {
+                window.clearTimeout(context.filterTimeout);
+            }
+
+            // Update filter after user has finished typing (1 second timeout)
+            context.filterTimeout = window.setTimeout(function() {
+                orgList.Model.updateFilter();
+            }, 1000);
+        });
     }
 }
 </script>
 <script src="{% static 'js/handlebars.min.js' %}"></script>
 
 {% verbatim %}
-<script id="organization-list-template">
-<table class="table table-striped">
-    <tbody>
-        <div class="panel-group" id="accordion">
-
-            {{#each organizations}}
-            <tr>
-                <td>
-                    <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }})" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
-                    <a onclick="orgList.Model.checkOrganization({{ this.id }})" href="#">{{ this.name }}</a>
-
-                    <span class="organization-icon-list pull-right">
-                        <a class="btn btn-xs btn-primary"  data-toggle="collapse" href="#organization-{{ this.id }}">{{ ../msg.view_details }}</a>
-                    </span>
-
-                    <div id="organization-{{ this.id }}" class="panel-collapse collapse out">
-                        <div class="col-md-6">
-                            <h2>{{ ../msg.contact_information }}</h2>
-                            <hr/>
-                            <div class="organization-address">
-                                {{#if this.address_line_one }}{{ this.address_line_one }}<br/>{{/if}}
-	                            {{#if this.address_line_two }}{{ this.address_line_two }}<br/>{{/if}}
-	                            {{#if this.postal_code }}{{ this.postal_code }}<br/>{{/if}}
-	                            {{#if this.country }}{{ this.country }}<br/>{{/if}}
-	                        </div>
-                            {{#if this.email_address}}
-                                <div>
-                                    <a href="mailto:{{ this.email_address }}">{{ this.email_address }}</a>
-                                </div>
-                            {{/if}}
-                            <div class="panel panel-info">
-                                <div class="panel-body">
-                                    <p>{{../msg/question_update_details}}</p>
-                                    <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/edit/{{ this.id }}">{{ ../msg.update_details }}</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h2>{{ ../msg.ratings }}</h2>
-                            <hr/>
-                            <div>
-                                {{#if this.amount_ratings}}
-                                    {{ ../msg.amount_ratings }}: {{this.amount_ratings}} ({{ ../msg.average_ratings }} {{this.average_rating}}/5) <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.view_or_give_ratings }}</a>
-                                {{else}}
-                                    {{ ../msg.no_ratings }} <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.give_ratings }}</a>
-                                {{/if}}
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            {{/each}}
-
+<script id="organization-list-template" type="text/html">
+    <div class="row">
+        <div class="organization-list-filter col-md-offset-9 col-md-3">
+            <input class="form-control" type="text" id="organization_name_filter" placeholder="{{ msg.search_organization }}" value="{{ pendingNameFilter }}"/>
         </div>
-    </tbody>
-</table>
-<div>
-    <button id="create-request" class="btn btn-success" onclick="orgList.Controller.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
-    {{printOrganizationsChecked}}
-    <span class="pull-right">
-        <a class="pull-right btn btn-primary" href="{{ ORIGIN_WITH_LANG_CODE }}organizations/new/">{{msg.add_organization}}</a>
-    </span>
-</div>
-{{#if pagination}}
-    <ul class="pagination">
-        {{#each pages}}
-        <li class="{{#if this.prev}}prev{{/if}} {{# if this.active }}active{{/if}}">
-            <a id="page-{{ this.page }}" href="#" onclick="{{#unless this.disabled}}orgList.Controller.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
-        </li>
-        {{/each}}
-    </ul>
-{{/if}}
+    </div>
+    <table class="table table-striped">
+        <tbody>
+            <div class="panel-group" id="accordion">
+
+                {{#each organizations}}
+                <tr>
+                    <td>
+                        <input id="org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }}); return false;" type="checkbox" name="org_ids" value="{{ this.id }}" {{#isOrganizationChecked this.id}}checked{{/isOrganizationChecked}}/>
+                        <a id="link-org-{{ this.id }}" onclick="orgList.Model.checkOrganization({{ this.id }}); return false;" href="#">{{ this.name }}</a>
+
+                        <span class="organization-icon-list pull-right">
+                            <a class="btn btn-xs btn-primary"  data-toggle="collapse" href="#organization-{{ this.id }}">{{ ../msg.view_details }}</a>
+                        </span>
+
+                        <div id="organization-{{ this.id }}" class="panel-collapse collapse out">
+                            <div class="col-md-6">
+                                <h2>{{ ../msg.contact_information }}</h2>
+                                <hr/>
+                                <div class="organization-address">
+                                    {{#if this.address_line_one }}{{ this.address_line_one }}<br/>{{/if}}
+    	                            {{#if this.address_line_two }}{{ this.address_line_two }}<br/>{{/if}}
+    	                            {{#if this.postal_code }}{{ this.postal_code }}<br/>{{/if}}
+    	                            {{#if this.country }}{{ this.country }}<br/>{{/if}}
+    	                        </div>
+                                {{#if this.email_address}}
+                                    <div>
+                                        <a href="mailto:{{ this.email_address }}">{{ this.email_address }}</a>
+                                    </div>
+                                {{/if}}
+                                <div class="panel panel-info">
+                                    <div class="panel-body">
+                                        <p>{{../msg/question_update_details}}</p>
+                                        <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/edit/{{ this.id }}">{{ ../msg.update_details }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h2>{{ ../msg.ratings }}</h2>
+                                <hr/>
+                                <div>
+                                    {{#if this.amount_ratings}}
+                                        {{ ../msg.amount_ratings }}: {{this.amount_ratings}} ({{ ../msg.average_ratings }} {{this.average_rating}}/5) <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.view_or_give_ratings }}</a>
+                                    {{else}}
+                                        {{ ../msg.no_ratings }} <a class="btn btn-info" href="{{ ../ORIGIN_WITH_LANG_CODE }}organizations/view/{{ this.id }}">{{ ../msg.give_ratings }}</a>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+
+            </div>
+        </tbody>
+    </table>
+    <div>
+        <button id="create-request" class="btn btn-success" onclick="orgList.Controller.createRequest()" {{#unless checkedOrganizations}}disabled{{/unless}}>{{ msg.create_request }}</button>
+        {{printOrganizationsChecked}}
+        <span class="pull-right">
+            <a class="pull-right btn btn-primary" href="{{ ORIGIN_WITH_LANG_CODE }}organizations/new/">{{msg.add_organization}}</a>
+        </span>
+    </div>
+    {{#if pagination}}
+        <ul class="pagination">
+            {{#each pages}}
+            <li class="{{#if this.prev}}prev{{/if}} {{# if this.active }}active{{/if}}">
+                <a id="page-{{ this.page }}" href="#" onclick="{{#unless this.disabled}}orgList.Controller.loadPage({{this.page}}){{/unless}}">{{{ this.label }}}</a>
+            </li>
+            {{/each}}
+        </ul>
+    {{/if}}
 </script>
 {% endverbatim %}
