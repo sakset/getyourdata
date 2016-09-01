@@ -63,13 +63,15 @@ def create_dummy_organization(new_name='Organization Two', new_email_address='fa
 @isDjangoTest()
 class DataRequestCreationTests(TestCase):
     def setUp(self):
-        self.organization = create_dummy_organization('Organization', 'fake@address.com',
-                                                      'Address one', 'Address two',
-                                                      '00000', 'Finland')
-        self.organization2 = create_dummy_organization()
-        self.organization3 = create_dummy_organization('Organization Three', 'fake@addressb.com',
-                                                       'Address 5', 'Address 6',
-                                                       '123456', 'Estonia')
+        self.organization = create_dummy_organization(
+            'Organization 1', 'fake@address.com',
+            'Address one', 'Address two',
+            '00000', 'Finland')
+        self.organization2 = create_dummy_organization('Organization 2')
+        self.organization3 = create_dummy_organization(
+            'Organization Three', 'fake@addressb.com',
+            'Address 5', 'Address 6',
+            '123456', 'Estonia')
 
         self.auth_field1 = AuthenticationField.objects.create(
             name="some_number",
@@ -84,7 +86,8 @@ class DataRequestCreationTests(TestCase):
             title="Oddest thing",
             help_text='oddest text')
 
-        self.assertEquals(self.organization.authentication_fields.all().count(), 0)
+        self.assertEquals(
+            self.organization.authentication_fields.all().count(), 0)
 
         self.organization.authentication_fields.add(self.auth_field1)
         self.organization.authentication_fields.add(self.auth_field2)
@@ -96,10 +99,10 @@ class DataRequestCreationTests(TestCase):
         self.organization3.authentication_fields.add(self.auth_field2)
         self.organization3.authentication_fields.add(self.auth_field3)
 
-        self.assertEquals(self.organization.authentication_fields.all().count(), 2)
-        self.assertEquals(self.organization2.authentication_fields.all().count(), 2)
-        self.assertEquals(DataRequest.objects.all().count(), 0)
-        self.assertEquals(AuthenticationContent.objects.all().count(), 0)
+        self.assertEquals(
+            self.organization.authentication_fields.all().count(), 2)
+        self.assertEquals(
+            self.organization2.authentication_fields.all().count(), 2)
 
     def test_data_request_form_is_correct(self):
         response = self.client.get(reverse("data_request:request_data",
@@ -111,13 +114,16 @@ class DataRequestCreationTests(TestCase):
 
     def test_required_by_is_present_when_supposed(self):
         response = self.client.get(reverse("data_request:request_data",
-            args = ("%d,%d,%d" % (self.organization.id, self.organization2.id, self.organization3.id),)))
+            args = ("%d,%d,%d" % (
+                self.organization.id, self.organization2.id,
+                self.organization3.id),)))
 
         self.assertContains(response, "Required by:")
 
 
     def test_required_by_is_not_present_when_supposed(self):
-        response = self.client.get(reverse("data_request:request_data",
+        response = self.client.get(reverse(
+            "data_request:request_data",
             args = (self.organization.id,)))
 
         self.assertNotContains(response, "Required by:")
@@ -133,7 +139,7 @@ class DataRequestCreationTests(TestCase):
         self.assertContains(response, "Oddest thing")
 
     def test_data_request_is_created(self):
-        self.client.post(
+        response = self.client.post(
             reverse("data_request:request_data", args=(self.organization.id,)),
             {"some_number": "1234567",
              "other_thing": "Some text here",
@@ -143,15 +149,10 @@ class DataRequestCreationTests(TestCase):
             follow=True
         )
 
-        self.assertEquals(DataRequest.objects.all().count(), 1)
-
-        data_request = DataRequest.objects.first()
-
-        self.assertTrue(data_request.organization == self.organization)
-        self.assertTrue(data_request.user_email_address == "test@test.com")
+        self.assertContains(response, "Organization 1", 1)
 
     def test_multiple_data_requests_can_be_created(self):
-        self.client.post(
+        response = self.client.post(
             reverse("data_request:request_data",
                     args=("%d,%d" % (self.organization.id,
                                      self.organization2.id),)),
@@ -163,15 +164,8 @@ class DataRequestCreationTests(TestCase):
              "g-recaptcha-response": "PASSED"},
             follow=True)
 
-        self.assertEquals(DataRequest.objects.all().count(), 2)
-
-        data_request1 = DataRequest.objects.get(organization=self.organization)
-        data_request2 = DataRequest.objects.get(organization=self.organization2)
-
-        self.assertEquals(data_request1.organization, self.organization)
-        self.assertEquals(data_request2.organization, self.organization2)
-        self.assertEquals(data_request1.user_email_address, "test@test.com")
-        self.assertEquals(data_request2.user_email_address, "test@test.com")
+        self.assertContains(response, "Organization 1", 1)
+        self.assertContains(response, "Organization 2", 1)
 
     def test_email_request_is_sent_correctly(self):
         response = self.client.post(
