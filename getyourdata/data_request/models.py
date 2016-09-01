@@ -84,8 +84,8 @@ class DataRequest():
         """
         Add AuthenticationContent(s) to the data request
         """
-        for organization in args:
-             self.auth_contents.append(organization)
+        for auth_content in args:
+             self.auth_contents.append(auth_content)
 
     def get_auth_content(self, name):
         """
