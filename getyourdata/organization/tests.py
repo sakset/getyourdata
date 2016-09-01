@@ -523,8 +523,11 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
                 char = unichr(97+i)
             else:
                 char = 'z' + unichr(97+i-25)
+
+            # Organizations are named starting from 'a Organization' to
+            # 'b Organization' ..
             organization = Organization.objects.create(
-                name='%s Organization' % char,
+                name='%s Organization %d' % (char, i),
                 email_address='fake@address.com',
                 address_line_one='Address one',
                 address_line_two='Address two',
@@ -664,7 +667,8 @@ class OrganizationListJavascriptTests(LiveServerTestCase):
 
         filter_box.send_keys("Organization 20")
 
-        organization = Organization.objects.get(name="Organization 20")
+        organization = Organization.objects.get(
+            name__endswith="Organization 20")
 
         find_element_by_xpath(
             self,
