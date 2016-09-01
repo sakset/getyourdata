@@ -295,8 +295,10 @@ orgList.View = {
 
 {% verbatim %}
 <script id="organization-list-template" type="text/html">
-    <div class="organization-list-filter col-md-offset-9 col-md-3">
-        <input class="form-control" type="text" id="organization_name_filter" placeholder="{{ msg.search_organization }}" value="{{ pendingNameFilter }}"/>
+    <div class="row">
+        <div class="organization-list-filter col-md-offset-9 col-md-3">
+            <input class="form-control" type="text" id="organization_name_filter" placeholder="{{ msg.search_organization }}" value="{{ pendingNameFilter }}"/>
+        </div>
     </div>
     <table class="table table-striped">
         <tbody>
