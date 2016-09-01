@@ -73,19 +73,6 @@
     background: green;
 }
 
-
-/* org. list specific */
-
-#organization-list {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-#organization-list td > a {
-    margin-top: 1em;
-    color: #959595;
-}
-
 #bootstrap-overrides .panel > .panel-heading {
     color: #959595;
     background-color: #f5f6f6;
