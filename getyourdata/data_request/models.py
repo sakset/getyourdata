@@ -40,38 +40,61 @@ class FeedbackMessageContent(BaseModel):
     footer = models.TextField(blank=True, default="Regards,")
 
 
-class AuthenticationContent(BaseModel):
+class AuthenticationContent():
     """
     A single entry in user's data request
 
     This is not saved to the database and only exists during the request
     creation process
     """
-    request_uuid = models.CharField(max_length=255, default=uuid.uuid4)
     auth_field = models.ForeignKey(AuthenticationField, related_name="+")
-    data_request = models.ForeignKey(
-        "data_request.DataRequest", related_name="auth_contents")
     content = models.CharField(max_length=255)
+
+    def __init__(self, *args, **kwargs):
+        self.auth_field = kwargs.get("auth_field", None)
+        self.content = kwargs.get("content", None)
 
     def __unicode__(self):
         return "Authentication content"
 
 
-class DataRequest(BaseModel):
+class DataRequest():
     """
     User's data request to a single organization
 
     This is not saved to the database and only exists during the request
     creation process
     """
-    request_uuid = models.CharField(max_length=255, default=uuid.uuid4)
-    organization = models.ForeignKey(
-        Organization, related_name="data_requests")
+    organization = None
 
-    user_email_address = models.EmailField(
-        max_length=255, null=True, blank=True,
-        default="",
-        )
+    auth_contents = []
+
+    def __init__(self, *args, **kwargs):
+        self.auth_contents = []
+        self.organization = kwargs.get("organization", None)
+
+        if self.organization is None:
+            raise IOError("missing organization")
+
+    def add_auth_contents(self, *args):
+        """
+        Add an arbitrary amount of AuthenticationContent objects
+        """
+        for organization in args:
+             self.auth_contents.append(organization)
+
+    def get_auth_content(self, name):
+        """
+        Get AuthenticationContent by name
+
+        If found, return the AuthenticationContent, otherwise return None
+        """
+        for auth_content in self.auth_contents:
+            if auth_content.auth_field.name == "name":
+                return auth_content
+
+        return None
+
 
     def to_text(self, html=False):
         """
@@ -80,10 +103,7 @@ class DataRequest(BaseModel):
         :html: If True, return a HTML-formatted document,
                otherwise return the content in plain-text
         """
-        try:
-            person_name = self.auth_contents.get(auth_field__name="name")
-        except:
-            person_name = None
+        person_name = self.get_auth_content("name")
 
         request_content, created = RequestContent.objects.get_or_create(
             title="Default")
@@ -105,10 +125,7 @@ class DataRequest(BaseModel):
         """
         Return data request as the text used in the email request
         """
-        try:
-            person_name = self.auth_contents.get(auth_field__name="name")
-        except:
-            person_name = None
+        person_name = self.get_auth_content("name")
 
         request_content, created = RequestContent.objects.get_or_create(
             title="Default")
@@ -129,4 +146,3 @@ class DataRequest(BaseModel):
 
     def __unicode__(self):
         return "Data request for " + self.organization.name
-

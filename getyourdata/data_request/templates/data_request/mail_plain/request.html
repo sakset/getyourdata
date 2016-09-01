@@ -11,7 +11,7 @@
 
 {{ request_content.content1 }}
 
-{% for auth_content in data_request.auth_contents.all %}
+{% for auth_content in data_request.auth_contents %}
 {{ auth_content.auth_field }}: {{ auth_content.content }}
 {% endfor %}
 
