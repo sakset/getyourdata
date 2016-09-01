@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from data_request.forms import DataRequestForm
 from data_request.forms import OrganizationRatingForm
 from data_request.models import DataRequest, AuthenticationContent
+from data_request.models import AuthenticationField
 from organization.models import Organization, Comment
 
 from getyourdata.forms import CaptchaForm
@@ -378,10 +379,25 @@ def get_data_request(request, organization, form):
     auth_fields = organization.authentication_fields.order_by('order')
     auth_contents = []
 
+    email_added = False
+
     for auth_field in auth_fields:
+        if auth_field.name == "email_address":
+            email_added = True
+
         auth_contents.append(AuthenticationContent(
             auth_field=auth_field,
             content=form.cleaned_data[auth_field.name]
+        ))
+
+    # If we have user's email address, but the organization didn't require it,
+    # add it anyway
+    if not email_added and form.cleaned_data.get("email_address", None):
+        email_field = AuthenticationField.objects.get(name="email_address")
+
+        auth_contents.append(AuthenticationContent(
+            auth_field=email_field,
+            content=form.cleaned_data["email_address"]
         ))
 
     data_request.add_auth_contents(*auth_contents)
