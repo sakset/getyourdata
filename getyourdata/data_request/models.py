@@ -47,8 +47,8 @@ class AuthenticationContent():
     This is not saved to the database and only exists during the request
     creation process
     """
-    auth_field = models.ForeignKey(AuthenticationField, related_name="+")
-    content = models.CharField(max_length=255)
+    auth_field = None
+    content = None
 
     def __init__(self, *args, **kwargs):
         self.auth_field = kwargs.get("auth_field", None)
