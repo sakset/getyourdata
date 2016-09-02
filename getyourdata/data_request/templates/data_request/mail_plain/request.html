@@ -14,13 +14,11 @@
 {% for auth_content in data_request.auth_contents %}
 {{ auth_content.auth_field }}: {{ auth_content.content }}
 {% endfor %}
+{% if data_request.user_email_address %}
+{% trans 'Email address' %}: {{ data_request.user_email_address }}
+{% endif %}
 
 {{ request_content.content2 }}
-
-{% if data_request.user_email_address %}
-{{ request_content.content3 }}
-{{ data_request.user_email_address }}
-{% endif %}
 
 {% if person_name %}
 {{ request_content.footer }}

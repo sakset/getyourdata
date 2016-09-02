@@ -27,6 +27,9 @@ class AuthenticationField(BaseModel):
         max_length=1028, default="", blank=True,
         help_text=_("If not blank, this regex is used to validate the field value"))
 
+    class Meta:
+        ordering = ('-order',)
+
     def __unicode__(self):
         return self.title
 
