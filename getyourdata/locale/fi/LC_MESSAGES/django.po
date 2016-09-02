@@ -8,49 +8,40 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 17:06+0000\n"
-"PO-Revision-Date: 2016-08-24 16:04+0000\n"
-"Last-Translator:   <>\n"
+"POT-Creation-Date: 2016-09-02 15:21+0300\n"
+"PO-Revision-Date: 2016-09-02 12:33+0000\n"
+"Last-Translator:   <admin@admin.admin>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.7.11\n"
 
-#: data_request/forms.py:25 data_request/forms.py:68
+#: data_request/forms.py:19 data_request/forms.py:60
 msgid "The value for this field was not valid"
 msgstr "Tämän kentän arvo ei ollut kelvollinen"
 
-#: data_request/forms.py:80
+#: data_request/forms.py:72
 msgid "Receiving email address"
 msgstr "Vastaanottava sähköpostiosoite"
 
-#: data_request/forms.py:82
+#: data_request/forms.py:74
 msgid ""
-"Optional - A copy of your mail requests can be sent to this email address if "
-"filled"
+"Optional - A copy of your mail requests can be sent to this email address if"
+" filled"
 msgstr ""
 "Valinnainen - Kopio tietopyynnöstäsi voidaan lähettää tähän osoitteeseen"
 
-#: data_request/forms.py:92
-msgid "Send a copy of mail requests"
-msgstr "Lähetä kopio tietopyynnöistä"
-
-#: data_request/forms.py:95
+#: data_request/forms.py:81
 msgid ""
-"If checked, a copy of your mail requests will be sent to the receiving email "
+"Your data and further enquiries by organizations will be sent to this "
 "address"
-msgstr "Jos valittu, kopio tietopyynnöstäsi lähetetään tähän osoitteeseen"
-
-#: data_request/forms.py:101
-msgid ""
-"Your data and further enquiries by organizations will be sent to this address"
 msgstr ""
 "Tietosi ja organisaatioiden kyselyt lähetetään tähän sähköpostiosoitteeseen"
 
-#: data_request/forms.py:123
+#: data_request/forms.py:103
 msgid ""
 "You must enter a receiving email address if you want a copy of your mail "
 "requests as an email message."
@@ -58,34 +49,35 @@ msgstr ""
 "Jos haluat saada kopion sähköpostipyynnöstäsi sähköpostiisi, täytä "
 "sähköpostiosoitteesi."
 
-#: data_request/forms.py:149 data_request/forms.py:150
-#: organization/forms.py:147 organization/forms.py:148
+#: data_request/forms.py:129 data_request/forms.py:130
+#: organization/forms.py:156 organization/forms.py:157
 msgid "Please leave a rating"
 msgstr "Anna arvosana"
 
-#: data_request/forms.py:152 organization/forms.py:150
-#: organization/forms.py:170
+#: data_request/forms.py:132 organization/forms.py:159
+#: organization/forms.py:179
 msgid "Rating"
 msgstr "Arvosana"
 
-#: data_request/forms.py:160 data_request/forms.py:185 feedback/forms.py:10
-#: organization/forms.py:158
+#: data_request/forms.py:140 data_request/forms.py:165 feedback/forms.py:10
+#: organization/forms.py:167
 msgid "Message is required"
 msgstr "Viesti pakollinen"
 
-#: data_request/forms.py:162 organization/forms.py:159
+#: data_request/forms.py:142 organization/forms.py:168
 msgid "Maximum allowed length is 2000 characters"
 msgstr "Suurin sallittu merkkimäärä 2000 merkkiä."
 
-#: data_request/forms.py:164 feedback/forms.py:13 organization/forms.py:161
-#: organization/forms.py:171
+#: data_request/forms.py:144 feedback/forms.py:13 organization/forms.py:170
+#: organization/forms.py:180
 msgid "Message"
 msgstr "Viesti"
 
 #: data_request/models.py:38
 msgid "Included if user requested a copy of his mail request PDF"
 msgstr ""
-"Sisällytetään mikäli käyttäjä valitsi haluavansa kopion tietopyyntökirjeestä."
+"Sisällytetään mikäli käyttäjä valitsi haluavansa kopion "
+"tietopyyntökirjeestä."
 
 #: data_request/services.py:61
 #, python-format
@@ -99,24 +91,20 @@ msgstr "Kiitos GetYourDatan käytöstä!"
 #: data_request/templates/data_request/email/thanks.html:13
 msgid ""
 "\n"
-"        When you receive a reply from the following organization, please "
-"take a minute to rate it based on how your\n"
+"        When you receive a reply from the following organization, please take a minute to rate it based on how your\n"
 "        request was handled.\n"
 "        "
 msgid_plural ""
 "\n"
-"        When you receive a reply from the following organizations, please "
-"take a minute to rate them based on how your\n"
+"        When you receive a reply from the following organizations, please take a minute to rate them based on how your\n"
 "        requests were handled.\n"
 "        "
 msgstr[0] ""
 "\n"
-"Kun saat vastauksen allaolevalta organisaatiolta, anna organisaatiolle "
-"arvosana siitä miten hyvin tietopyyntöösi vastattiin."
+"Kun saat vastauksen allaolevalta organisaatiolta, anna organisaatiolle arvosana siitä miten hyvin tietopyyntöösi vastattiin."
 msgstr[1] ""
 "\n"
-"Kun saat vastauksen allaolevilta organisaatioilta, anna organisaatioille "
-"arvosanoja siitä miten hyvin tietopyyntöihisi vastattiin."
+"Kun saat vastauksen allaolevilta organisaatioilta, anna organisaatioille arvosanoja siitä miten hyvin tietopyyntöihisi vastattiin."
 
 #: data_request/templates/data_request/email/thanks.html:22
 #: data_request/templates/data_request/email_plain/thanks.html:14
@@ -127,6 +115,13 @@ msgstr "Anna organisaatiolle arvosana"
 #: data_request/templates/data_request/mail/request.html:4
 msgid "Data request: "
 msgstr "Tietopyyntö: "
+
+#: data_request/templates/data_request/email_plain/request.html:12
+#: data_request/templates/data_request/mail/request.html:107
+#: data_request/templates/data_request/mail_plain/request.html:18
+#: organization/models.py:69
+msgid "Email address"
+msgstr "Sähköpostiosoite"
 
 #: data_request/templates/data_request/email_plain/thanks.html:8
 msgid ""
@@ -183,14 +178,12 @@ msgstr "Seuraaville organisaatioille pyynnöt pitää lähettää postitse"
 #: data_request/templates/data_request/request_data.html:64
 msgid ""
 "\n"
-"                        Note: The personal details submitted here will not "
-"be stored on the server, but they will only\n"
+"                        Note: The personal details submitted here will not be stored on the server, but they will only\n"
 "                        be used temporarily for data request generation.\n"
 "                    "
 msgstr ""
 "\n"
-"Huom! Syötettyjä henkilötietoja ei tallenneta palvelimelle, vaan niitä "
-"käsitellään vain tilapäisesti tietopyyntöjen luonnin yhteydessä."
+"Huom! Syötettyjä henkilötietoja ei tallenneta palvelimelle, vaan niitä käsitellään vain tilapäisesti tietopyyntöjen luonnin yhteydessä."
 
 #: data_request/templates/data_request/request_data_feedback.html:13
 msgid "Thanks!"
@@ -217,10 +210,11 @@ msgstr ""
 "kuluttua."
 
 #: data_request/templates/data_request/request_data_feedback.html:32
-#: data_request/templates/data_request/request_data_feedback.html:54
+#: data_request/templates/data_request/request_data_feedback.html:59
 msgid ""
 "When you have received a reply to your data request, please review your "
-"process with the organization below. Your feedback will help the other users!"
+"process with the organization below. Your feedback will help the other "
+"users!"
 msgid_plural ""
 "When you have received a reply to your data request, please review your "
 "process with the organizations below. Your feedback will help the other "
@@ -232,25 +226,24 @@ msgstr[1] ""
 "Saatuasi vastauksen tietopyyntöösi, anna organisaatiolle palautetta "
 "tietopyynnön vastaamista koskien. Palautteesi auttaa muita käyttäjiä."
 
-#: data_request/templates/data_request/request_data_feedback.html:40
+#: data_request/templates/data_request/request_data_feedback.html:43
+#| msgid ""
+#| "\n"
+#| "                            You can add this page into your bookmarks for later use.\n"
+#| "                        "
 msgid ""
 "\n"
-"                            You can add this page into your bookmarks for "
-"later use.\n"
-"                        "
+"                                You can add this page into your bookmarks for later use.\n"
+"                                "
 msgstr ""
 "\n"
 "Voit lisätä tämän sivun kirjanmerkkeihisi myöhempää vierailua varten."
 
-#: data_request/templates/data_request/request_data_feedback.html:47
+#: data_request/templates/data_request/request_data_feedback.html:52
 msgid "If PDF wasn't downloaded automatically, click here to download it"
 msgstr ""
 "Jos kirje-PDF:n automaattinen lataus ei onnistunut, klikkaa tästä "
 "ladataksesi sen uudelleen."
-
-#: data_request/templates/data_request/request_data_feedback.html:97
-msgid "Submit feedback"
-msgstr "Lähetä palaute"
 
 #: data_request/templates/data_request/request_data_review.html:21
 msgid "Please review the following message"
@@ -310,24 +303,15 @@ msgstr ""
 #: data_request/templates/data_request/request_data_sent.html:49
 msgid ""
 "\n"
-"                            You can send data requests to the listed "
-"organizations by mail. The following document\n"
-"                            contains the required pages. If your printer "
-"supports two-sided printing, the print-out\n"
-"                            can be folded, stapled and mailed as-is (please "
-"consult your printer's user guide for\n"
-"                            two-sided printing instructions). If using one-"
-"sided printing the address pages are\n"
+"                            You can send data requests to the listed organizations by mail. The following document\n"
+"                            contains the required pages. If your printer supports two-sided printing, the print-out\n"
+"                            can be folded, stapled and mailed as-is (please consult your printer's user guide for\n"
+"                            two-sided printing instructions). If using one-sided printing the address pages are\n"
 "                            printed on separate papers.\n"
 "                            "
 msgstr ""
 "\n"
-"Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava "
-"PDF-muotoinen tiedosto sisältää tarvittavat kirjeet. Mikäli tulostimesi "
-"tukee kaksipuolista tulostusta (kts. tulostimesi käyttöohje), voi PDF-"
-"tiedoston tulostaa ja postittaa sellaisenaan yhteentaitettuna ja "
-"postimerkillä varustettuna. Yksipuoleisena tulostettuna kirjeiden "
-"osoitesivut tulostuvat omille sivuilleen."
+"Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava PDF-muotoinen tiedosto sisältää tarvittavat kirjeet. Mikäli tulostimesi tukee kaksipuolista tulostusta (kts. tulostimesi käyttöohje), voi PDF-tiedoston tulostaa ja postittaa sellaisenaan yhteentaitettuna ja postimerkillä varustettuna. Yksipuoleisena tulostettuna kirjeiden osoitesivut tulostuvat omille sivuilleen."
 
 #: data_request/templates/data_request/request_data_sent.html:64
 msgid "Download PDF"
@@ -353,54 +337,48 @@ msgstr "Sähköpostipyynnöt lähetetty onnistuneesti!"
 msgid "Requests were sent to the following organizations by email:"
 msgstr "Tietopyynnöt lähetettiin seuraaville organisaatioille sähköpostitse:"
 
-#: data_request/views.py:172
+#: data_request/views.py:164
 msgid "The PDF file couldn't be created! Please try again later."
 msgstr "PDF-tiedoston luonti epäonnistui! Yritä myöhemmin uudelleen."
 
-#: data_request/views.py:188
+#: data_request/views.py:180
 msgid "Email requests couldn't be sent! Please try again later."
 msgstr "Sähköpostipyyntöjä ei voitu lähettää! Yritä myöhemmin uudelleen."
 
-#: data_request/views.py:200
+#: data_request/views.py:192
 msgid "A feedback message couldn't be sent!"
 msgstr "Palautteen lähettäminen ei onnistunut!"
-
-#: data_request/views.py:320
-msgid ""
-"Thank you for your contribution! Your feedback will help the other users and "
-"the organizations."
-msgstr ""
-"Kiitos osallistumisestasi! Palautteesi auttaa muita palvelun käyttäjiä ja "
-"organisaatioita."
-
-#: data_request/views.py:325
-msgid "Some of the fields were invalid or missing, please review."
-msgstr ""
-"Jotkin syötetyistä arvoista olivat virheellisiä tai tiedot puuttuivat. Ole "
-"hyvä ja tarkista arvot."
 
 #: feedback/forms.py:11
 msgid "Maximum allowed length is 4096 characters"
 msgstr "Suurin sallittu pituus 4096 merkkiä."
 
+#: feedback/forms.py:19 feedback/services.py:18
+msgid "Originating URL"
+msgstr "URL, josta lähtöisin"
+
+#: feedback/services.py:16
+msgid "The following feedback was sent:\n"
+msgstr "Seuraava palaute lähetettiin:\n"
+
 #: feedback/templates/feedback.html:6
 msgid "Feedback regarding this service?"
 msgstr "Palautetta koskien tätä palvelua?"
 
-#: feedback/templates/feedback.html:21
+#: feedback/templates/feedback.html:22
 #: organization/templates/organization/view.html:62
 msgid "Leave feedback"
 msgstr "Jätä palautetta"
 
-#: feedback/views.py:22 feedback/views.py:45 organization/views.py:80
+#: feedback/views.py:31 feedback/views.py:62 organization/views.py:80
 msgid "Thank you for your feedback!"
 msgstr "Kiitos palautteestasi!"
 
-#: getyourdata/settings.py:197
+#: getyourdata/settings.py:204
 msgid "English"
 msgstr "Englanti"
 
-#: getyourdata/settings.py:198
+#: getyourdata/settings.py:205
 msgid "Finnish"
 msgstr "Suomi"
 
@@ -416,19 +394,19 @@ msgstr "Usein kysyttyjä kysymyksiä"
 msgid "This site doesn't contain any answers at the moment."
 msgstr "Tällä sivulla ei ole vielä vastauksia tällä hetkellä."
 
-#: organization/admin.py:70
+#: organization/admin.py:72
 msgid "Review"
 msgstr "Katselmoi"
 
-#: organization/admin.py:72
+#: organization/admin.py:74
 msgid "Review again"
 msgstr "Katselmoi uudestaan"
 
-#: organization/admin.py:74
+#: organization/admin.py:76
 msgid "Updated"
 msgstr "Päivitetty"
 
-#: organization/admin.py:76
+#: organization/admin.py:78
 msgid "Ignored"
 msgstr "Sivuutettu"
 
@@ -442,15 +420,11 @@ msgstr "Organisaatiolle %s päivitettiin uudet tiedot."
 msgid "The organization draft for %s was ignored."
 msgstr "Organisaatioluonnos organisaatiolle %s sivuutettiin."
 
-#: organization/forms.py:37 organization/forms.py:79
+#: organization/forms.py:42 organization/forms.py:88
 msgid "Authentication fields"
 msgstr "Tunnistekentät"
 
-#: organization/forms.py:38
-#| msgid ""
-#| "What personal details this organizations requires for identifying the "
-#| "customer and forresponding to data requests. For example: postal address, "
-#| "social security number, loyalty card number, customer number"
+#: organization/forms.py:43
 msgid ""
 "What personal details this organizations requires for identifying the "
 "customer and for responding to data requests. For example: postal address, "
@@ -460,7 +434,7 @@ msgstr ""
 "asiakkaansa ja vastatakseen saamiinsa tietopyyntöihin. Esim. postiosoite, "
 "henkilötunnus, kanta-asiakaskortin numero, asiakasnumero."
 
-#: organization/forms.py:80
+#: organization/forms.py:89
 msgid ""
 "What personal details this organizations requires for identifying the "
 "customer and forresponding to data requests. For example: postal address, "
@@ -470,15 +444,15 @@ msgstr ""
 "asiakkaansa ja vastatakseen saamiinsa tietopyyntöihin. Esim. postiosoite, "
 "henkilötunnus, kanta-asiakaskortin numero, asiakasnumero."
 
-#: organization/models.py:26
+#: organization/models.py:28
 msgid "If not blank, this regex is used to validate the field value"
 msgstr "Jos kenttä ei ole tyhjä, tätä regexiä käytetään kentän validointiin"
 
-#: organization/models.py:51
+#: organization/models.py:59
 msgid "Name"
 msgstr "Nimi"
 
-#: organization/models.py:57
+#: organization/models.py:66
 msgid ""
 "Email address used by the organization for receiving data requests. Leave "
 "empty if the organization only accepts requests by post."
@@ -486,27 +460,23 @@ msgstr ""
 "Organisaation käyttämä sähköpostiosoite tietopyyntöjen vastaanottamiseen. "
 "Jätä tyhjäksi mikäli organisaatio vastaanottaa tietopyyntöjä vain kirjeitse."
 
-#: organization/models.py:59
-msgid "Email address"
-msgstr "Sähköpostiosoite"
-
-#: organization/models.py:65
+#: organization/models.py:76
 msgid "Address line 1"
 msgstr "Osoiterivi 1"
 
-#: organization/models.py:69
+#: organization/models.py:81
 msgid "Address line 2"
 msgstr "Osoiterivi 2"
 
-#: organization/models.py:73
+#: organization/models.py:86
 msgid "Postal code"
 msgstr "Postinumero"
 
-#: organization/models.py:77
+#: organization/models.py:91
 msgid "Country"
 msgstr "Maa"
 
-#: organization/models.py:91
+#: organization/models.py:108
 msgid ""
 "Organization profile must contain either a valid email address or postal "
 "information"
@@ -514,27 +484,28 @@ msgstr ""
 "Organisaatioprofiilin pitää sisältää joko kelvollinen sähköpostiosoite tai "
 "postiosoitetiedot"
 
-#: organization/models.py:103
+#: organization/models.py:120
 msgid "Verified"
 msgstr "Vahvistettu"
 
-#: organization/models.py:104
+#: organization/models.py:121
 msgid "Verified organizations are visible to all users"
 msgstr "Vahvistetut organisaatiot näkyvät kaikille käyttäjille"
 
-#: organization/models.py:143
+#: organization/models.py:170
 msgid ""
 "The name of the register used by the organization. Eg. Customer register"
 msgstr "Organisaation käyttämä nimi rekisterille. Esim. \"Asiakasrekisteri\""
 
-#: organization/models.py:145
+#: organization/models.py:172
 msgid "Name of the person register"
 msgstr "Henkilörekisterin nimi"
 
-#: organization/models.py:167
+#: organization/models.py:198
 msgid "Can check organization drafts and update the original organization"
 msgstr ""
-"Voi tarkistaa organisaatioluonnoksia ja päivittää alkuperäistä organisaatiota"
+"Voi tarkistaa organisaatioluonnoksia ja päivittää alkuperäistä "
+"organisaatiota"
 
 #: organization/templates/organization/admin/check_organization_draft.html:8
 msgid "Organization draft: "
@@ -585,25 +556,25 @@ msgstr "Valitse organisaatiot"
 
 #: organization/templates/organization/list.html:27
 msgid ""
-"Choose the organizations you want to get your data from and click the Create "
-"Request button."
+"Choose the organizations you want to get your data from and click the Create"
+" Request button."
 msgstr ""
-"Valitse organisaatiot joilta haluat saada tietosi ja klikkaa \"Luo pyyntö\" -"
-"nappia."
+"Valitse organisaatiot joilta haluat saada tietosi ja klikkaa \"Luo pyyntö\" "
+"-nappia."
 
 #: organization/templates/organization/list.html:42
-#: organization/templates/organization/list_js.html:24
+#: organization/templates/organization/list_js.html:25
 msgid "View details"
 msgstr "Näytä tiedot"
 
 #: organization/templates/organization/list.html:51
-#: organization/templates/organization/list_js.html:17
+#: organization/templates/organization/list_js.html:18
 msgid "Create request with selections"
 msgstr "Luo pyyntö"
 
 #: organization/templates/organization/list.html:54
 #: organization/templates/organization/list.html:65
-#: organization/templates/organization/list_js.html:23
+#: organization/templates/organization/list_js.html:24
 msgid "Add organization"
 msgstr "Lisää organisaatio"
 
@@ -611,36 +582,33 @@ msgstr "Lisää organisaatio"
 msgid "No organizations yet."
 msgstr "Ei organisaatioita."
 
-#: organization/templates/organization/list_js.html:18
+#: organization/templates/organization/list_js.html:19
 msgid "0 organizations selected."
 msgstr "0 organisaatiota valittu."
 
-#: organization/templates/organization/list_js.html:19
+#: organization/templates/organization/list_js.html:20
 msgid "1 organization selected."
 msgstr "1 organisaatio valittu."
 
-#: organization/templates/organization/list_js.html:20
+#: organization/templates/organization/list_js.html:21
 #, python-brace-format
 msgid "{0} organizations selected."
 msgstr "{0} organisaatiota valittu."
 
-#: organization/templates/organization/list_js.html:21
+#: organization/templates/organization/list_js.html:22
 msgid "Accepts postal requests"
 msgstr "Hyväksyy postipyynnöt"
 
-#: organization/templates/organization/list_js.html:22
+#: organization/templates/organization/list_js.html:23
 msgid "Accepts email requests"
 msgstr "Hyväksyy sähköpostipyynnöt"
 
-#: organization/templates/organization/list_js.html:25
+#: organization/templates/organization/list_js.html:26
 #: organization/templates/organization/view.html:68
 msgid "Contact information"
 msgstr "Yhteystiedot"
 
-#: organization/templates/organization/list_js.html:26
-#| msgid ""
-#| "Is this organization's information incorrect or out-of-date? Update the "
-#| "organization profile to keep it up-to-date."
+#: organization/templates/organization/list_js.html:27
 msgid ""
 "Is this organization's information incorrect or out-of-date? Update the "
 "organization profile to keep it up-to-date"
@@ -648,36 +616,38 @@ msgstr ""
 "Ovatko tämän organisaation yhteystiedot virheellisiä tai vanhentuneita? "
 "Päivitä organisaatioprofiili pitääksesi tiedot ajan tasalla."
 
-#: organization/templates/organization/list_js.html:27
+#: organization/templates/organization/list_js.html:28
 #: organization/templates/organization/view.html:27
 #: organization/templates/organization/view.html:32
 msgid "Update details"
 msgstr "Päivitä tiedot"
 
-#: organization/templates/organization/list_js.html:28
-#: organization/templates/organization/list_js.html:32
-#| msgid "Rating"
+#: organization/templates/organization/list_js.html:29
+#: organization/templates/organization/list_js.html:33
 msgid "Ratings"
 msgstr "Arviot"
 
-#: organization/templates/organization/list_js.html:29
-#| msgid "View details"
+#: organization/templates/organization/list_js.html:30
 msgid "View or give ratings"
 msgstr "Näytä arviot tai anna arvio"
 
-#: organization/templates/organization/list_js.html:30
-#| msgid "Rate organizations"
+#: organization/templates/organization/list_js.html:31
 msgid "Rate the organization"
 msgstr "Arvostele organisaatio"
 
-#: organization/templates/organization/list_js.html:31
+#: organization/templates/organization/list_js.html:32
 msgid "No ratings (yet)"
 msgstr "Ei arvioita (vielä)"
 
-#: organization/templates/organization/list_js.html:33
+#: organization/templates/organization/list_js.html:34
 #: organization/templates/organization/view.html:102
 msgid "Average rating"
 msgstr "Arvosanojen keskiarvo"
+
+#: organization/templates/organization/list_js.html:35
+#| msgid "Choose organizations"
+msgid "Search for organizations"
+msgstr "Hae organisaatioita"
 
 #: organization/templates/organization/new_organization/new.html:10
 msgid "Create a new organization profile"
@@ -725,8 +695,8 @@ msgstr "Palaute"
 
 #: organization/templates/organization/view.html:38
 msgid ""
-"Do you have feedback regarding this organization? Send us feedback using the "
-"following form."
+"Do you have feedback regarding this organization? Send us feedback using the"
+" following form."
 msgstr ""
 "Onko sinulla palautetta tästä organisaatiosta? Lähetä meille palautetta "
 "käyttämällä alla olevaa lomaketta."
@@ -780,15 +750,15 @@ msgstr ""
 "Muutoksesi sisältävä organisaatio lähetetty! Palvelun ylläpito tarkistaa "
 "tiedot ennen kuin ne näkyvät muille käyttäjille."
 
-#: templates/base.html:41
+#: templates/base.html:42
 msgid "No results for "
 msgstr "Ei tuloksia: "
 
-#: templates/base.html:42
+#: templates/base.html:43
 msgid "Select some options"
 msgstr "Valitse vaihtoehtoja"
 
-#: templates/base.html:43
+#: templates/base.html:44
 msgid "Select an option"
 msgstr "Valitse vaihtoehto"
 
@@ -812,6 +782,29 @@ msgstr "UKK"
 msgid "Review and send requests"
 msgstr "Katselmoi ja lähetä pyynnöt"
 
+#~ msgid "Send a copy of mail requests"
+#~ msgstr "Lähetä kopio tietopyynnöistä"
+
+#~ msgid ""
+#~ "If checked, a copy of your mail requests will be sent to the receiving email"
+#~ " address"
+#~ msgstr "Jos valittu, kopio tietopyynnöstäsi lähetetään tähän osoitteeseen"
+
+#~ msgid "Submit feedback"
+#~ msgstr "Lähetä palaute"
+
+#~ msgid ""
+#~ "Thank you for your contribution! Your feedback will help the other users and"
+#~ " the organizations."
+#~ msgstr ""
+#~ "Kiitos osallistumisestasi! Palautteesi auttaa muita palvelun käyttäjiä ja "
+#~ "organisaatioita."
+
+#~ msgid "Some of the fields were invalid or missing, please review."
+#~ msgstr ""
+#~ "Jotkin syötetyistä arvoista olivat virheellisiä tai tiedot puuttuivat. Ole "
+#~ "hyvä ja tarkista arvot."
+
 #~ msgid "What authentication fields this organizations requires"
 #~ msgstr "Mitä tunnistekenttiä tämä organisaatio vaatii"
 
@@ -819,8 +812,8 @@ msgstr "Katselmoi ja lähetä pyynnöt"
 #~ "You can send data requests to the listed organizations by mail. The "
 #~ "following document contains the required pages:"
 #~ msgstr ""
-#~ "Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. "
-#~ "Seuraava asiakirja sisältää tarvittavat kirjeet:"
+#~ "Voit lähettää tietopyyntöjä postitse listatuille organisaatioille. Seuraava "
+#~ "asiakirja sisältää tarvittavat kirjeet:"
 
 #~ msgid ""
 #~ "\n"
@@ -850,10 +843,8 @@ msgstr "Katselmoi ja lähetä pyynnöt"
 #~ msgstr "Katselmoi pyyntösi"
 
 #~ msgid ""
-#~ "The displayed email messages will be sent when you click \"Create request"
-#~ "\""
-#~ msgstr ""
-#~ "Esillä olevat sähköpostiviestit lähetetään kun painat \"Luo pyyntö\""
+#~ "The displayed email messages will be sent when you click \"Create request\""
+#~ msgstr "Esillä olevat sähköpostiviestit lähetetään kun painat \"Luo pyyntö\""
 
 #~ msgid ""
 #~ "Note that since we don't store user information, the information on this "
@@ -867,8 +858,7 @@ msgstr "Katselmoi ja lähetä pyynnöt"
 #~ "about you. GetYourData helps you with making the enquiries."
 #~ msgstr ""
 #~ "Sinulla on oikeus saada kopio yritysten ja julkisen sektorin sinusta "
-#~ "säilyttävästä datasta. GetYourData auttaa sinua tietopyyntöjen "
-#~ "tekemisessä."
+#~ "säilyttävästä datasta. GetYourData auttaa sinua tietopyyntöjen tekemisessä."
 
 #~ msgid "Get a copy of your own data"
 #~ msgstr "Hanki kopio omasta datastasi"
@@ -914,8 +904,8 @@ msgstr "Katselmoi ja lähetä pyynnöt"
 
 #~ msgid ""
 #~ "An organization profile has been created! You can view the created "
-#~ "organization profile, create a new user request using the provided "
-#~ "details or return to the homepage."
+#~ "organization profile, create a new user request using the provided details "
+#~ "or return to the homepage."
 #~ msgstr ""
 #~ "Organisaatioprofiili luotu! Voit katsella luotua organisaatioprofiilia, "
 #~ "tehdä tietopyynnön antamiesi organisaatiotietojen avulla tai palata "
@@ -942,5 +932,5 @@ msgstr "Katselmoi ja lähetä pyynnöt"
 #~ msgid ""
 #~ "Unique identifiers that organization needs and details of the identifiers."
 #~ msgstr ""
-#~ "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi "
-#~ "ja yksityiskohtainen kuvaus niistä"
+#~ "Uniikit tunnisteet jotka organisaatio tarvitsee henkilön tunnistamiseksi ja "
+#~ "yksityiskohtainen kuvaus niistä"
