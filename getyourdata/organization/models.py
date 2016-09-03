@@ -28,7 +28,7 @@ class AuthenticationField(BaseModel):
         help_text=_("If not blank, this regex is used to validate the field value"))
 
     class Meta:
-        ordering = ('-order',)
+        ordering = ('order',)
 
     def __unicode__(self):
         return self.title

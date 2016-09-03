@@ -386,6 +386,4 @@ def get_data_request(organization, form):
         ))
     data_request.add_auth_contents(*auth_contents)
     data_request.user_email_address = form.cleaned_data.get("user_email_address", None)
-
-    print data_request.user_email_address
     return data_request
