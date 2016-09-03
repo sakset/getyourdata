@@ -14,7 +14,7 @@ More information can be found at [requestyourdata.org](http://okffi.github.io/ry
 
 Install the required dependencies using the following command (should work on Debian and derivatives such as Ubuntu)
 
-    sudo apt-get install libpq-dev libjpeg-dev python-dev postgresql postgresql-contrib python-virtualenv
+    sudo apt-get install libpq-dev libjpeg-dev python-dev postgresql postgresql-contrib python-virtualenv memcached
 
 Navigate to the project directory. Install virtualenv.
 

@@ -9,10 +9,8 @@ class AuthenticationAttributeField(forms.CharField):
     A helper field to be used for authentication fields in DataRequestForm
     """
     def __init__(self, *args, **kwargs):
-        required_by = kwargs['required_by']
-        del kwargs['required_by']
+        self.required_by = kwargs.pop('required_by', None)
         super(AuthenticationAttributeField, self).__init__(*args, **kwargs)
-        self.required_by = required_by
 
     def clean(self, value):
         try:

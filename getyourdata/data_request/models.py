@@ -21,7 +21,6 @@ class RequestContent(BaseModel):
         blank=True, default="Dear recipient,")
     content1 = models.TextField(blank=True, default="content first")
     content2 = models.TextField(blank=True, default="content second")
-    content3 = models.TextField(blank=True, default="content third")
     footer = models.TextField(blank=True, default="Footer here")
 
 
@@ -40,16 +39,13 @@ class FeedbackMessageContent(BaseModel):
     footer = models.TextField(blank=True, default="Regards,")
 
 
-class AuthenticationContent():
+class AuthenticationContent(object):
     """
     A single entry in user's data request
 
     This is not saved to the database and only exists during the request
     creation process
     """
-    auth_field = None
-    content = None
-
     def __init__(self, *args, **kwargs):
         self.auth_field = kwargs.get("auth_field", None)
         self.content = kwargs.get("content", None)
@@ -58,17 +54,13 @@ class AuthenticationContent():
         return "Authentication content"
 
 
-class DataRequest():
+class DataRequest(object):
     """
     User's data request to a single organization
 
     This is not saved to the database and only exists during the request
     creation process
     """
-    organization = None
-
-    auth_contents = []
-
     def __init__(self, *args, **kwargs):
         """
         Create a DataRequest that contains AuthenticationContent objects
@@ -76,6 +68,7 @@ class DataRequest():
         """
         self.auth_contents = kwargs.get("auth_contents", [])
         self.organization = kwargs.get("organization", None)
+        self.user_email_address = kwargs.get("user_email_address", None)
 
         if self.organization is None:
             raise AttributeError("'%s' requires an Organization object as its organization parameter")
@@ -94,7 +87,7 @@ class DataRequest():
         If found, return the AuthenticationContent, otherwise return None
         """
         for auth_content in self.auth_contents:
-            if auth_content.auth_field.name == "name":
+            if auth_content.auth_field.name == name:
                 return auth_content
 
         return None
