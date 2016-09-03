@@ -5,7 +5,7 @@ from data_request.models import FeedbackMessageContent
 
 @register(RequestContent)
 class RequestContentTranslationOptions(TranslationOptions):
-    fields = ('header', 'content1', 'content2', 'content3', 'footer')
+    fields = ('header', 'content1', 'content2', 'footer')
 
 
 @register(FeedbackMessageContent)

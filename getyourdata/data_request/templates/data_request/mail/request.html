@@ -101,14 +101,22 @@ everything two sided -->
         {% for auth_content in data_request.auth_contents %}
             <p>{{ auth_content.auth_field }}: <b>{{ auth_content.content }}</b></p>
         {% endfor %}
+        {% if data_request.user_email_address %}
+            <p>{% trans 'Email address' %}: <b>{{ data_request.user_email_address }}</b></p>
+        {% endif %}
 
         <p>{{ request_content.content2|linebreaks }}</p>
 
-        {% if data_request.user_email_address %}
-            <div class="datarequest-content3">
-                <p>{{ request_content.content3 }}: {{ data_request.user_email_address }}</p>
-            </div>
-        {% endif %}
+    </div>
+
+    {% if person_name %}
+
+        <div class="datarequest-footer">
+            <p>{{ request_content.footer }}<br>
+            {{ person_name.content }}</p>
+        </div>
+
+    {% endif %}
 
         {% if person_name %}
             <div class="datarequest-footer">

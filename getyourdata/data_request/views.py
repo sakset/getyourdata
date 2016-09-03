@@ -101,7 +101,7 @@ def review_request(request, org_ids, ignore_captcha=True,
         data_requests = []
 
         if form.is_valid():
-            data_requests = get_data_requests(request, form, organizations)
+            data_requests = get_data_requests(form, organizations)
 
             if request.POST.get("send", None) and not prevent_redirect:
                 return send_request(request, org_ids)
@@ -151,7 +151,7 @@ def send_request(request, org_ids):
             email_requests = []
 
             for organization in organizations:
-                data_request = get_data_request(request, organization, form)
+                data_request = get_data_request(organization, form)
 
                 # Generate PDF pages for mail requests
                 try:
@@ -249,7 +249,7 @@ def give_feedback(request, org_ids):
         pdf_pages = []
 
         for organization in mail_organizations:
-            data_request = get_data_request(request, organization, form)
+            data_request = get_data_request(organization, form)
 
             pdf_page = generate_pdf_page(data_request)
             pdf_pages.append(pdf_page)
@@ -270,11 +270,10 @@ def give_feedback(request, org_ids):
     })
 
 
-def get_data_requests(request, form, organizations):
+def get_data_requests(form, organizations):
     """
     Get a list of every data request
 
-    :request: A request object passed from the view
     :form: A filled DataRequestForm
     :email_organizations: A list of organizations that accept email requests
     :mail_organizations: A list of organizations that only accept mail requests
@@ -282,7 +281,7 @@ def get_data_requests(request, form, organizations):
     data_requests = []
 
     for organization in organizations:
-        data_request = get_data_request(request, organization, form)
+        data_request = get_data_request(organization, form)
         data_requests.append(data_request)
 
     return data_requests
@@ -366,40 +365,25 @@ def send_email_requests(email_requests, form):
         return True
 
 
-def get_data_request(request, organization, form):
+def get_data_request(organization, form):
     """Get a temporary data request containing user's authentication details
 
-    :request: A request object passed from the view
     :organization: Organization of the data request
     :form: The view's DataRequestForm
     :returns: A DataRequest with details filled
 
     """
     data_request = DataRequest(organization=organization)
-    auth_fields = organization.authentication_fields.order_by('order')
+    auth_fields = organization.authentication_fields(manager='objects').all()
     auth_contents = []
 
     email_added = False
 
     for auth_field in auth_fields:
-        if auth_field.name == "email_address":
-            email_added = True
-
         auth_contents.append(AuthenticationContent(
             auth_field=auth_field,
             content=form.cleaned_data[auth_field.name]
         ))
-
-    # If we have user's email address, but the organization didn't require it,
-    # add it anyway
-    if not email_added and form.cleaned_data.get("email_address", None):
-        email_field = AuthenticationField.objects.get(name="email_address")
-
-        auth_contents.append(AuthenticationContent(
-            auth_field=email_field,
-            content=form.cleaned_data["email_address"]
-        ))
-
     data_request.add_auth_contents(*auth_contents)
-
+    data_request.user_email_address = form.cleaned_data.get("user_email_address", None)
     return data_request
