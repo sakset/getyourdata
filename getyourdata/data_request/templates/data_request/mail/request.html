@@ -113,7 +113,7 @@ everything two sided -->
     {% if person_name %}
 
         <div class="datarequest-footer">
-            <p>{{ request_content.footer }}<br>
+            <p>{{ request_content.footer|linebreaks }}<br>
             {{ person_name.content }}</p>
         </div>
 
